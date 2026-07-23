@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React WhatsApp Simulator — Demostración en Vivo</title>
+  <meta name="description" content="Componente interactivo 3D de simulación de conversaciones de WhatsApp para React, Next.js, Vue y Web Components." />
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="./dist/whatsapp-simulator.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-dark: #090d12;
+      --bg-card: #111822;
+      --border-color: #1f2937;
+      --accent-green: #25d366;
+      --accent-green-hover: #20bd5a;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 60px;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Background Glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(37, 211, 102, 0.12) 0%, rgba(9, 13, 18, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      text-align: center;
+      max-width: 800px;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(37, 211, 102, 0.1);
+      border: 1px solid rgba(37, 211, 102, 0.3);
+      color: var(--accent-green);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-green);
+      box-shadow: 0 0 10px var(--accent-green);
+    }
+
+    h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff 0%, #9ca3af 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .demo-container {
+      width: 100%;
+      max-width: 1100px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #simulator-root {
+      min-height: 600px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Features section */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 60px;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(37, 211, 102, 0.4);
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .feature-card p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Code block section */
+    .code-section {
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 60px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      background: #16202c;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .code-header h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .code-body {
+      padding: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      color: #e5e7eb;
+      background: #0d131a;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--accent-green);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <!-- ES Modules Import Map -->
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18.3.1",
+      "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@18.3.1",
+      "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+      "framer-motion": "https://esm.sh/framer-motion@11.18.2?external=react,react-dom",
+      "lucide-react": "https://esm.sh/lucide-react@0.474.0?external=react"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <header>
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Librería React & Web Component
+    </div>
+    <h1>react-whatsapp-simulator</h1>
+    <p>
+      Simulador de conversaciones de WhatsApp en 3D interactivo con animaciones en tiempo real, 
+      indicador de tipeo y síntesis de efectos de sonido vía Web Audio API.
+    </p>
+  </header>
+
+  <main class="demo-container">
+    <div id="simulator-root">
+      <p style="color: #9ca3af; text-align: center; padding: 40px;">Cargando simulador...</p>
+    </div>
+
+    <!-- Key Features Grid -->
+    <section class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">📱</span>
+        <h3>Interfaz Fiel a WhatsApp</h3>
+        <p>Diseño en modo oscuro nativo, burbujas animadas con Framer Motion, aviso de cifrado y doble check azul.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🔊</span>
+        <h3>Audio Sintetizado</h3>
+        <p>Efectos de sonido procedimentales generados con Web Audio API al tipear, enviar y recibir mensajes sin assets .mp3.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🎨</span>
+        <h3>Inclinación 3D en Scroll</h3>
+        <p>Efecto de perspectiva tridimensional suave que reacciona de forma dinámica al hacer scroll en la página.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">⚡</span>
+        <h3>Multi-Framework</h3>
+        <p>Soporte nativo para React / Next.js y adaptador CustomElement (<code>&lt;whatsapp-simulator&gt;</code>) para Vue, Svelte y HTML plano.</p>
+      </div>
+    </section>
+
+    <!-- Quick Usage Code Block -->
+    <section class="code-section">
+      <div class="code-header">
+        <h3>💻 Instalación y Uso Rápido</h3>
+      </div>
+      <pre class="code-body"><code>npm install react-whatsapp-simulator framer-motion lucide-react
+
+import React from "react";
+import { WhatsAppSimulator } from "react-whatsapp-simulator";
+import "react-whatsapp-simulator/dist/whatsapp-simulator.css";
+
+const scripts = {
+  soporte: {
+    id: "soporte",
+    label: "Atención al Cliente AI",
+    description: "Flujo de resolución de consultas 24/7",
+    steps: [
+      { sender: "user", type: "text", content: "Hola, necesito ayuda con mi pedido.", delay: 500 },
+      { sender: "assistant", type: "text", content: "¡Hola! Con gusto te ayudo. ¿Me compartes tu número de orden?", delay: 1200 }
+    ]
+  }
+};
+
+export default function App() {
+  return (
+    &lt;WhatsAppSimulator
+      scripts={scripts}
+      assistantName="Asistenxa Support"
+      enable3DTilt={true}
+      enableSound={true}
+      locale="es"
+    /&gt;
+  );
+}</code></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>Desarrollado con ❤️ para <strong>ChambaPro</strong> & <strong>Asistenxa</strong> • Licencia MIT</p>
+  </footer>
+
+  <!-- Main React Loader script using ESM -->
+  <script type="module">
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+    import { WhatsAppSimulator } from './dist/index.mjs';
+
+    // Script definitions for the demo
+    const DEMO_SCRIPTS = {
+      ai_support: {
+        id: "ai_support",
+        label: "🤖 Asistente IA 24/7",
+        description: "Demostración de atención al cliente automatizada",
+        steps: [
+          { sender: "user", type: "text", content: "Hola! Quisiera saber el estado de mi solicitud #4092.", delay: 800 },
+          { sender: "assistant", type: "text", content: "¡Hola! Con gusto te ayudo. Estoy verificando tu solicitud en el sistema... 🔍", delay: 1500 },
+          { sender: "assistant", type: "text", content: "¡Listo! Tu solicitud de servicio ha sido aprobada y el técnico está asignado para hoy a las 15:00 hs. 🛠️", delay: 2000 },
+          { sender: "user", type: "text", content: "Excelente, ¡muchas gracias por la rapidez!", delay: 1200 },
+          { sender: "assistant", type: "text", content: "¡De nada! Recuerda que estoy disponible 24/7 si necesitas algo más. 👋", delay: 1000 }
+        ]
+      },
+      lead_qualifier: {
+        id: "lead_qualifier",
+        label: "💼 Cotización de Servicios",
+        description: "Calificación rápida de prospectos comerciales",
+        steps: [
+          { sender: "user", type: "text", content: "Buenas tardes, me interesa cotizar una plataforma web.", delay: 600 },
+          { sender: "assistant", type: "text", content: "¡Hola! Excelente decisión. Para darte un estimado preciso, ¿qué tipo de proyecto es?", delay: 1400 },
+          { sender: "user", type: "text", content: "Es un e-commerce para venta de productos digitales.", delay: 1000 },
+          { sender: "assistant", type: "text", content: "Perfecto. Te enviamos una propuesta preliminar en PDF con opciones de diseño y pasarela de pago. 📑", delay: 1800 }
+        ]
+      },
+      incident_intake: {
+        id: "incident_intake",
+        label: "🚨 Reporte de Incidentes",
+        description: "Recepción y seguimiento de reporte técnico",
+        steps: [
+          { sender: "user", type: "text", content: "Tengo un problema de conexión en la sucursal Centro.", delay: 700 },
+          { sender: "assistant", type: "text", content: "Entendido. He abierto el ticket #INC-883. Un especialista de soporte en sitio se está comunicando contigo.", delay: 1600 },
+          { sender: "assistant", type: "text", content: "Tiempo estimado de atención: 15 minutos. ⏱️", delay: 1200 }
+        ]
+      }
+    };
+
+    const container = document.getElementById('simulator-root');
+    const root = createRoot(container);
+
+    root.render(
+      React.createElement(WhatsAppSimulator, {
+        scripts: DEMO_SCRIPTS,
+        defaultActiveScriptId: "ai_support",
+        assistantName: "Asistenxa IA",
+        title: "Simulador Interactivo de WhatsApp",
+        description: "Elige un escenario para ver la simulación en tiempo real",
+        locale: "es",
+        enable3DTilt: true,
+        enableSound: true
+      })
+    );
+  </script>
+
+</body>
+</html>
