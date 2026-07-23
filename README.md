@@ -131,6 +131,19 @@ Include the Web Component in non-React applications:
 
 ---
 
+## 🌐 Live Demo & GitHub Pages
+
+La demostración interactiva está configurada para desplegarse automáticamente en GitHub Pages con cada push a `main`:
+
+🔗 **Demo en Vivo**: [https://rrortega.github.io/whatsimule/](https://rrortega.github.io/whatsimule/)
+
+### Configuración en el Repositorio:
+1. En GitHub ve a **Settings** > **Pages**.
+2. En **Source**, selecciona **GitHub Actions**.
+3. El workflow `.github/workflows/deploy-demo.yml` compilará la librería (`npm run build`) y desplegará la demo automáticamente.
+
+---
+
 ## 📄 License
 
 MIT © Asistenxa

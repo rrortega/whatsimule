@@ -2,6 +2,14 @@
   "name": "react-whatsapp-simulator",
   "version": "1.0.0",
   "description": "Interactive, animated 3D WhatsApp conversation simulator component for React and Web framework applications with Web Audio API sound synthesis.",
+  "homepage": "https://rrortega.github.io/whatsimule/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rrortega/whatsimule.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rrortega/whatsimule/issues"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
