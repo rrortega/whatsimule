@@ -142,3 +142,4 @@ Creado y mantenido por **Rolando R. Ortega**.
 ## 📄 Licencia
 
 Este proyecto es open-source y está licenciado bajo la [Licencia MIT](LICENSE). Cualquiera es libre de usarlo, modificarlo y distribuirlo en proyectos personales o comerciales.
+
