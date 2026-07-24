@@ -961,6 +961,7 @@
     }
 
     /* Code IDE Tab View */
+    /* Code IDE Tab View - Fully Responsive */
     .ide-card {
       background: #0d131a;
       border: 1px solid var(--border-color);
@@ -969,17 +970,22 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
-      height: 90dvh;
+      height: 80dvh;
+      max-height: 800px;
+      min-height: 420px;
+      width: 100%;
+      max-width: 100%;
     }
 
     .ide-header {
       background: #16202c;
-      padding: 12px 18px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--border-color);
       flex-shrink: 0;
+      gap: 8px;
     }
 
     body.demo-theme-light .ide-card {
@@ -1013,6 +1019,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-shrink: 0;
     }
 
     .dot {
@@ -1037,6 +1044,9 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.82rem;
       color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .copy-btn {
@@ -1051,6 +1061,8 @@
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
       transition: all 0.2s ease;
     }
 
@@ -1063,28 +1075,77 @@
       position: relative;
       flex: 1;
       min-height: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
+      -webkit-overflow-scrolling: touch;
     }
 
-    /* Prism line numbers override */
+    /* Prism line numbers & code responsive override */
     pre[class*="language-"] {
       flex: 1;
       margin: 0 !important;
       border-radius: 0 !important;
       background: transparent !important;
       font-family: 'JetBrains Mono', monospace !important;
-      font-size: 0.85rem !important;
-      line-height: 1.6 !important;
+      font-size: 0.82rem !important;
+      line-height: 1.55 !important;
+      overflow-x: auto !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      word-break: normal !important;
+      white-space: pre !important;
     }
 
     code[class*="language-"] {
       font-family: 'JetBrains Mono', monospace !important;
+      white-space: pre !important;
+      word-break: normal !important;
     }
 
     .line-numbers .line-numbers-rows {
       border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    @media (max-width: 1024px) {
+      .ide-card {
+        height: 65vh;
+        max-height: 600px;
+        min-height: 360px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .ide-card {
+        height: 60vh;
+        min-height: 320px;
+        border-radius: 12px;
+      }
+
+      .ide-header {
+        padding: 8px 12px;
+      }
+
+      .ide-title {
+        font-size: 0.75rem;
+      }
+
+      .copy-btn {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+      }
+
+      pre[class*="language-"] {
+        font-size: 0.74rem !important;
+        padding-left: 3.2em !important;
+      }
+
+      pre[class*="language-"].line-numbers {
+        padding-left: 3.2em !important;
+      }
     }
 
     /* Presentation & Author Section Styles */
