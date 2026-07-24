@@ -15,7 +15,7 @@ interface ChatHeaderProps {
 }
 
 export const ChatHeader: React.FC<ChatHeaderProps> = ({
-    assistantName = "Asistenxa AI",
+    assistantName = "RRORTEGA",
     assistantAvatarUrl,
     chatType = "direct",
     groupMembersText,
@@ -87,10 +87,10 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
                     {chatType === "group" ? (
                         <button type="button" className="rws-icon-btn" aria-label="Iniciar chat de voz grupal" title="Chat de voz grupal">
                             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="rws-header-icon">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                                <line x1="8" y1="8" x2="16" y2="8"/>
-                                <line x1="8" y1="11" x2="14" y2="11"/>
-                                <line x1="8" y1="14" x2="11" y2="14"/>
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                <line x1="8" y1="8" x2="16" y2="8" />
+                                <line x1="8" y1="11" x2="14" y2="11" />
+                                <line x1="8" y1="14" x2="11" y2="14" />
                             </svg>
                         </button>
                     ) : (

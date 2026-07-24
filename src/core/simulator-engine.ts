@@ -40,8 +40,8 @@ export class WhatsAppSimulatorEngine {
     private listeners: Set<StateListener> = new Set();
 
     private activeRunId: number = 0;
-    private timeoutIds: any[] = [];
-    private intervalId: any = null;
+    private timeoutIds: ReturnType<typeof setTimeout>[] = [];
+    private intervalId: ReturnType<typeof setInterval> | null = null;
 
     private state: SimulatorState;
 

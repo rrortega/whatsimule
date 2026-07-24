@@ -19,7 +19,7 @@ export const WhatsAppSimulator: React.FC<WhatsAppSimulatorProps> = ({
     scripts = {},
     customScripts,
     defaultActiveScriptId,
-    assistantName = "Asistenxa AI",
+    assistantName = "RRORTEGA",
     assistantAvatarUrl,
     chatType = "direct",
     groupMembersText,
@@ -238,10 +238,10 @@ export const WhatsAppSimulator: React.FC<WhatsAppSimulatorProps> = ({
                             style={
                                 customWallpaperUrl
                                     ? {
-                                          backgroundImage: `url("${customWallpaperUrl}")`,
-                                          backgroundSize: "cover",
-                                          backgroundPosition: "center",
-                                      }
+                                        backgroundImage: `url("${customWallpaperUrl}")`,
+                                        backgroundSize: "cover",
+                                        backgroundPosition: "center",
+                                    }
                                     : undefined
                             }
                         >

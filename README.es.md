@@ -107,7 +107,7 @@ export default function App() {
 | :--- | :--- | :--- | :--- |
 | `scripts` | `Record<string, ChatScript>` | `{}` | Diccionario de guiones conversacionales con pasos (`text`, `image`, `audio`). |
 | `defaultActiveScriptId` | `string` | `undefined` | ID del guión activo predeterminado a ejecutar. |
-| `assistantName` | `string` | `"Asistenxa AI"` | Nombre del contacto o grupo mostrado en el encabezado. |
+| `assistantName` | `string` | `"RRORTEGA"` | Nombre del contacto o grupo mostrado en el encabezado. |
 | `assistantAvatarUrl` | `string` | `undefined` | URL de la imagen de perfil del contacto. |
 | `chatType` | `"direct" \| "group"` | `"direct"` | Modo de conversación en encabezado (Chat Privado o Grupal). |
 | `wallpaperPattern` | `"doodle" \| "dots" \| "grid"` | `"doodle"` | Patrón de fondo del chat. |
@@ -134,8 +134,10 @@ Creado y mantenido por **Rolando R. Ortega**.
 ¡Las contribuciones, sugerencias y reportes de errores son más que bienvenidos!
 
 - ⭐ **Deja tu estrella en GitHub**: Si esta librería te fue útil, ¡deja tu estrella en [GitHub](https://github.com/rrortega/whatsimule) para apoyar el proyecto!
-- 🐛 **Abre un Issue**: ¿Encontraste un bug o tienes una idea para mejorar? Abre un issue en [GitHub Issues](https://github.com/rrortega/whatsimule/issues).
 - 🔀 **Envía tu Pull Request**: Siente libre de enviar un Pull Request en [GitHub Pull Requests](https://github.com/rrortega/whatsimule/pulls).
+- 🐛 **Abre un Issue**: ¿Encontraste un bug o tienes una idea para mejorar? Abre un issue en [GitHub Issues](https://github.com/rrortega/whatsimule/issues).
+- 👤 **Perfil de GitHub**: Conoce más proyectos en [GitHub (@rrortega)](https://github.com/rrortega).
+- 👔 **LinkedIn**: Conéctate en [LinkedIn](https://www.linkedin.com/in/rrortega/).
 
 ---
 

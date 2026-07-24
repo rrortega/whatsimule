@@ -106,7 +106,7 @@ export default function App() {
 | :--- | :--- | :--- | :--- |
 | `scripts` | `Record<string, ChatScript>` | `{}` | Dictionary of conversation scripts with steps (`text`, `image`, `audio`). |
 | `defaultActiveScriptId` | `string` | `undefined` | ID of the default active script to run automatically. |
-| `assistantName` | `string` | `"Asistenxa AI"` | Contact or group name displayed in the header. |
+| `assistantName` | `string` | `"RRORTEGA"` | Contact or group name displayed in the header. |
 | `assistantAvatarUrl` | `string` | `undefined` | Image URL for the contact profile picture. |
 | `chatType` | `"direct" \| "group"` | `"direct"` | Chat header layout mode (Direct or Group chat). |
 | `wallpaperPattern` | `"doodle" \| "dots" \| "grid"` | `"doodle"` | Built-in chat background pattern style. |
@@ -133,6 +133,7 @@ Created and maintained by **Rolando R. Ortega**.
 Contributions, issue reports, and feature requests are very welcome!
 
 - ⭐ **Star on GitHub**: If you like this project, please give it a star on [GitHub](https://github.com/rrortega/whatsimule)!
+- 👔 **LinkedIn**: Connect on [LinkedIn](https://www.linkedin.com/in/rrortega/).
 - 🐛 **Open an Issue**: Found a bug or have a feature idea? Open an issue on [GitHub Issues](https://github.com/rrortega/whatsimule/issues).
 - 🔀 **Submit a PR**: Feel free to submit a Pull Request on [GitHub Pull Requests](https://github.com/rrortega/whatsimule/pulls).
 
