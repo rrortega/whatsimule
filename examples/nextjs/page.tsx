@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { WhatsAppSimulator, ChatScript } from "rrortega-whatsimule";
+import { WhatSimule, ChatScript } from "rrortega-whatsimule";
 import "rrortega-whatsimule/dist/whatsapp-simulator.css";
 
 const demoScripts: Record<string, ChatScript> = {
@@ -19,7 +19,7 @@ const demoScripts: Record<string, ChatScript> = {
 export default function NextJSExamplePage() {
   return (
     <main style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", padding: "2rem" }}>
-      <WhatsAppSimulator
+      <WhatSimule
         scripts={demoScripts}
         assistantName="Rolando AI"
         deviceStyle="iphone"

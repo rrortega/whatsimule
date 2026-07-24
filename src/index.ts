@@ -12,10 +12,10 @@ export type {
 } from "./core/types";
 
 // React exports
-export { WhatsAppSimulator } from "./react/WhatsAppSimulator";
+export { WhatSimule, WhatsAppSimulator } from "./react/WhatsAppSimulator";
 export { useWhatsAppSimulator } from "./react/useWhatsAppSimulator";
 export { VirtualKeyboard } from "./react/components/VirtualKeyboard";
-export type { WhatsAppSimulatorProps } from "./react/WhatsAppSimulator";
+export type { WhatSimuleProps, WhatsAppSimulatorProps } from "./react/WhatsAppSimulator";
 
 // Web Component export
 export { WhatsAppSimulatorElement } from "./web-component/whatsapp-simulator-element";

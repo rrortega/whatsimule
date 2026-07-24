@@ -1,5 +1,5 @@
 import React from "react";
-import { WhatsAppSimulator, ChatScript } from "rrortega-whatsimule";
+import { WhatSimule, ChatScript } from "rrortega-whatsimule";
 import "rrortega-whatsimule/dist/whatsapp-simulator.css";
 
 const demoScripts: Record<string, ChatScript> = {
@@ -17,7 +17,7 @@ const demoScripts: Record<string, ChatScript> = {
 export default function App() {
   return (
     <div style={{ padding: "2rem", display: "flex", justifyContent: "center" }}>
-      <WhatsAppSimulator
+      <WhatSimule
         scripts={demoScripts}
         assistantName="Vite Assistant"
         deviceStyle="android"

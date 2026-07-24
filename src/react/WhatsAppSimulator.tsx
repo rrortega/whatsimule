@@ -9,13 +9,15 @@ import { ChatInput } from "./components/ChatInput";
 import { VirtualKeyboard } from "./components/VirtualKeyboard";
 import { ScriptSelector } from "./components/ScriptSelector";
 
-export interface WhatsAppSimulatorProps extends WhatsAppSimulatorOptions, SimulatorEventHandlers {
+export interface WhatSimuleProps extends WhatsAppSimulatorOptions, SimulatorEventHandlers {
     scripts?: Record<string, ChatScript>;
     className?: string;
     style?: React.CSSProperties;
 }
 
-export const WhatsAppSimulator: React.FC<WhatsAppSimulatorProps> = ({
+export type WhatsAppSimulatorProps = WhatSimuleProps;
+
+export const WhatSimule: React.FC<WhatSimuleProps> = ({
     scripts = {},
     customScripts,
     defaultActiveScriptId,
@@ -399,3 +401,5 @@ export const WhatsAppSimulator: React.FC<WhatsAppSimulatorProps> = ({
         </div>
     );
 };
+
+export const WhatsAppSimulator = WhatSimule;

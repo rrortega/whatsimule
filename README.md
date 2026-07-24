@@ -61,7 +61,7 @@ import "rrortega-whatsimule/dist/whatsapp-simulator.css";
 
 ```tsx
 import React from "react";
-import { WhatsAppSimulator, ChatScript } from "rrortega-whatsimule";
+import { WhatSimule, ChatScript } from "rrortega-whatsimule";
 import "rrortega-whatsimule/dist/whatsapp-simulator.css";
 
 const customScripts: Record<string, ChatScript> = {
@@ -82,7 +82,7 @@ const customScripts: Record<string, ChatScript> = {
 
 export default function App() {
   return (
-    <WhatsAppSimulator
+    <WhatSimule
       scripts={customScripts}
       defaultActiveScriptId="ai_support"
       assistantName="Rolando AI"
