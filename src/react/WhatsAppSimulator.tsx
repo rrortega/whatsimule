@@ -115,15 +115,28 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
 
     const captionTextareaRef = useRef<HTMLTextAreaElement>(null);
 
-    // Auto-scroll internal chat container to bottom on new messages or typing
+    // Auto-scroll internal chat container to bottom on new messages, typing, or keyboard open
     useEffect(() => {
-        if (chatBodyRef.current) {
-            chatBodyRef.current.scrollTo({
-                top: chatBodyRef.current.scrollHeight,
-                behavior: "smooth"
-            });
-        }
-    }, [state.messages, state.isTyping]);
+        const scrollToBottom = () => {
+            if (chatBodyRef.current) {
+                chatBodyRef.current.scrollTo({
+                    top: chatBodyRef.current.scrollHeight,
+                    behavior: "smooth"
+                });
+            }
+        };
+
+        scrollToBottom();
+
+        // Additional timers ensure chat auto-scrolls cleanly as keyboard finishes opening
+        const timer1 = setTimeout(scrollToBottom, 60);
+        const timer2 = setTimeout(scrollToBottom, 180);
+
+        return () => {
+            clearTimeout(timer1);
+            clearTimeout(timer2);
+        };
+    }, [state.messages, state.isTyping, state.isKeyboardOpen, state.inputValue]);
 
     // Auto-expand caption textarea in media preview screen
     useEffect(() => {
