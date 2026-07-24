@@ -1141,24 +1141,87 @@
       text-align: left;
     }
 
+    @keyframes rotateClockwise {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
     .feature-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 24px;
-      transition: all 0.25s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       position: relative;
       overflow: hidden;
+      z-index: 1;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 270deg,
+        #00a884 310deg,
+        #25d366 345deg,
+        #ffffff 360deg
+      );
+      animation: rotateClockwise 3s linear infinite;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      inset: 1.5px;
+      background: var(--bg-card);
+      border-radius: 14.5px;
+      z-index: -1;
+      transition: background 0.3s ease;
     }
 
     .feature-card:hover {
-      border-color: rgba(0, 168, 132, 0.4);
-      transform: translateY(-3px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      border-color: transparent;
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px rgba(0, 168, 132, 0.22);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
     }
 
     body.demo-theme-light .feature-card:hover {
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 16px 36px rgba(0, 168, 132, 0.15);
+    }
+
+    /* Mouse Cursor Spotlight Glow */
+    #mouse-spotlight {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 500px;
+      height: 500px;
+      margin-top: -250px;
+      margin-left: -250px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 168, 132, 0.15) 0%, rgba(37, 211, 102, 0.05) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 9999;
+      transition: opacity 0.3s ease;
+      opacity: 0;
     }
 
     .feature-icon {
@@ -1496,6 +1559,8 @@
 </head>
 
 <body>
+  <!-- Mouse Spotlight Glow Follower -->
+  <div id="mouse-spotlight"></div>
 
   <!-- Top Navigation Header -->
   <nav class="top-nav">
@@ -2919,6 +2984,18 @@ export default function App() {
         }
       });
     });
+
+    // Mouse Cursor Spotlight Glow Follower
+    const spotlight = document.getElementById('mouse-spotlight');
+    if (spotlight) {
+      window.addEventListener('mousemove', (e) => {
+        spotlight.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+        spotlight.style.opacity = '1';
+      });
+      document.addEventListener('mouseleave', () => {
+        spotlight.style.opacity = '0';
+      });
+    }
   </script>
 
 </body>
