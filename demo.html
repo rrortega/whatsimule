@@ -1615,7 +1615,24 @@
           Escenarios de Prueba
         </h3>
         <div class="script-card-list" id="script-card-list">
-          <div class="script-card-item active" data-value="ai_support">
+          <div class="script-card-item active" data-value="about_library">
+            <div class="script-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
+                <path d="M12 6a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V7a1 1 0 0 0-1-1zm0 8a1.25 1.25 0 1 0 1.25 1.25A1.25 1.25 0 0 0 12 14z" />
+              </svg>
+            </div>
+            <div class="script-card-content">
+              <div class="script-card-header">
+                <span class="script-card-title">💡 ¿Qué es esta librería?</span>
+                <span class="script-card-tag">Presentación</span>
+              </div>
+              <p class="script-card-desc">Diálogo fluido y divertido sobre el propósito de WhatSimule.</p>
+            </div>
+          </div>
+
+          <div class="script-card-item" data-value="ai_support">
             <div class="script-card-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -2482,6 +2499,20 @@
 
     // Conversation Scripts Data
     const DEMO_SCRIPTS = {
+      about_library: {
+        id: "about_library",
+        label: "💡 ¿Qué es esta librería?",
+        description: "Explicación interactiva con toque de humor sobre WhatSimule",
+        steps: [
+          { sender: "user", type: "text", content: "Oye, ¿de qué va esta librería y para qué me sirve en mi web?", delay: 800 },
+          { sender: "assistant", type: "text", content: "¡Hola! 👋 Se llama WhatSimule (rrortega-whatsimule). Sirve para simular conversaciones hiperrealistas de WhatsApp en tus landing pages o apps.", delay: 1600 },
+          { sender: "user", type: "text", content: "Mmm... ¿Y por qué pondría un chat animado en mi landing? 🧐", delay: 1200 },
+          { sender: "assistant", type: "text", content: "¡Porque nadie lee textos largos! 😅 Un chat en vivo muestra lo que hace tu producto, SaaS o IA en 5 segundos sin aburrir a nadie.", delay: 2000 },
+          { sender: "user", type: "text", content: "Oye, ¡y tiene animación de teclado QWERTY y notas de voz reales!", delay: 1400 },
+          { sender: "assistant", type: "text", content: "¡Claro! Tipeo tecla por tecla, Web Audio API nativo, fotos a pantalla completa y cero dependencias pesadas. Hecho por @rrortega con mucho ❤️.", delay: 2200 },
+          { sender: "user", type: "text", content: "¡Está genial! Voy a instalarlo y darle una estrella en GitHub ⭐", delay: 1200 }
+        ]
+      },
       ai_support: {
         id: "ai_support",
         label: "🤖 Asistente IA 24/7",
@@ -2558,7 +2589,7 @@
 
     // State management for playground
     let currentConfig = {
-      scriptId: "ai_support",
+      scriptId: "about_library",
       assistantName: "RRORTEGA",
       assistantAvatarUrl: customAvatarUrl,
       chatType: "direct",
@@ -2653,7 +2684,7 @@ export default function App() {
 
         const getSelectedScriptId = () => {
           const activeCard = document.querySelector('#script-card-list .script-card-item.active');
-          return activeCard ? activeCard.dataset.value : 'ai_support';
+          return activeCard ? activeCard.dataset.value : 'about_library';
         };
 
         const getGroupValue = (groupId, fallback) => {
