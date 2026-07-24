@@ -143,7 +143,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
                 ) : (
                     <div className="rws-text-content">
                         <span>{cleanContent}</span>
-                        {link && <LinkPreviewBadge linkUrl={link} />}
+                        {link && <LinkPreviewBadge linkUrl={link} previewData={message.linkPreview} />}
                     </div>
                 )}
 

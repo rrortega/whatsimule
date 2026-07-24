@@ -3,6 +3,14 @@ import React from "react";
 export type MessageSender = "user" | "resident" | "assistant" | "asistenxa";
 export type MessageType = "text" | "image" | "audio";
 
+export interface LinkPreviewData {
+    url: string;
+    title?: string;
+    description?: string;
+    image?: string;
+    siteName?: string;
+}
+
 export interface Message {
     id: string;
     sender: MessageSender;
@@ -16,6 +24,7 @@ export interface Message {
     caption?: string;
     audioDuration?: string;
     audioUrl?: string;
+    linkPreview?: LinkPreviewData;
 }
 
 export interface ScriptStep {
@@ -28,6 +37,7 @@ export interface ScriptStep {
     caption?: string;
     audioDuration?: string;
     audioUrl?: string;
+    linkPreview?: LinkPreviewData;
 }
 
 export interface ChatScript {

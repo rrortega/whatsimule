@@ -217,6 +217,7 @@ export class WhatsAppSimulatorEngine {
                         timestamp,
                         senderName: step.senderName,
                         senderColor: step.senderColor,
+                        linkPreview: step.linkPreview,
                     };
 
                     this.updateState({
