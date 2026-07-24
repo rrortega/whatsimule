@@ -15,6 +15,8 @@ Una librería interactiva y pixel-perfect para **React** y **Next.js** que simul
 Prueba el playground interactivo y personaliza todas las opciones en tiempo real:
 👉 **[https://rrortega.github.io/whatsimule/](https://rrortega.github.io/whatsimule/)**
 
+![whatsimule Playground Preview](preview.png)
+
 ---
 
 ## ✨ Características Principales

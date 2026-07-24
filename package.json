@@ -17,7 +17,8 @@
     "dist",
     "README.md",
     "README.es.md",
-    "LICENSE"
+    "LICENSE",
+    "preview.png"
   ],
   "scripts": {
     "build": "tsup",

@@ -15,6 +15,8 @@ An interactive, pixel-perfect WhatsApp conversation simulator library for **Reac
 Try the live playground and customize all options in real-time:
 👉 **[https://rrortega.github.io/whatsimule/](https://rrortega.github.io/whatsimule/)**
 
+![whatsimule Playground Preview](preview.png)
+
 ---
 
 ## ✨ Features
