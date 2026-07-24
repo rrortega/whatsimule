@@ -222,12 +222,14 @@
       padding: 0;
     }
 
-    body {
+    html, body {
       font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       background-color: var(--bg-dark);
       color: var(--text-main);
       min-height: 100vh;
       padding: 20px 24px 60px;
+      overflow-x: hidden;
+      width: 100%;
     }
 
     /* Ambient Background Glow */
@@ -351,18 +353,20 @@
     /* Main Grid Layout */
     .playground-grid {
       max-width: 1320px;
+      width: 100%;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 380px 1fr;
+      grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
       gap: 32px;
       align-items: start;
       position: relative;
       z-index: 1;
+      box-sizing: border-box;
     }
 
     @media (max-width: 1024px) {
       .playground-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
     }
 
@@ -897,6 +901,9 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      min-width: 0;
+      width: 100%;
+      max-width: 100%;
     }
 
     /* Tabs Header */
