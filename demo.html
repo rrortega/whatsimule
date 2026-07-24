@@ -2692,17 +2692,18 @@
       const codeSnippet = document.getElementById('code-snippet');
       if (!codeSnippet) return;
 
+      const activeScript = DEMO_SCRIPTS[currentConfig.scriptId] || DEMO_SCRIPTS.about_library;
+
       const codeText = `import React from "react";
-import { WhatsAppSimulator, ChatScript } from "rrortega-whatsimule";
+import { WhatSimule, ChatScript } from "rrortega-whatsimule";
 import "rrortega-whatsimule/dist/whatsapp-simulator.css";
 
-const customScripts: Record<string, ChatScript> = ${JSON.stringify(DEMO_SCRIPTS, null, 2)};
+const activeScript: ChatScript = ${JSON.stringify(activeScript, null, 2)};
 
 export default function App() {
   return (
-    <WhatsAppSimulator
-      scripts={customScripts}
-      defaultActiveScriptId="${currentConfig.scriptId}"
+    <WhatSimule
+      scripts={{ [activeScript.id]: activeScript }}
       assistantName="${currentConfig.assistantName}"
       ${currentConfig.assistantAvatarUrl ? `assistantAvatarUrl="${currentConfig.assistantAvatarUrl.substring(0, 30)}..."\n      ` : ""}chatType="${currentConfig.chatType}"
       wallpaperPattern="${currentConfig.wallpaperPattern}"
