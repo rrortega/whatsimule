@@ -1,6 +1,6 @@
 🇪🇸 Español | [🇬🇧 Read in English](README.md)
 
-# rrortega-whatsimule (`react-whatsapp-simulator`)
+# rrortega-whatsimule
 
 [![npm version](https://img.shields.io/npm/v/rrortega-whatsimule.svg)](https://www.npmjs.com/package/rrortega-whatsimule)
 [![licencia](https://img.shields.io/npm/l/rrortega-whatsimule.svg)](LICENSE)
