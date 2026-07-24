@@ -18,7 +18,7 @@ export const LinkPreviewBadge: React.FC<LinkPreviewBadgeProps> = ({ linkUrl, lab
             }}
         >
             <div className="rws-link-preview-icon">
-                <ExternalLink className="w-3.5 h-3.5" />
+                <ExternalLink size={14} />
             </div>
             <div className="rws-link-preview-info">
                 <span className="rws-link-preview-title">{label}</span>

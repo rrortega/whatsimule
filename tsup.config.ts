@@ -1,7 +1,11 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/styles/whatsapp-simulator.css"],
+  entry: {
+    index: "src/index.ts",
+    "whatsapp-simulator": "src/styles/whatsapp-simulator.css",
+    "styles/whatsapp-simulator": "src/styles/whatsapp-simulator.css",
+  },
   format: ["cjs", "esm"],
   dts: true,
   clean: true,

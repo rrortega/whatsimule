@@ -32,22 +32,22 @@
     margin: 0 0 1rem 0;
 }
 
-/* Script Selector */
+/* Script Selector Chips */
 .rws-script-selector {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .rws-script-chip {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    padding: 0.5rem 0.875rem;
+    padding: 0.5rem 1rem;
     border-radius: 9999px;
-    font-size: 0.825rem;
+    font-size: 0.85rem;
     font-weight: 600;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -65,68 +65,299 @@
     background: #00a884 !important;
     border-color: #00a884 !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 12px rgba(0, 168, 132, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 168, 132, 0.35);
 }
 
-/* Phone Frame */
+/* 3D Perspective Wrapper */
+.rws-perspective-container {
+    perspective: 1200px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0;
+}
+
+/* Phone Wrapper Outer Shell */
+.rws-phone-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Phone Frame Screen Shell (Clips inner headers and content to rounded corners) */
 .rws-phone-frame {
     position: relative;
-    border-radius: 36px;
+    width: 100%;
+    height: 680px;
+    display: flex;
+    flex-direction: column;
     background: #0b141a;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 168, 132, 0.15);
     overflow: hidden;
-    transform-origin: center center;
+    isolation: isolate;
+    transform-style: preserve-3d;
+    transition: background-color 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
-.rws-phone-notch {
+/* Physical Phone Hardware Side Buttons */
+.rws-side-btn {
+    position: absolute;
+    background: #52596b;
+    border-radius: 2px;
+    z-index: 60;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+/* iPhone Specific Phone Frame & Hardware Buttons */
+.rws-device-iphone.rws-phone-frame {
+    border-radius: 44px;
+    border: 10px solid #282c37;
+    box-shadow: 
+        0 0 0 2px #4b5266,
+        0 0 0 4px rgba(0, 0, 0, 0.6),
+        0 25px 70px rgba(0, 0, 0, 0.9),
+        0 0 40px rgba(0, 168, 132, 0.25);
+}
+
+/* Frameless (No Phone Outer Border or Hardware Shell) */
+.rws-device-none.rws-phone-frame {
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+}
+
+.rws-phone-wrapper .rws-iphone-mute {
+    left: -13px;
+    top: 60px;
+    width: 3px;
+    height: 16px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: -1px 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.rws-phone-wrapper .rws-iphone-vol-up {
+    left: -13px;
+    top: 95px;
+    width: 3px;
+    height: 34px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: -1px 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.rws-phone-wrapper .rws-iphone-vol-down {
+    left: -13px;
+    top: 140px;
+    width: 3px;
+    height: 34px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: -1px 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.rws-phone-wrapper .rws-iphone-power {
+    right: -13px;
+    top: 110px;
+    width: 3px;
+    height: 48px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    box-shadow: 1px 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Dynamic Island / iPhone Top Notch */
+.rws-phone-notch-container {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    pointer-events: none;
+}
+
+.rws-dynamic-island {
+    width: 105px;
     height: 24px;
-    background: #111b21;
+    background: #000000;
+    border-radius: 18px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
+    justify-content: space-between;
+    padding: 0 10px;
 }
 
 .rws-camera-lens {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #050a0e;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #080d14;
+    border: 1px solid #182230;
 }
 
 .rws-speaker-grille {
-    width: 40px;
-    height: 4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #080d14;
+    border: 1px solid #182230;
+}
+
+/* Android Specific Phone Frame & Hardware Buttons */
+.rws-device-android.rws-phone-frame {
+    border-radius: 24px;
+    border: 8px solid #2d323e;
+    box-shadow: 
+        0 0 0 2px #4f576b,
+        0 0 0 4px rgba(0, 0, 0, 0.6),
+        0 25px 70px rgba(0, 0, 0, 0.9),
+        0 0 40px rgba(0, 168, 132, 0.25);
+}
+
+.rws-phone-wrapper .rws-android-vol {
+    right: -11px;
+    top: 80px;
+    width: 3px;
+    height: 52px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    box-shadow: 1px 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.rws-phone-wrapper .rws-android-power {
+    right: -11px;
+    top: 148px;
+    width: 3px;
+    height: 28px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    box-shadow: 1px 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.rws-android-speaker-slit {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 3px;
     border-radius: 2px;
-    background: #1f2c34;
+    background: #25282e;
+}
+
+.rws-android-punchhole-container {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    pointer-events: none;
+}
+
+.rws-android-punchhole {
+    width: 11px;
+    height: 11px;
+    background: #000000;
+    border-radius: 50%;
+    border: 1px solid #22252a;
+    box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.rws-android-nav-bar {
+    background: #202c33;
+    padding: 6px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #aebac1;
+    transition: background-color 0.3s ease;
+}
+
+.rws-android-nav-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    opacity: 0.8;
+}
+
+.rws-status-battery-pct {
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* Status Bar */
+.rws-header-wrapper {
+    background: #202c33;
+    padding-top: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.rws-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 20px 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #e9edef;
+    opacity: 0.9;
+}
+
+.rws-status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rws-status-5g {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.rws-status-icon {
+    color: inherit;
 }
 
 /* Chat Header */
 .rws-header {
     background: #202c33;
-    padding: 10px 14px;
+    padding: 8px 14px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.3s ease;
 }
 
 .rws-header-left {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .rws-back-button {
     background: none;
     border: none;
-    color: #aebac1;
+    color: inherit;
     cursor: pointer;
     padding: 2px;
     display: flex;
     align-items: center;
+    border-radius: 50%;
 }
 
 .rws-avatar-container {
@@ -147,7 +378,7 @@
     height: 100%;
     border-radius: 50%;
     background: #00a884;
-    color: #fff;
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -157,8 +388,8 @@
 
 .rws-status-indicator {
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: 1px;
+    right: 1px;
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -176,32 +407,37 @@
     font-weight: 600;
     margin: 0;
     color: #e9edef;
+    line-height: 1.2;
 }
 
 .rws-header-status {
-    font-size: 12px;
+    font-size: 11.5px;
     color: #00a884;
     margin: 0;
+    line-height: 1.2;
 }
 
 .rws-header-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
 }
 
 .rws-icon-btn {
     background: none;
     border: none;
-    color: #aebac1;
+    color: inherit;
     cursor: pointer;
     padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 50%;
     transition: color 0.15s ease;
 }
 
-.rws-icon-btn:hover {
-    color: #e9edef;
+.rws-header-icon {
+    color: inherit;
 }
 
 /* Progress Bar */
@@ -217,16 +453,92 @@
     transition: width 0.1s linear;
 }
 
-/* Chat Body */
+/* Chat Body & WhatsApp Wallpaper */
 .rws-chat-body {
     background-color: #0b141a;
-    background-image: radial-gradient(#182229 1px, transparent 1px);
-    background-size: 20px 20px;
-    height: 440px;
-    padding: 14px;
+    flex: 1;
+    min-height: 0;
+    padding: 12px 12px 16px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    transition: background-color 0.3s ease;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Wallpaper Patterns */
+.rws-wallpaper-doodle {
+    background-image: 
+        radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-position: 0 0, 12px 12px;
+}
+
+.rws-wallpaper-dots {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.5px, transparent 1.5px);
+    background-size: 16px 16px;
+}
+
+.rws-wallpaper-grid {
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.rws-theme-light .rws-wallpaper-doodle {
+    background-image: 
+        radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+}
+
+.rws-theme-light .rws-wallpaper-dots {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.1) 1.5px, transparent 1.5px);
+}
+
+.rws-theme-light .rws-wallpaper-grid {
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+}
+
+.rws-sender-name {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    line-height: 1.2;
+}
+
+/* Custom Scrollbar for Chat Body */
+.rws-chat-body::-webkit-scrollbar {
+    width: 5px;
+}
+
+.rws-chat-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.rws-chat-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.rws-chat-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 168, 132, 0.7);
+}
+
+.rws-theme-light .rws-chat-body {
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.rws-theme-light .rws-chat-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.rws-theme-light .rws-chat-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 168, 132, 0.7);
 }
 
 .rws-encryption-notice {
@@ -239,6 +551,7 @@
     margin-bottom: 14px;
     text-align: center;
     border: 1px solid rgba(255, 210, 125, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .rws-messages-list {
@@ -251,6 +564,7 @@
 .rws-message-wrapper {
     display: flex;
     width: 100%;
+    margin-bottom: 2px;
 }
 
 .rws-message-user {
@@ -264,23 +578,72 @@
 .rws-message-bubble {
     position: relative;
     max-width: 82%;
-    padding: 7px 10px;
+    padding: 6px 9px 6px 10px;
     border-radius: 8px;
     font-size: 13.5px;
     line-height: 19px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
 }
 
 .rws-message-user .rws-message-bubble {
     background: #005c4b;
     color: #e9edef;
-    border-top-right-radius: 2px;
+    border-top-right-radius: 0;
 }
 
 .rws-message-assistant .rws-message-bubble {
     background: #202c33;
     color: #e9edef;
-    border-top-left-radius: 2px;
+    border-top-left-radius: 0;
+}
+
+.rws-theme-light .rws-message-bubble {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+}
+
+.rws-theme-light .rws-message-user .rws-message-bubble {
+    background: #d9fdd3;
+    color: #111b21;
+}
+
+.rws-theme-light .rws-message-assistant .rws-message-bubble {
+    background: #ffffff;
+    color: #111b21;
+}
+
+/* Bubble SVG Tails */
+.rws-bubble-tail {
+    position: absolute;
+    top: 0;
+    z-index: 2;
+}
+
+.rws-tail-right {
+    right: -8px;
+}
+
+.rws-tail-left {
+    left: -8px;
+}
+
+.rws-bubble-tail-path {
+    transition: fill 0.3s ease;
+}
+
+.rws-message-assistant .rws-bubble-tail-path {
+    fill: #202c33;
+}
+
+.rws-message-user .rws-bubble-tail-path {
+    fill: #005c4b;
+}
+
+.rws-theme-light .rws-message-assistant .rws-bubble-tail-path {
+    fill: #ffffff;
+}
+
+.rws-theme-light .rws-message-user .rws-bubble-tail-path {
+    fill: #d9fdd3;
 }
 
 .rws-text-content {
@@ -293,12 +656,15 @@
     justify-content: flex-end;
     gap: 3px;
     margin-top: 2px;
-    font-size: 10px;
+    font-size: 10.5px;
     color: #8696a0;
+    float: right;
+    margin-left: 12px;
 }
 
 .rws-read-receipt {
     color: #53bdeb;
+    margin-left: 2px;
 }
 
 /* Image content */
@@ -313,30 +679,438 @@
     width: 100%;
     height: auto;
     display: block;
+    border-radius: 4px;
+}
+
+.rws-image-caption {
+    margin-top: 6px;
+    font-size: 13.5px;
+    line-height: 18px;
+    word-break: break-word;
+    color: inherit;
+    padding: 0 2px 2px;
+}
+
+/* Audio Voice Note Player */
+.rws-audio-player {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 2px;
+    min-width: 210px;
+}
+
+.rws-audio-avatar-badge {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #00a884;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.rws-audio-play-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: opacity 0.15s ease;
+}
+
+.rws-audio-play-btn:hover {
+    opacity: 0.8;
+}
+
+.rws-audio-waveform-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rws-audio-waveform-track {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 20px;
+}
+
+.rws-waveform-bar {
+    width: 2.5px;
+    background: #8696a0;
+    border-radius: 2px;
+    transition: background-color 0.2s ease;
+}
+
+.rws-waveform-bar.active {
+    background: #00a884;
+}
+
+.rws-audio-duration {
+    font-size: 11px;
+    color: #8696a0;
+}
+
+.rws-audio-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rws-audio-transcription {
+    font-size: 12.5px;
+    font-style: italic;
+    color: #8696a0;
+    line-height: 1.4;
+    padding-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rws-theme-light .rws-audio-transcription {
+    color: #667781;
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.rws-image-blur {
+    filter: blur(4px) brightness(0.7);
+    transition: filter 0.4s ease;
 }
 
 .rws-upload-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.rws-upload-ring-box {
+    position: relative;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.rws-progress-circle {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top-color: #00a884;
+.rws-upload-circle-svg {
+    transform: rotate(-90deg);
+}
+
+.rws-upload-circle-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.25);
+    stroke-width: 3.5;
+}
+
+.rws-upload-circle-progress {
+    fill: none;
+    stroke: #00a884;
+    stroke-width: 3.5;
+    stroke-dasharray: 125.66;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.25s linear;
+}
+
+.rws-upload-center-icon {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* WhatsApp Full-Screen Media Preview Screen */
+.rws-media-preview-screen {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    background: #0b141a;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    user-select: none;
+}
+
+.rws-media-preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    color: #e9edef;
+    background: rgba(11, 20, 26, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+}
+
+.rws-media-icon-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rws-media-tools {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.rws-media-tool-icon {
+    color: #aebac1;
+    cursor: pointer;
+}
+
+.rws-media-preview-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    overflow: hidden;
+    background: #000000;
+}
+
+.rws-media-preview-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.rws-media-preview-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: rgba(11, 20, 26, 0.95);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rws-media-caption-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #1f2c34;
+    border-radius: 20px;
+    padding: 6px 12px;
+}
+
+.rws-caption-smile-icon {
+    color: #8696a0;
+    flex-shrink: 0;
+}
+
+.rws-media-caption-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #e9edef;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    resize: none;
+    height: 24px;
+    max-height: 120px;
+    line-height: 20px;
+    overflow-y: auto;
+}
+
+.rws-media-caption-input::placeholder {
+    color: #8696a0;
+}
+
+/* WhatsApp Voice Recording Hands-Free Control Bar */
+.rws-audio-recording-bar {
+    background: #111b21;
+    padding: 8px 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    user-select: none;
+    z-index: 20;
+}
+
+.rws-rec-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 4px;
+}
+
+.rws-rec-timer-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 55px;
+}
+
+.rws-rec-red-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #ea4335;
+    animation: rws-pulse-red 1s infinite alternate;
+}
+
+@keyframes rws-pulse-red {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0.3; transform: scale(0.85); }
+}
+
+.rws-rec-timer {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #e9edef;
+    font-family: monospace;
+}
+
+.rws-rec-waveform {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5px;
+    height: 22px;
+}
+
+.rws-rec-wave-bar {
+    width: 3px;
+    background: #ea4335;
+    border-radius: 3px;
+    transition: height 0.15s ease;
+}
+
+.rws-rec-wave-bar.paused {
+    background: #8696a0;
+}
+
+.rws-rec-view-once {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px dashed #00a884;
+    color: #00a884;
     font-size: 11px;
-    font-weight: bold;
-    color: #fff;
-    animation: rws-spin 1s linear infinite;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rws-rec-bottom-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.rws-rec-trash-btn {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.15s ease;
+}
+
+.rws-rec-trash-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.rws-rec-pause-pill {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #202c33;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e9edef;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.rws-rec-pause-pill:hover {
+    background: #2a3942;
+}
+
+.rws-theme-light .rws-audio-recording-bar {
+    background: #f0f2f5;
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.rws-theme-light .rws-rec-timer {
+    color: #111b21;
+}
+
+.rws-theme-light .rws-rec-pause-pill {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #111b21;
+}
+
+.rws-header-status.rws-status-active {
+    color: #00a884;
+    font-weight: 500;
+}
+
+.rws-recording-indicator {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #202c33;
+    padding: 6px 12px;
+    border-radius: 16px;
+    color: #00a884;
+    font-size: 12.5px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    border: 1px solid rgba(0, 168, 132, 0.2);
+}
+
+.rws-rec-dot-mic {
+    color: #ea4335;
+    animation: rws-pulse-red 1s infinite alternate;
+}
+
+.rws-theme-light .rws-header-status.rws-status-active {
+    color: #00a884;
+}
+
+.rws-theme-light .rws-recording-indicator {
+    background: #ffffff;
+    border-color: rgba(0, 168, 132, 0.3);
+    color: #00a884;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 @keyframes rws-spin {
@@ -360,6 +1134,12 @@
 
 .rws-link-preview-badge:hover {
     background: rgba(0, 0, 0, 0.35);
+}
+
+.rws-link-preview-icon {
+    display: flex;
+    align-items: center;
+    color: #53bdeb;
 }
 
 .rws-link-preview-info {
@@ -416,18 +1196,20 @@
     background: #202c33;
     padding: 8px 10px;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 8px;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.3s ease;
 }
 
 .rws-input-wrapper {
     flex: 1;
     background: #2a3942;
-    border-radius: 8px;
+    border-radius: 18px;
     display: flex;
-    align-items: center;
-    padding: 0 10px;
+    align-items: flex-end;
+    padding: 3px 8px;
+    transition: background-color 0.3s ease;
 }
 
 .rws-input-icon-btn {
@@ -435,15 +1217,21 @@
     border: none;
     color: #8696a0;
     cursor: pointer;
-    padding: 6px;
+    padding: 6px 4px;
     display: flex;
     align-items: center;
+    margin-bottom: 2px;
+}
+
+.rws-input-icon {
+    color: inherit;
 }
 
 .rws-input-field-container {
     flex: 1;
     display: flex;
     align-items: center;
+    padding: 2px 0;
 }
 
 .rws-input-field {
@@ -453,7 +1241,19 @@
     outline: none;
     color: #e9edef;
     font-size: 14px;
-    padding: 8px 4px;
+    font-family: inherit;
+    line-height: 1.4;
+    resize: none;
+    padding: 5px 4px;
+    margin: 0;
+    min-height: 24px;
+    max-height: 110px;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.rws-input-field::-webkit-scrollbar {
+    display: none;
 }
 
 .rws-input-field::placeholder {
@@ -468,8 +1268,8 @@
 }
 
 .rws-send-btn {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     background: #00a884;
     border: none;
@@ -477,11 +1277,17 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 168, 132, 0.4);
     transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 .rws-send-btn:hover {
     background: #008f70;
+}
+
+.rws-send-icon {
+    color: #ffffff;
 }
 
 .rws-btn-ripple {
@@ -494,16 +1300,30 @@
     100% { transform: scale(1); }
 }
 
-/* Restart Button */
+/* Home Bar Indicator */
+.rws-phone-home-indicator {
+    background: #202c33;
+    padding: 6px 0 8px;
+    display: flex;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.rws-home-bar {
+    width: 130px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Floating Restart Button */
 .rws-restart-btn {
     position: absolute;
-    bottom: 60px;
-    right: 14px;
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background: rgba(32, 44, 51, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     color: #8696a0;
     display: flex;
     align-items: center;
@@ -514,8 +1334,353 @@
     z-index: 10;
 }
 
+.rws-restart-pos-bottom-right {
+    bottom: 75px;
+    right: 14px;
+}
+
+.rws-restart-pos-bottom-left {
+    bottom: 75px;
+    left: 14px;
+}
+
+.rws-restart-pos-top-right {
+    top: 75px;
+    right: 14px;
+}
+
+.rws-restart-pos-top-left {
+    top: 75px;
+    left: 14px;
+}
+
+.rws-restart-pos-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    background: rgba(18, 28, 40, 0.65);
+    border: 2px solid rgba(0, 168, 132, 0.7);
+    color: #25d366;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    opacity: 0.7;
+}
+
+.rws-restart-pos-center:hover {
+    opacity: 1;
+    background: #00a884;
+    color: #ffffff;
+    border-color: #00a884;
+    transform: translate(-50%, -50%) scale(1.12);
+}
+
+.rws-restart-pos-center-left {
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+}
+
+.rws-restart-pos-center-left:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+.rws-restart-pos-center-right {
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+}
+
+.rws-restart-pos-center-right:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
 .rws-restart-btn:hover {
-    color: #e9edef;
+    color: #ffffff;
     background: #00a884;
     border-color: #00a884;
+    transform: scale(1.08);
+}
+
+/* Light Theme Styling (WhatsApp Light Mode) */
+.rws-theme-light.rws-phone-frame {
+    background: #efeae2;
+}
+
+.rws-theme-light.rws-device-iphone {
+    border-color: #d1d5db;
+    box-shadow: 
+        0 0 0 2px #e5e7eb,
+        0 25px 60px rgba(0, 0, 0, 0.22),
+        0 10px 25px rgba(0, 168, 132, 0.15);
+}
+
+.rws-theme-light.rws-device-android {
+    border-color: #cbd5e1;
+    box-shadow: 
+        0 0 0 2px #e2e8f0,
+        0 25px 60px rgba(0, 0, 0, 0.22),
+        0 10px 25px rgba(0, 168, 132, 0.15);
+}
+
+.rws-theme-light .rws-header-wrapper,
+.rws-theme-light .rws-header,
+.rws-theme-light .rws-input-bar,
+.rws-theme-light .rws-phone-home-indicator,
+.rws-theme-light .rws-android-nav-bar {
+    background: #f0f2f5;
+    color: #111b21;
+}
+
+.rws-theme-light .rws-status-bar {
+    color: #111b21;
+}
+
+.rws-theme-light .rws-status-icon,
+.rws-theme-light .rws-header-icon,
+.rws-theme-light .rws-input-icon {
+    color: #54656f;
+}
+
+.rws-theme-light .rws-header-title {
+    color: #111b21;
+}
+
+.rws-theme-light .rws-header-status {
+    color: #00a884;
+}
+
+.rws-theme-light .rws-chat-body {
+    background-color: #efeae2;
+    background-image: 
+        radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+}
+
+.rws-theme-light .rws-encryption-notice {
+    background: #ffeead;
+    color: #54656f;
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+.rws-theme-light .rws-message-assistant .rws-message-bubble {
+    background: #ffffff;
+    color: #111b21;
+}
+
+.rws-theme-light .rws-message-user .rws-message-bubble {
+    background: #d9fdd3;
+    color: #111b21;
+}
+
+.rws-theme-light .rws-input-wrapper {
+    background: #ffffff;
+}
+
+.rws-theme-light .rws-input-field {
+    color: #111b21;
+}
+
+.rws-theme-light .rws-input-field::placeholder {
+    color: #667781;
+}
+
+.rws-theme-light .rws-home-bar {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.rws-theme-light .rws-typing-indicator {
+    background: #ffffff;
+}
+
+.rws-theme-light .rws-side-btn {
+    background: #94a3b8;
+}
+
+/* ==========================================================================
+   Virtual Mobile Keyboard Styles
+   ========================================================================== */
+.rws-virtual-keyboard {
+    background: #182229;
+    padding: 10px 8px 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    user-select: none;
+    z-index: 8;
+    box-shadow: 0 -8px 16px -4px rgba(0, 0, 0, 0.45);
+}
+
+.rws-kb-theme-light {
+    background: #d1d5db;
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+.rws-kb-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    flex-wrap: nowrap;
+    margin: 2px 0;
+}
+
+.rws-kb-row-padded {
+    padding: 0 8px;
+}
+
+.rws-kb-key {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    margin: 2px 2px;
+    border-radius: 6px;
+    border: none;
+    background: #2a3942;
+    color: #e9edef;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.08s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.rws-kb-theme-light .rws-kb-key {
+    background: #ffffff;
+    color: #111b21;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.rws-kb-special {
+    flex: 1.4;
+    background: #1f2c34;
+    color: #8696a0;
+}
+
+.rws-kb-theme-light .rws-kb-special {
+    background: #b0b7c0;
+    color: #4b5563;
+}
+
+.rws-kb-mod {
+    flex: 1.2;
+}
+
+.rws-kb-space {
+    flex: 4;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #8696a0;
+}
+
+.rws-kb-send {
+    flex: 1.8;
+    background: #00a884;
+    color: #ffffff;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.rws-kb-send:hover {
+    background: #008f70;
+}
+
+/* Gboard Android Toolbar & Key Styling */
+.rws-kb-device-android {
+    background: #1e2836;
+    padding-top: 4px;
+}
+
+.rws-gboard-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 2px 12px 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 2px;
+}
+
+.rws-gboard-tool-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 50%;
+    transition: color 0.15s ease;
+}
+
+.rws-gboard-tool-btn:hover {
+    color: #f8fafc;
+}
+
+.rws-kb-device-android .rws-kb-key {
+    border-radius: 5px;
+    box-shadow: none;
+    background: #2b3748;
+}
+
+.rws-kb-device-android .rws-kb-special {
+    background: #202b3a;
+}
+
+.rws-kb-device-android .rws-kb-space {
+    flex: 3.5;
+    font-size: 11px;
+    text-transform: none;
+}
+
+.rws-kb-device-android .rws-kb-comma,
+.rws-kb-device-android .rws-kb-dot {
+    flex: 0.8;
+}
+
+.rws-kb-device-android .rws-kb-send {
+    flex: 1.2;
+    background: #3b82f6;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+}
+
+.rws-kb-device-android .rws-kb-send:hover {
+    background: #2563eb;
+}
+
+.rws-kb-theme-light.rws-kb-device-android {
+    background: #edf2f7;
+}
+
+.rws-kb-theme-light.rws-kb-device-android .rws-kb-key {
+    background: #ffffff;
+    color: #1e293b;
+}
+
+.rws-kb-theme-light.rws-kb-device-android .rws-kb-special {
+    background: #cbd5e1;
+    color: #475569;
+}
+
+/* Keypress Highlight Animation */
+.rws-kb-key-active {
+    background: #00a884 !important;
+    color: #ffffff !important;
+    transform: scale(1.06);
+    box-shadow: 0 0 12px rgba(0, 168, 132, 0.8), 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 6px;
+    z-index: 20;
 }

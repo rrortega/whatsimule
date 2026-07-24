@@ -1,26 +1,219 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>React WhatsApp Simulator — Demostración en Vivo</title>
-  <meta name="description" content="Componente interactivo 3D de simulación de conversaciones de WhatsApp para React, Next.js, Vue y Web Components." />
-  
+  <title>React WhatsApp Simulator — Interactive Playground & Live Demo</title>
+  <meta name="description"
+    content="Simulador de conversaciones de WhatsApp en 3D para React, Next.js, Vue y Web Components. Playground interactivo." />
+
+  <!-- Umami Analytics (Injected strictly in production, never on localhost) -->
+  <script>
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && !window.location.hostname.startsWith('192.168.')) {
+      var s = document.createElement('script');
+      s.defer = true;
+      s.src = 'https://umami.asistenxa.com/script.js';
+      s.setAttribute('data-website-id', 'b6965b71-3d82-41f4-92e4-e1361d9fae36');
+      document.head.appendChild(s);
+    }
+  </script>
+
   <!-- Stylesheets -->
   <link rel="stylesheet" href="./dist/whatsapp-simulator.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+
+  <!-- Prism.js IDE Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 
   <style>
     :root {
       --bg-dark: #090d12;
       --bg-card: #111822;
+      --bg-card-hover: #16202c;
       --border-color: #1f2937;
-      --accent-green: #25d366;
-      --accent-green-hover: #20bd5a;
+      --accent-green: #00a884;
+      --accent-green-bright: #25d366;
       --text-main: #f3f4f6;
       --text-muted: #9ca3af;
+    }
+
+    /* Demo Page Light Mode Theme Overrides */
+    body.demo-theme-light {
+      --bg-dark: #f1f5f9;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8fafc;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.demo-theme-light::before {
+      background: radial-gradient(circle, rgba(0, 168, 132, 0.08) 0%, rgba(241, 245, 249, 0) 70%);
+    }
+
+    body.demo-theme-light .brand-title {
+      background: linear-gradient(135deg, #0f172a 0%, #475569 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    body.demo-theme-light .config-panel {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    body.demo-theme-light .panel-section {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+    }
+
+    body.demo-theme-light .section-title {
+      color: #008f70;
+    }
+
+    body.demo-theme-light .form-label {
+      color: #475569;
+    }
+
+    body.demo-theme-light .form-input,
+    body.demo-theme-light .form-select {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: #cbd5e1;
+    }
+
+    body.demo-theme-light .toggle-row {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    body.demo-theme-light .toggle-label {
+      color: #0f172a;
+    }
+
+    body.demo-theme-light .toggle-sub {
+      color: #64748b;
+    }
+
+    body.demo-theme-light .btn-group,
+    body.demo-theme-light .btn-grid-4 {
+      background: #e2e8f0;
+      border-color: #cbd5e1;
+    }
+
+    body.demo-theme-light .btn-group-btn,
+    body.demo-theme-light .btn-grid-btn {
+      color: #475569;
+    }
+
+    body.demo-theme-light .btn-group-btn:hover,
+    body.demo-theme-light .btn-grid-btn:hover {
+      color: #0f172a;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    body.demo-theme-light .btn-group-btn.active,
+    body.demo-theme-light .btn-grid-btn.active {
+      background: #00a884;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 168, 132, 0.35);
+    }
+
+    body.demo-theme-light .script-card-item {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    body.demo-theme-light .script-card-title {
+      color: #0f172a;
+    }
+
+    body.demo-theme-light .script-card-desc {
+      color: #64748b;
+    }
+
+    body.demo-theme-light .script-card-icon {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    body.demo-theme-light .script-card-item.active {
+      border-color: #00a884;
+      background: #f0fdf4;
+      box-shadow: 0 4px 14px rgba(0, 168, 132, 0.15);
+    }
+
+    body.demo-theme-light .script-card-item.active .script-card-icon {
+      background: #00a884;
+      color: #ffffff;
+    }
+
+    body.demo-theme-light .range-slider {
+      background: #cbd5e1;
+    }
+
+    body.demo-theme-light .range-ticks {
+      color: #64748b;
+    }
+
+    body.demo-theme-light .switch .slider {
+      background-color: #cbd5e1;
+    }
+
+    body.demo-theme-light .switch input:checked+.slider {
+      background-color: #00a884;
+    }
+
+    body.demo-theme-light .script-card-tag {
+      background: #e2e8f0;
+      color: #008f70;
+    }
+
+    body.demo-theme-light .tab-btn {
+      color: #475569;
+    }
+
+    body.demo-theme-light .tab-btn:hover {
+      color: #0f172a;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    body.demo-theme-light .tab-btn.active {
+      background: #00a884;
+      color: #ffffff;
+    }
+
+    body.demo-theme-light .code-card-header {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    body.demo-theme-light .code-card-title {
+      color: #0f172a;
+    }
+
+    body.demo-theme-light .github-link {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: #cbd5e1;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    body.demo-theme-light .tabs-header {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     * {
@@ -34,11 +227,7 @@
       background-color: var(--bg-dark);
       color: var(--text-main);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 24px 16px 60px;
-      overflow-x: hidden;
+      padding: 20px 24px 60px;
     }
 
     /* Ambient Background Glow */
@@ -48,80 +237,908 @@
       top: -200px;
       left: 50%;
       transform: translateX(-50%);
-      width: 800px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(37, 211, 102, 0.12) 0%, rgba(9, 13, 18, 0) 70%);
+      width: 1000px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 168, 132, 0.1) 0%, rgba(9, 13, 18, 0) 70%);
       pointer-events: none;
       z-index: 0;
     }
 
-    header {
-      text-align: center;
-      max-width: 800px;
-      margin-bottom: 32px;
+    /* Top Nav Header */
+    .top-nav {
+      max-width: 1320px;
+      margin: 0 auto 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       position: relative;
       z-index: 1;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .badge {
-      display: inline-flex;
+    .brand {
+      display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 9999px;
-      background: rgba(37, 211, 102, 0.1);
-      border: 1px solid rgba(37, 211, 102, 0.3);
-      color: var(--accent-green);
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 16px;
+      gap: 12px;
     }
 
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: var(--accent-green);
-      box-shadow: 0 0 10px var(--accent-green);
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--accent-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 14px rgba(0, 168, 132, 0.4);
     }
 
-    h1 {
-      font-size: 2.75rem;
+    .brand-title {
+      font-size: 1.25rem;
       font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 12px;
       background: linear-gradient(135deg, #ffffff 0%, #9ca3af 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    header p {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      line-height: 1.6;
+    .brand-badge {
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: rgba(0, 168, 132, 0.12);
+      border: 1px solid rgba(0, 168, 132, 0.3);
+      color: var(--accent-green-bright);
+      font-size: 12px;
+      font-weight: 600;
     }
 
-    .demo-container {
-      width: 100%;
-      max-width: 1100px;
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .github-link:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .theme-toggle-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .theme-toggle-nav-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(0, 168, 132, 0.4);
+      color: var(--accent-green-bright);
+    }
+
+    body.demo-theme-light .theme-toggle-nav-btn {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: #cbd5e1;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Main Grid Layout */
+    .playground-grid {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 32px;
+      align-items: start;
       position: relative;
       z-index: 1;
     }
 
-    #simulator-root {
-      min-height: 600px;
+    @media (max-width: 1024px) {
+      .playground-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left Config Panel */
+    .config-panel {
+      background: #121c28;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    .panel-section {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-green-bright);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Form controls */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      background: #0b121a;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--accent-green);
+    }
+
+    .form-input-file {
+      width: 100%;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border: 1px dashed var(--border-color);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 4px;
+    }
+
+    .form-input-file:hover {
+      border-color: var(--accent-green);
+    }
+
+    .form-sub-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .form-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .avatar-badge-btn {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s ease;
+    }
+
+    .avatar-badge-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .avatar-badge-preview {
+      width: 28px;
+      height: 28px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 50%;
+      background: #00a884;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0, 168, 132, 0.4);
+    }
+
+    .avatar-badge-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-upload-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar-thumbnail-preview {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--accent-green);
+      flex-shrink: 0;
+    }
+
+    .avatar-thumbnail-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .btn-text-danger {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: opacity 0.15s ease;
+    }
+
+    .btn-text-danger:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+
+    /* Toggle switches */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #0b121a;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+    }
+
+    .toggle-label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .toggle-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #1f2937;
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: var(--accent-green);
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Custom Range Slider */
+    .range-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .range-badge {
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--accent-green);
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .range-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      cursor: pointer;
+      margin: 8px 0 4px;
+    }
+
+    .range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 168, 132, 0.4);
+      transition: transform 0.15s ease;
+    }
+
+    .range-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.18);
+    }
+
+    .range-ticks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Segmented Button Toggle Group */
+    .btn-group {
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .btn-group-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      font-family: inherit;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-group-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-group-btn.active {
+      background: var(--accent-green);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 168, 132, 0.35);
+    }
+
+    /* 4-Button Grid for Corner Positioning */
+    .btn-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 4px;
+    }
+
+    .btn-grid-pos {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 4px;
+    }
+
+    .btn-grid-btn {
+      padding: 8px 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: inherit;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-grid-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-grid-btn.active {
+      background: var(--accent-green);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 168, 132, 0.35);
+    }
+
+    body.demo-theme-light .btn-grid-4 {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    body.demo-theme-light .btn-grid-btn {
+      color: #64748b;
+    }
+
+    body.demo-theme-light .btn-grid-btn:hover {
+      color: #0f172a;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    /* Script Cards List */
+    .script-card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .script-card-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .script-card-item:hover {
+      border-color: rgba(0, 168, 132, 0.4);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .script-card-item.active {
+      border-color: var(--accent-green);
+      background: rgba(0, 168, 132, 0.12);
+      box-shadow: 0 4px 14px rgba(0, 168, 132, 0.2);
+    }
+
+    .script-card-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      margin-top: 2px;
+    }
+
+    .script-card-item.active .script-card-icon {
+      background: var(--accent-green);
+      color: #ffffff;
+    }
+
+    .script-card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 1;
+    }
+
+    .script-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .script-card-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin: 0;
+    }
+
+    .script-card-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent-green-bright);
+    }
+
+    .script-card-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    /* Live Event Log Console */
+    .event-console {
+      background: #080d14;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      max-height: 180px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .log-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.4;
+      word-break: break-all;
+    }
+
+    .log-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .log-sent {
+      background: rgba(0, 168, 132, 0.2);
+      color: var(--accent-green-bright);
+    }
+
+    .log-done {
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+    }
+
+    .log-time {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    /* Right Column (Sticky Container) */
+    .sticky-viewport {
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Tabs Header */
+    .tabs-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #121c28;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .tab-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      background: var(--accent-green);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(0, 168, 132, 0.35);
+    }
+
+    /* Tab Contents */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    #tab-code.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Simulator Tab View */
+    #simulator-target {
       display: flex;
       justify-content: center;
     }
 
-    /* Features section */
+    /* Code IDE Tab View */
+    .ide-card {
+      background: #0d131a;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      height: 90dvh;
+    }
+
+    .ide-header {
+      background: #16202c;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    body.demo-theme-light .ide-card {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    body.demo-theme-light .ide-header {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    body.demo-theme-light .ide-title {
+      color: #475569;
+    }
+
+    body.demo-theme-light .copy-btn {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: #cbd5e1;
+    }
+
+    body.demo-theme-light .copy-btn:hover {
+      background: #00a884;
+      color: #ffffff;
+      border-color: #00a884;
+    }
+
+    .ide-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-red {
+      background: #ff5f56;
+    }
+
+    .dot-yellow {
+      background: #ffbd2e;
+    }
+
+    .dot-green {
+      background: #27c93f;
+    }
+
+    .ide-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-green);
+      border-color: var(--accent-green);
+    }
+
+    .code-wrapper {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Prism line numbers override */
+    pre[class*="language-"] {
+      flex: 1;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 0.85rem !important;
+      line-height: 1.6 !important;
+    }
+
+    code[class*="language-"] {
+      font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    .line-numbers .line-numbers-rows {
+      border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Presentation & Author Section Styles */
+    .presentation-container {
+      max-width: 1400px;
+      margin: 48px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+    }
+
+    .features-section {
+      text-align: center;
+    }
+
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(0, 168, 132, 0.12);
+      border: 1px solid rgba(0, 168, 132, 0.3);
+      color: var(--accent-green-bright);
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .presentation-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    body.demo-theme-light .presentation-title {
+      color: #0f172a;
+    }
+
+    .presentation-sub {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 20px;
-      margin-top: 60px;
-      width: 100%;
-      max-width: 1100px;
+      text-align: left;
     }
 
     .feature-card {
@@ -129,83 +1146,320 @@
       border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 24px;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(37, 211, 102, 0.4);
-    }
-
-    .feature-icon {
-      font-size: 24px;
-      margin-bottom: 12px;
-      display: inline-block;
-    }
-
-    .feature-card h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #fff;
-    }
-
-    .feature-card p {
-      font-size: 0.92rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    /* Code block section */
-    .code-section {
-      width: 100%;
-      max-width: 1100px;
-      margin-top: 60px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
+      transition: all 0.25s ease;
+      position: relative;
       overflow: hidden;
     }
 
-    .code-header {
-      background: #16202c;
-      padding: 16px 24px;
+    .feature-card:hover {
+      border-color: rgba(0, 168, 132, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    body.demo-theme-light .feature-card:hover {
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+      display: inline-block;
+    }
+
+    .feature-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .feature-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* Author Section Redesign */
+    .author-section {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(11, 20, 26, 0.98) 100%);
+      border: 1px solid rgba(0, 168, 132, 0.35);
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+      position: relative;
+      overflow: hidden;
+    }
+
+    body.demo-theme-light .author-section {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border-color: rgba(0, 168, 132, 0.3);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+    }
+
+    .author-card {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .author-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border-color);
+      gap: 20px;
     }
 
-    .code-header h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
+    .author-avatar-badge {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00a884 0%, #25d366 100%);
+      box-shadow: 0 6px 18px rgba(0, 168, 132, 0.45);
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 3px solid #00a884;
     }
 
-    .code-body {
-      padding: 24px;
+    .author-avatar-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .author-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .author-name-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .author-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    body.demo-theme-light .author-name {
+      color: #0f172a;
+    }
+
+    .author-github-handle {
+      font-size: 0.85rem;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.88rem;
-      color: #e5e7eb;
-      background: #0d131a;
-      overflow-x: auto;
-      line-height: 1.6;
-    }
-
-    footer {
-      margin-top: 60px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    footer a {
-      color: var(--accent-green);
+      color: var(--accent-green-bright);
       text-decoration: none;
+      background: rgba(0, 168, 132, 0.12);
+      border: 1px solid rgba(0, 168, 132, 0.3);
+      padding: 3px 10px;
+      border-radius: 9999px;
+      transition: all 0.2s ease;
     }
 
-    footer a:hover {
-      text-decoration: underline;
+    .author-github-handle:hover {
+      background: var(--accent-green);
+      color: #ffffff;
+    }
+
+    .author-tag {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .author-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    body.demo-theme-light .author-body {
+      background: #f1f5f9;
+      border-color: #e2e8f0;
+    }
+
+    .author-bio {
+      font-size: 0.96rem;
+      color: #cbd5e1;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    body.demo-theme-light .author-bio {
+      color: #334155;
+    }
+
+    .author-bio strong {
+      color: #ffffff;
+    }
+
+    body.demo-theme-light .author-bio strong {
+      color: #0f172a;
+    }
+
+    .author-message {
+      font-size: 0.92rem;
+      color: var(--accent-green-bright);
+      line-height: 1.6;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .author-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-author-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-author-action.primary {
+      background: linear-gradient(135deg, #00a884 0%, #128c7e 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(0, 168, 132, 0.35);
+    }
+
+    .btn-author-action.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 168, 132, 0.5);
+    }
+
+    .btn-author-action.secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+    }
+
+    body.demo-theme-light .btn-author-action.secondary {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+
+    .btn-author-action.secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--accent-green);
+      color: var(--accent-green-bright);
+    }
+
+    /* Quick Installation Section */
+    .installation-section {
+      text-align: center;
+    }
+
+    .install-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    body.demo-theme-light .install-card {
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .install-tabs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 4px;
+    }
+
+    body.demo-theme-light .install-tabs {
+      background: #e2e8f0;
+    }
+
+    .install-tab-btn {
+      padding: 6px 16px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .install-tab-btn.active {
+      background: var(--accent-green);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 168, 132, 0.4);
+    }
+
+    .install-command-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #090d12;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: #e9edef;
+    }
+
+    body.demo-theme-light .install-command-box {
+      background: #0f172a;
+      color: #f8fafc;
+    }
+
+    .install-prompt {
+      color: var(--accent-green-bright);
+      font-weight: 700;
+      user-select: none;
+    }
+
+    .copy-install-btn {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-install-btn:hover {
+      background: var(--accent-green);
+      border-color: var(--accent-green);
     }
   </style>
 
@@ -223,100 +1477,851 @@
   }
   </script>
 </head>
+
 <body>
 
-  <header>
-    <div class="badge">
-      <span class="badge-dot"></span>
-      Librería React & Web Component
+  <!-- Top Navigation Header -->
+  <nav class="top-nav">
+    <div class="brand">
+      <div class="brand-logo" title="WhatSimule">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#ffffff">
+          <path
+            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+        </svg>
+      </div>
+      <div>
+        <span class="brand-title">WhatSimule</span>
+      </div>
+      <span class="brand-badge">v1.0.0</span>
     </div>
-    <h1>react-whatsapp-simulator</h1>
-    <p>
-      Simulador de conversaciones de WhatsApp en 3D interactivo con animaciones en tiempo real, 
-      indicador de tipeo y síntesis de efectos de sonido vía Web Audio API.
-    </p>
-  </header>
+    <div class="nav-links">
+      <button type="button" class="theme-toggle-nav-btn" id="top-nav-theme-toggle"
+        title="Cambiar Tema Modo Claro / Oscuro">
+        <svg id="top-nav-theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+        <span id="top-nav-theme-text">Modo Claro</span>
+      </button>
+      <a href="https://github.com/rrortega/whatsimule" target="_blank" rel="noopener noreferrer" class="github-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+        GitHub
+      </a>
+    </div>
+  </nav>
 
-  <main class="demo-container">
-    <div id="simulator-root">
-      <p style="color: #9ca3af; text-align: center; padding: 40px;">Cargando simulador...</p>
+  <!-- Main Playground Split View Layout -->
+  <main class="playground-grid">
+
+    <!-- LEFT COLUMN: Panel de Configuración -->
+    <aside class="config-panel">
+      <!-- 1. Escenarios de Ejemplo -->
+      <div class="panel-section">
+        <h3 class="section-title">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 8V4H8" />
+            <rect width="16" height="12" x="4" y="8" rx="2" />
+            <path d="M2 14h2" />
+            <path d="M20 14h2" />
+            <path d="M15 13v2" />
+            <path d="M9 13v2" />
+          </svg>
+          Escenarios de Prueba
+        </h3>
+        <div class="script-card-list" id="script-card-list">
+          <div class="script-card-item active" data-value="ai_support">
+            <div class="script-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 8V4H8" />
+                <rect width="16" height="12" x="4" y="8" rx="2" />
+                <path d="M2 14h2" />
+                <path d="M20 14h2" />
+                <path d="M15 13v2" />
+                <path d="M9 13v2" />
+              </svg>
+            </div>
+            <div class="script-card-content">
+              <div class="script-card-header">
+                <span class="script-card-title">Asistencia IA 24/7</span>
+                <span class="script-card-tag">Atención Al Cliente</span>
+              </div>
+              <p class="script-card-desc">Soporte automatizado de cuenta y cambio de clave con IA.</p>
+            </div>
+          </div>
+
+          <div class="script-card-item" data-value="lead_qualifier">
+            <div class="script-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+            </div>
+            <div class="script-card-content">
+              <div class="script-card-header">
+                <span class="script-card-title">Cotización de Servicios</span>
+                <span class="script-card-tag">Calificación Leads</span>
+              </div>
+              <p class="script-card-desc">Asesoramiento comercial, plan Enterprise y agendamiento con especialista.</p>
+            </div>
+          </div>
+
+          <div class="script-card-item" data-value="incident_intake">
+            <div class="script-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                <line x1="12" x2="12" y1="9" y2="13" />
+                <line x1="12" x2="12.01" y1="17" y2="17" />
+              </svg>
+            </div>
+            <div class="script-card-content">
+              <div class="script-card-header">
+                <span class="script-card-title">Reporte de Incidentes</span>
+                <span class="script-card-tag">Soporte Técnico</span>
+              </div>
+              <p class="script-card-desc">Apertura de ticket prioritario #INC-883 y asignación de técnico en sitio.</p>
+            </div>
+          </div>
+
+          <div class="script-card-item" data-value="audio_support">
+            <div class="script-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+            </div>
+            <div class="script-card-content">
+              <div class="script-card-header">
+                <span class="script-card-title">Asistencia por Nota de Voz</span>
+                <span class="script-card-tag">Voz + Imagen</span>
+              </div>
+              <p class="script-card-desc">Diagnóstico asistido por voz e inspección de foto con pie de foto.</p>
+            </div>
+          </div>
+
+          <div class="script-card-item" data-value="image_inspection">
+            <div class="script-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                <circle cx="9" cy="9" r="2" />
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+              </svg>
+            </div>
+            <div class="script-card-content">
+              <div class="script-card-header">
+                <span class="script-card-title">Inspección Técnica & Foto</span>
+                <span class="script-card-tag">Evidencia Visual</span>
+              </div>
+              <p class="script-card-desc">Envío de foto con pie de foto y respuesta por audio del perito.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Identidad & Apariencia -->
+      <div class="panel-section">
+        <h3 class="section-title">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+            <path d="M2 12h20" />
+          </svg>
+          Identidad & Apariencia
+        </h3>
+
+        <div class="form-group">
+          <div class="form-label-row">
+            <label class="form-label">Nombre del Contacto / Grupo</label>
+            <button type="button" class="avatar-badge-btn" id="avatar-badge-toggle" title="Cambiar foto de perfil">
+              <div class="avatar-badge-preview" id="avatar-badge-display">
+                <span id="avatar-badge-initials">A</span>
+              </div>
+            </button>
+          </div>
+          <input type="text" id="assistant-name-input" class="form-input" value="ROLODEV" />
+
+          <div id="custom-avatar-wrapper" style="display: none; margin-top: 8px;">
+            <div class="avatar-upload-row">
+              <div class="avatar-thumbnail-preview" id="avatar-thumb-box" style="display: none;">
+                <img id="avatar-thumb-img" src="" alt="Avatar Thumbnail" />
+              </div>
+              <div style="flex: 1;">
+                <input type="file" id="custom-avatar-file" accept="image/*" class="form-input-file"
+                  title="Cargar foto de perfil" />
+                <div class="form-sub-hint">Sube una foto de perfil o avatar local</div>
+              </div>
+            </div>
+            <button type="button" id="remove-avatar-btn" class="btn-text-danger"
+              style="display: none; margin-top: 6px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18" />
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+              </svg>
+              Eliminar foto de perfil
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Modo de Conversación</label>
+          <div class="btn-group" id="chat-type-group">
+            <button type="button" class="btn-group-btn active" data-value="direct">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              Chat Privado
+            </button>
+            <button type="button" class="btn-group-btn" data-value="group">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              Chat Grupal
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Patrón / Imagen de Fondo</label>
+          <div class="btn-group" id="wallpaper-group">
+            <button type="button" class="btn-group-btn active" data-value="doodle" title="Patrón Doodle Clásico">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+              </svg>
+              Doodle
+            </button>
+            <button type="button" class="btn-group-btn" data-value="dots" title="Puntos Geométricos">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="5" cy="5" r="1.5" />
+                <circle cx="12" cy="5" r="1.5" />
+                <circle cx="19" cy="5" r="1.5" />
+                <circle cx="5" cy="12" r="1.5" />
+                <circle cx="12" cy="12" r="1.5" />
+                <circle cx="19" cy="12" r="1.5" />
+                <circle cx="5" cy="19" r="1.5" />
+                <circle cx="12" cy="19" r="1.5" />
+                <circle cx="19" cy="19" r="1.5" />
+              </svg>
+              Puntos
+            </button>
+            <button type="button" class="btn-group-btn" data-value="custom" title="Imagen personalizada">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                <circle cx="9" cy="9" r="2" />
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+              </svg>
+              Custom
+            </button>
+          </div>
+          <div id="custom-wallpaper-wrapper" style="display: none; margin-top: 6px;">
+            <input type="file" id="custom-wallpaper-file" accept="image/*" class="form-input-file"
+              title="Cargar fondo personalizado" />
+            <div class="form-sub-hint">Sube una imagen propia para el fondo del chat</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tema de Color del Chat</label>
+          <div class="btn-group" id="theme-group">
+            <button type="button" class="btn-group-btn active" data-value="dark">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+              </svg>
+              Oscuro
+            </button>
+            <button type="button" class="btn-group-btn" data-value="light">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
+              </svg>
+              Claro
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Dispositivo & Dimensiones -->
+      <div class="panel-section">
+        <h3 class="section-title">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect width="14" height="20" x="5" y="2" rx="2" ry="2" />
+            <path d="M12 18h.01" />
+          </svg>
+          Dispositivo & Dimensiones
+        </h3>
+
+        <div class="form-group">
+          <label class="form-label">Dispositivo (Layout)</label>
+          <div class="btn-group" id="device-group">
+            <button type="button" class="btn-group-btn active" data-value="iphone">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect width="14" height="20" x="5" y="2" rx="2" ry="2" />
+                <path d="M12 18h.01" />
+              </svg>
+              iPhone
+            </button>
+            <button type="button" class="btn-group-btn" data-value="android">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14" />
+                <path d="M2 12h20" />
+                <path d="M12 18h.01" />
+              </svg>
+              Android
+            </button>
+            <button type="button" class="btn-group-btn" data-value="none" title="Sin marco de teléfono">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+              </svg>
+              Ninguno
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 8px;">
+          <div class="range-header">
+            <label class="form-label">Ancho del Simulador</label>
+            <span class="range-badge" id="width-val-badge">360px</span>
+          </div>
+          <input type="range" id="width-range-input" min="280" max="600" step="10" value="360" class="range-slider" />
+        </div>
+
+        <div class="form-group" style="margin-top: 8px;">
+          <div class="range-header">
+            <label class="form-label">Alto del Simulador</label>
+            <span class="range-badge" id="height-val-badge">680px</span>
+          </div>
+          <input type="range" id="height-range-input" min="480" max="900" step="20" value="680" class="range-slider" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Idioma de la Interfaz</label>
+          <div class="btn-group" id="locale-group">
+            <button type="button" class="btn-group-btn active" data-value="es">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                <path d="M2 12h20" />
+              </svg>
+              Español
+            </button>
+            <button type="button" class="btn-group-btn" data-value="en">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="m5 8 6 6" />
+                <path d="m4 14 6-6 2-3" />
+                <path d="M2 5h12" />
+                <path d="M7 2h1" />
+                <path d="m22 22-5-10-5 10" />
+                <path d="M14 18h6" />
+              </svg>
+              English
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Escritura & Perspectiva 3D -->
+      <div class="panel-section">
+        <h3 class="section-title">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+          </svg>
+          Escritura & Perspectiva 3D
+        </h3>
+
+        <div class="form-group">
+          <label class="form-label">Modo de Escritura (Typing)</label>
+          <div class="btn-group" id="typing-mode-group">
+            <button type="button" class="btn-group-btn" data-value="direct" title="Escritura Rápida Directa">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+              </svg>
+              Directo
+            </button>
+            <button type="button" class="btn-group-btn active" data-value="keyboard"
+              title="Teclado Virtual Interactivo">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="12" x="2" y="4" rx="2" />
+                <path d="M6 8h.01" />
+                <path d="M10 8h.01" />
+                <path d="M14 8h.01" />
+                <path d="M18 8h.01" />
+                <path d="M8 12h8" />
+              </svg>
+              Teclado Virtual
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 8px;">
+          <div class="range-header">
+            <label class="form-label">Velocidad de Reproducción</label>
+            <span class="range-badge" id="speed-val-badge">1x</span>
+          </div>
+          <input type="range" id="speed-range-input" min="0.5" max="3" step="0.25" value="1" class="range-slider" />
+          <div class="range-ticks">
+            <span>0.5x</span>
+            <span>1x</span>
+            <span>2x</span>
+            <span>3x</span>
+          </div>
+        </div>
+
+        <div class="toggle-row" style="margin-top: 8px;">
+          <div>
+            <div class="toggle-label">Giro 3D en Scroll</div>
+            <div class="toggle-sub">Giro al desplazarse por la página</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="scroll-tilt-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Giro 3D en Mouse Hover</div>
+            <div class="toggle-sub">Reacciona al pasar el cursor sobre el teléfono</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="hover-tilt-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 5. Botón de Reinicio -->
+      <div class="panel-section">
+        <h3 class="section-title">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
+          </svg>
+          Botón de Reinicio
+        </h3>
+
+        <div class="form-group">
+          <label class="form-label">Aparición del Botón de Reinicio</label>
+          <div class="btn-group" id="restart-vis-group">
+            <button type="button" class="btn-group-btn" data-value="always" title="Siempre Visible">
+              Siempre
+            </button>
+            <button type="button" class="btn-group-btn active" data-value="on-complete" title="Al terminar simulación">
+              Al Terminar
+            </button>
+            <button type="button" class="btn-group-btn" data-value="never" title="Ocultar siempre">
+              Oculto
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 6px;">
+          <label class="form-label">Posición del Botón de Reinicio</label>
+          <div class="btn-grid-pos" id="restart-pos-group">
+            <button type="button" class="btn-grid-btn" data-value="top-left" title="Arriba Izquierda">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="17" y1="17" x2="7" y2="7" />
+                <polyline points="7 17 7 7 17 7" />
+              </svg>
+              Arriba Izq.
+            </button>
+            <button type="button" class="btn-grid-btn" data-value="top-right" title="Arriba Derecha">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+              Arriba Der.
+            </button>
+            <button type="button" class="btn-grid-btn active" data-value="center" title="Centro Pantalla">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              Centro
+            </button>
+            <button type="button" class="btn-grid-btn" data-value="center-left" title="Centro Izquierda">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg>
+              Centro Izq.
+            </button>
+            <button type="button" class="btn-grid-btn" data-value="center-right" title="Centro Derecha">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+              Centro Der.
+            </button>
+            <button type="button" class="btn-grid-btn" data-value="bottom-left" title="Abajo Izquierda">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="17" y1="7" x2="7" y2="17" />
+                <polyline points="17 17 7 17 7 7" />
+              </svg>
+              Abajo Izq.
+            </button>
+            <button type="button" class="btn-grid-btn" data-value="bottom-right" title="Abajo Derecha">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="7" y1="7" x2="17" y2="17" />
+                <polyline points="7 17 17 17 17 7" />
+              </svg>
+              Abajo Der.
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Audio & Seguridad -->
+      <div class="panel-section">
+        <h3 class="section-title">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+          </svg>
+          Audio & Seguridad
+        </h3>
+
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Master Audio (Habilitar Sonido)</div>
+            <div class="toggle-sub">Activa o desactiva todo el audio</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="sound-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row" style="margin-top: 4px;">
+          <div>
+            <div class="toggle-label">Sonido de Tipeo (Teclas)</div>
+            <div class="toggle-sub">Sonido procedimental al escribir cada letra</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="sound-typing-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row" style="margin-top: 4px;">
+          <div>
+            <div class="toggle-label">Sonido Mensaje Enviado</div>
+            <div class="toggle-sub">Efecto pop al enviar mensaje de usuario</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="sound-sent-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row" style="margin-top: 4px;">
+          <div>
+            <div class="toggle-label">Sonido Mensaje Recibido</div>
+            <div class="toggle-sub">Tono de notificación de mensaje entrante</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="sound-receive-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row" style="margin-top: 8px;">
+          <div>
+            <div class="toggle-label">Aviso Cifrado Extremo a Extremo</div>
+            <div class="toggle-sub">Muestra u oculta la caja informativa de cifrado</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="encryption-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT COLUMN: Sticky Tabs & Viewport -->
+    <div class="sticky-viewport">
+
+      <!-- Tabs Header -->
+      <div class="tabs-header">
+        <button type="button" class="tab-btn active" data-tab="tab-simulator">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect width="14" height="20" x="5" y="2" rx="2" ry="2" />
+            <path d="M12 18h.01" />
+          </svg>
+          Simulador en Vivo
+        </button>
+        <button type="button" class="tab-btn" data-tab="tab-code">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6" />
+            <polyline points="8 6 2 12 8 18" />
+          </svg>
+          Ver Código & Exportar
+        </button>
+      </div>
+
+      <!-- TAB 1: Live Interactive Simulator -->
+      <div id="tab-simulator" class="tab-content active">
+        <div id="simulator-target">
+          <p style="color: #9ca3af; text-align: center; padding: 40px;">Cargando simulador...</p>
+        </div>
+      </div>
+
+      <!-- TAB 2: IDE Code Viewer with Syntax Highlighting & Line Numbers -->
+      <div id="tab-code" class="tab-content">
+        <div class="ide-card">
+          <div class="ide-header">
+            <div class="ide-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span class="ide-title" style="margin-left: 8px;">App.tsx</span>
+            </div>
+            <button type="button" class="copy-btn" id="copy-code-btn">
+              Copiar Código
+            </button>
+          </div>
+          <div class="code-wrapper">
+            <pre class="line-numbers"><code id="code-snippet" class="language-jsx"></code></pre>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Key Features Grid -->
-    <section class="features-grid">
-      <div class="feature-card">
-        <span class="feature-icon">📱</span>
-        <h3>Interfaz Fiel a WhatsApp</h3>
-        <p>Diseño en modo oscuro nativo, burbujas animadas con Framer Motion, aviso de cifrado y doble check azul.</p>
-      </div>
-
-      <div class="feature-card">
-        <span class="feature-icon">🔊</span>
-        <h3>Audio Sintetizado</h3>
-        <p>Efectos de sonido procedimentales generados con Web Audio API al tipear, enviar y recibir mensajes sin assets .mp3.</p>
-      </div>
-
-      <div class="feature-card">
-        <span class="feature-icon">🎨</span>
-        <h3>Inclinación 3D en Scroll</h3>
-        <p>Efecto de perspectiva tridimensional suave que reacciona de forma dinámica al hacer scroll en la página.</p>
-      </div>
-
-      <div class="feature-card">
-        <span class="feature-icon">⚡</span>
-        <h3>Multi-Framework</h3>
-        <p>Soporte nativo para React / Next.js y adaptador CustomElement (<code>&lt;whatsapp-simulator&gt;</code>) para Vue, Svelte y HTML plano.</p>
-      </div>
-    </section>
-
-    <!-- Quick Usage Code Block -->
-    <section class="code-section">
-      <div class="code-header">
-        <h3>💻 Instalación y Uso Rápido</h3>
-      </div>
-      <pre class="code-body"><code>npm install react-whatsapp-simulator framer-motion lucide-react
-
-import React from "react";
-import { WhatsAppSimulator } from "react-whatsapp-simulator";
-import "react-whatsapp-simulator/dist/whatsapp-simulator.css";
-
-const scripts = {
-  soporte: {
-    id: "soporte",
-    label: "Atención al Cliente AI",
-    description: "Flujo de resolución de consultas 24/7",
-    steps: [
-      { sender: "user", type: "text", content: "Hola, necesito ayuda con mi pedido.", delay: 500 },
-      { sender: "assistant", type: "text", content: "¡Hola! Con gusto te ayudo. ¿Me compartes tu número de orden?", delay: 1200 }
-    ]
-  }
-};
-
-export default function App() {
-  return (
-    &lt;WhatsAppSimulator
-      scripts={scripts}
-      assistantName="Asistenxa Support"
-      enable3DTilt={true}
-      enableSound={true}
-      locale="es"
-    /&gt;
-  );
-}</code></pre>
-    </section>
   </main>
 
-  <footer>
-    <p>Desarrollado con ❤️ para <strong>ChambaPro</strong> & <strong>Asistenxa</strong> • Licencia MIT</p>
-  </footer>
+  <!-- Features & Presentation Section -->
+  <section class="presentation-container">
+
+    <!-- Features Grid -->
+    <div class="features-section">
+      <div class="section-badge">⚡ Todo lo que necesitas</div>
+      <h2 class="presentation-title">Características Principales</h2>
+      <p class="presentation-sub">Diseñado meticulosamente para ofrecer una experiencia interactiva idéntica a WhatsApp
+        en cualquier aplicación React.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <h3 class="feature-title">Pixel-Perfect WhatsApp</h3>
+          <p class="feature-desc">Fiel a la interfaz oficial de WhatsApp Web y Mobile. Soporta temas Claro/Oscuro,
+            marcos iPhone & Android, y patrones de fondo Doodle/Puntos.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⌨️</div>
+          <h3 class="feature-title">Teclado Virtual Interactivo</h3>
+          <p class="feature-desc">Animación de tipeo letra por letra con Teclado QWERTY dinámico, respuesta háptica
+            visual y sonido sintético de pulsación de teclas.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📸</div>
+          <h3 class="feature-title">Envío & Carga de Medios</h3>
+          <p class="feature-desc">Previsualización a pantalla completa de imágenes con comentarios dinámicos, desenfoque
+            progresivo y anillo SVG circular de carga.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎙️</div>
+          <h3 class="feature-title">Notas de Voz & Grabación</h3>
+          <p class="feature-desc">Simulación de barra manos libres de grabación con espectro de ondas en vivo, estado
+            "Grabando audio..." y transcripción automática en cursiva.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3 class="feature-title">Totalmente Personalizable</h3>
+          <p class="feature-desc">Ajusta dimensiones en vivo, scripts conversacionales ilimitados, avatares, nombres,
+            velocidades de simulación y efectos 3D de perspectiva.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🚀</div>
+          <h3 class="feature-title">Listo para Producción</h3>
+          <p class="feature-desc">Librería optimizada en TypeScript con compilación dual ESM/CJS, cero dependencias
+            pesadas y fácil integración con NPM/PNPM.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔊</div>
+          <h3 class="feature-title">Efectos de Audio Sintético</h3>
+          <p class="feature-desc">Efectos de sonido nativos (Web Audio API) para tipeo de teclado, envío y recepción de
+            mensajes sin requerir archivos de audio externos.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎛️</div>
+          <h3 class="feature-title">Perspectiva & Inclinación 3D</h3>
+          <p class="feature-desc">Efectos sutiles de inclinación 3D al hacer hover o scroll, auto-scroll fluido
+            inteligente y soporte para múltiples velocidades de animación.</p>
+        </div>
+      </div>
+      <!-- Quick Installation Section -->
+      <div class="installation-section">
+        <div class="section-badge">📦 Instalación Rápida</div>
+        <h2 class="presentation-title">Instala en un Comando</h2>
+        <p class="presentation-sub">Añade el simulador a tu proyecto React en segundos utilizando tu gestor de paquetes
+          preferido.</p>
+
+        <div class="install-card">
+          <div class="install-tabs">
+            <button type="button" class="install-tab-btn active" data-pkg="npm">npm</button>
+            <button type="button" class="install-tab-btn" data-pkg="pnpm">pnpm</button>
+            <button type="button" class="install-tab-btn" data-pkg="yarn">yarn</button>
+            <button type="button" class="install-tab-btn" data-pkg="bun">bun</button>
+          </div>
+          <div class="install-command-box">
+            <span class="install-prompt">$</span>
+            <code id="install-command-text">npm install rrortega-whatsimule</code>
+            <button type="button" class="copy-install-btn" id="copy-install-cmd" title="Copiar comando">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+              </svg>
+              <span id="copy-install-label">Copiar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Creator Card Section -->
+      <div class="author-section">
+        <div class="author-card">
+
+          <!-- Header: Avatar + Title + GitHub Handle -->
+          <div class="author-header">
+            <div class="author-avatar-badge">
+              <img src="./rolando-ortega.jpg" alt="Rolando R. Ortega" />
+            </div>
+            <div class="author-info">
+              <div class="author-name-row">
+                <h3 class="author-name">Rolando R. Ortega</h3>
+                <a href="https://github.com/rrortega" target="_blank" rel="noopener noreferrer"
+                  class="author-github-handle">@rrortega</a>
+              </div>
+              <span class="author-tag">Creador de whatsimule</span>
+            </div>
+          </div>
+
+          <!-- Body: Biography & Message -->
+          <div class="author-body">
+            <p class="author-bio">
+              Creé <strong>whatsimule</strong> para brindar una librería ligera, interactiva y ultra realista para
+              simular conversaciones de WhatsApp directamente en landing pages, demos de producto o sitios web con
+              sonidos de teclado, mensajes de audio y carga de medios.
+            </p>
+            <p class="author-message">
+              Espero que esta herramienta te sea de gran utilidad para elevar la conversión y la experiencia visual de
+              tus proyectos.
+            </p>
+          </div>
+
+          <!-- Actions -->
+          <div class="author-actions">
+            <a href="https://github.com/rrortega/whatsimule" target="_blank" rel="noopener noreferrer"
+              class="btn-author-action primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+              </svg>
+              Apoyar con una Estrella ⭐
+            </a>
+            <a href="https://github.com/rrortega" target="_blank" rel="noopener noreferrer"
+              class="btn-author-action secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              Perfil de GitHub (@rrortega)
+            </a>
+            <a href="https://github.com/rrortega/whatsimule/issues" target="_blank" rel="noopener noreferrer"
+              class="btn-author-action secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              Sugerencias o Issues
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+  </section>
+
+  <!-- Prism.js Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 
   <!-- Main React Loader script using ESM -->
   <script type="module">
-    import React from 'react';
+    import React, { useState, useEffect } from 'react';
     import { createRoot } from 'react-dom/client';
     import { WhatsAppSimulator } from './dist/index.mjs';
 
-    // Script definitions for the demo
+    // Conversation Scripts Data
     const DEMO_SCRIPTS = {
       ai_support: {
         id: "ai_support",
@@ -350,25 +2355,478 @@ export default function App() {
           { sender: "assistant", type: "text", content: "Entendido. He abierto el ticket #INC-883. Un especialista de soporte en sitio se está comunicando contigo.", delay: 1600 },
           { sender: "assistant", type: "text", content: "Tiempo estimado de atención: 15 minutos. ⏱️", delay: 1200 }
         ]
+      },
+      audio_support: {
+        id: "audio_support",
+        label: "🎙️ Asistencia por Nota de Voz",
+        description: "Diagnóstico con notas de voz enviadas y recibidas",
+        steps: [
+          { sender: "user", type: "text", content: "Hola! Tuve una falla en la llave termomagnética del tablero principal.", delay: 800 },
+          { sender: "user", type: "audio", content: "Nota de voz del residente explicando el problema.", audioDuration: "0:12", delay: 1600 },
+          { sender: "assistant", type: "text", content: "¡Hola! Escuché tu audio con atención. ¿Podrías enviarme una foto del tablero para inspeccionar las llaves?", delay: 1400 },
+          { sender: "user", type: "image", content: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=500&auto=format&fit=crop&q=80", caption: "Llave termomagnética desactivada en la sección B2.", delay: 1800 },
+          { sender: "assistant", type: "audio", content: "Instrucciones de seguridad por voz del perito eléctrico.", audioDuration: "0:24", delay: 2000 },
+          { sender: "assistant", type: "text", content: "Por favor baja la palanca principal y aguarda 2 minutos antes de rearmar. Un técnico ya va en camino. 🛠️", delay: 1500 }
+        ]
+      },
+      image_inspection: {
+        id: "image_inspection",
+        label: "📸 Inspección Técnica & Foto",
+        description: "Evidencia fotográfica con pie de foto y dictamen por voz",
+        steps: [
+          { sender: "user", type: "image", content: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=500&auto=format&fit=crop&q=80", caption: "Reporto fisura detectada en la columna de soporte norte.", delay: 1000 },
+          { sender: "assistant", type: "text", content: "Gracias por enviar la imagen. He transferido el caso a la división de infraestructura.", delay: 1500 },
+          { sender: "assistant", type: "audio", content: "Dictamen preliminar en audio por el ingeniero a cargo.", audioDuration: "0:18", delay: 2200 },
+          { sender: "user", type: "text", content: "Excelente, quedo a la espera del equipo de campo.", delay: 1000 }
+        ]
       }
     };
 
-    const container = document.getElementById('simulator-root');
-    const root = createRoot(container);
+    let demoPageTheme = (() => {
+      try { return localStorage.getItem('demo_page_theme') || 'dark'; } catch (e) { return 'dark'; }
+    })();
 
-    root.render(
-      React.createElement(WhatsAppSimulator, {
+    if (demoPageTheme === 'light') {
+      document.body.classList.add('demo-theme-light');
+    }
+
+    const savedSimulatorTheme = (() => {
+      try { return localStorage.getItem('simulator_theme') || 'dark'; } catch (e) { return 'dark'; }
+    })();
+
+    let customAvatarUrl = undefined;
+    let customWallpaperUrl = undefined;
+
+    // State management for playground
+    let currentConfig = {
+      scriptId: "ai_support",
+      assistantName: "Asistenxa IA",
+      assistantAvatarUrl: customAvatarUrl,
+      chatType: "direct",
+      wallpaperPattern: "doodle",
+      customWallpaperUrl: customWallpaperUrl,
+      typingMode: "keyboard",
+      theme: savedSimulatorTheme,
+      deviceStyle: "iphone",
+      width: 360,
+      height: 680,
+      locale: "es",
+      showEncryptionNotice: true,
+      enableScrollTilt: true,
+      enableHoverTilt: true,
+      speedMultiplier: 1,
+      showRestartButton: true,
+      restartButtonVisibility: "on-complete",
+      restartButtonPosition: "center",
+      enableSound: true,
+      soundTyping: true,
+      soundSent: true,
+      soundReceive: true
+    };
+
+    function updateGeneratedCode() {
+      const codeSnippet = document.getElementById('code-snippet');
+      if (!codeSnippet) return;
+
+      const codeText = `import React from "react";
+import { WhatsAppSimulator, ChatScript } from "rrortega-whatsimule";
+import "rrortega-whatsimule/dist/whatsapp-simulator.css";
+
+const customScripts: Record<string, ChatScript> = ${JSON.stringify(DEMO_SCRIPTS, null, 2)};
+
+export default function App() {
+  return (
+    <WhatsAppSimulator
+      scripts={customScripts}
+      defaultActiveScriptId="${currentConfig.scriptId}"
+      assistantName="${currentConfig.assistantName}"
+      ${currentConfig.assistantAvatarUrl ? `assistantAvatarUrl="${currentConfig.assistantAvatarUrl.substring(0, 30)}..."\n      ` : ""}chatType="${currentConfig.chatType}"
+      wallpaperPattern="${currentConfig.wallpaperPattern}"
+      ${currentConfig.customWallpaperUrl ? `customWallpaperUrl="${currentConfig.customWallpaperUrl.substring(0, 30)}..."\n      ` : ""}typingMode="${currentConfig.typingMode}"
+      hideSelector={true}
+      showEncryptionNotice={${currentConfig.showEncryptionNotice}}
+      showRestartButton={${currentConfig.showRestartButton}}
+      restartButtonVisibility="${currentConfig.restartButtonVisibility}"
+      restartButtonPosition="${currentConfig.restartButtonPosition}"
+      theme="${currentConfig.theme}"
+      deviceStyle="${currentConfig.deviceStyle}"
+      width="${currentConfig.width}px"
+      height="${currentConfig.height}px"
+      locale="${currentConfig.locale}"
+      enableScrollTilt={${currentConfig.enableScrollTilt}}
+      enableHoverTilt={${currentConfig.enableHoverTilt}}
+      speedMultiplier={${currentConfig.speedMultiplier}}
+      enableSound={${currentConfig.enableSound}}
+      soundTyping={${currentConfig.soundTyping}}
+      soundSent={${currentConfig.soundSent}}
+      soundReceive={${currentConfig.soundReceive}}
+      onMessageSent={(msg) => console.log("Mensaje enviado:", msg)}
+      onScriptComplete={(id) => console.log("Script finalizado:", id)}
+    />
+  );
+}`;
+
+      codeSnippet.textContent = codeText;
+      if (window.Prism) {
+        Prism.highlightElement(codeSnippet);
+      }
+    }
+
+    // App Wrapper Component
+    function PlaygroundApp() {
+      const [config, setConfig] = useState(currentConfig);
+
+      // Listen to control changes
+      useEffect(() => {
+        const nameInput = document.getElementById('assistant-name-input');
+        const avatarFileInput = document.getElementById('custom-avatar-file');
+        const wallpaperFileInput = document.getElementById('custom-wallpaper-file');
+        const encryptionToggle = document.getElementById('encryption-toggle');
+        const scrollTiltToggle = document.getElementById('scroll-tilt-toggle');
+        const hoverTiltToggle = document.getElementById('hover-tilt-toggle');
+        const speedSelect = document.getElementById('speed-input');
+        const restartBtnToggle = document.getElementById('restart-btn-toggle');
+        const restartPosSelect = document.getElementById('restart-pos-input');
+        const soundToggle = document.getElementById('sound-toggle');
+        const soundTypingToggle = document.getElementById('sound-typing-toggle');
+        const soundSentToggle = document.getElementById('sound-sent-toggle');
+        const soundReceiveToggle = document.getElementById('sound-receive-toggle');
+
+        const getSelectedScriptId = () => {
+          const activeCard = document.querySelector('#script-card-list .script-card-item.active');
+          return activeCard ? activeCard.dataset.value : 'ai_support';
+        };
+
+        const getGroupValue = (groupId, fallback) => {
+          const activeBtn = document.querySelector(`#${groupId} .btn-group-btn.active, #${groupId} .btn-grid-btn.active`);
+          return activeBtn ? activeBtn.dataset.value : fallback;
+        };
+
+        const speedSlider = document.getElementById('speed-range-input');
+        const speedBadge = document.getElementById('speed-val-badge');
+        const widthSlider = document.getElementById('width-range-input');
+        const widthBadge = document.getElementById('width-val-badge');
+        const heightSlider = document.getElementById('height-range-input');
+        const heightBadge = document.getElementById('height-val-badge');
+
+        const avatarBadgeToggle = document.getElementById('avatar-badge-toggle');
+        const customAvatarWrapper = document.getElementById('custom-avatar-wrapper');
+        const avatarThumbBox = document.getElementById('avatar-thumb-box');
+        const avatarThumbImg = document.getElementById('avatar-thumb-img');
+        const removeAvatarBtn = document.getElementById('remove-avatar-btn');
+
+        const updateAvatarUI = () => {
+          const nameVal = nameInput ? (nameInput.value.trim() || "A") : "A";
+          const initialChar = nameVal.charAt(0).toUpperCase();
+          const avatarBadgeDisplay = document.getElementById('avatar-badge-display');
+
+          if (customAvatarUrl) {
+            if (avatarBadgeDisplay) {
+              avatarBadgeDisplay.innerHTML = `<img src="${customAvatarUrl}" alt="Avatar" />`;
+            }
+            if (avatarThumbBox && avatarThumbImg) {
+              avatarThumbImg.src = customAvatarUrl;
+              avatarThumbBox.style.display = 'block';
+            }
+            if (removeAvatarBtn) {
+              removeAvatarBtn.style.display = 'inline-flex';
+            }
+          } else {
+            if (avatarBadgeDisplay) {
+              avatarBadgeDisplay.innerHTML = `<span>${initialChar}</span>`;
+            }
+            if (avatarThumbBox) {
+              avatarThumbBox.style.display = 'none';
+            }
+            if (removeAvatarBtn) {
+              removeAvatarBtn.style.display = 'none';
+            }
+          }
+        };
+
+        avatarBadgeToggle?.addEventListener('click', () => {
+          if (customAvatarWrapper) {
+            const isHidden = customAvatarWrapper.style.display === 'none';
+            customAvatarWrapper.style.display = isHidden ? 'block' : 'none';
+          }
+        });
+
+        removeAvatarBtn?.addEventListener('click', () => {
+          customAvatarUrl = undefined;
+          if (avatarFileInput) avatarFileInput.value = '';
+          updateAvatarUI();
+          handleChange();
+        });
+
+        const handleChange = () => {
+          const speedVal = parseFloat(speedSlider ? speedSlider.value : 1);
+          if (speedBadge) {
+            speedBadge.textContent = `${speedVal}x`;
+          }
+
+          const widthVal = parseInt(widthSlider ? widthSlider.value : 360, 10);
+          if (widthBadge) widthBadge.textContent = `${widthVal}px`;
+
+          const heightVal = parseInt(heightSlider ? heightSlider.value : 680, 10);
+          if (heightBadge) heightBadge.textContent = `${heightVal}px`;
+
+          const wallpaperVal = getGroupValue('wallpaper-group', 'doodle');
+          const customWallpaperWrapper = document.getElementById('custom-wallpaper-wrapper');
+
+          if (wallpaperVal === 'custom') {
+            if (customWallpaperWrapper) customWallpaperWrapper.style.display = 'block';
+          } else {
+            if (customWallpaperWrapper) customWallpaperWrapper.style.display = 'none';
+            customWallpaperUrl = undefined;
+            if (wallpaperFileInput) wallpaperFileInput.value = '';
+          }
+
+          updateAvatarUI();
+
+          const restartVis = getGroupValue('restart-vis-group', 'always');
+
+          const newCfg = {
+            scriptId: getSelectedScriptId(),
+            assistantName: nameInput ? (nameInput.value || "Asistenxa IA") : "Asistenxa IA",
+            assistantAvatarUrl: customAvatarUrl,
+            chatType: getGroupValue('chat-type-group', 'direct'),
+            wallpaperPattern: wallpaperVal,
+            customWallpaperUrl: customWallpaperUrl,
+            typingMode: getGroupValue('typing-mode-group', 'direct'),
+            theme: getGroupValue('theme-group', 'dark'),
+            deviceStyle: getGroupValue('device-group', 'iphone'),
+            width: widthVal,
+            height: heightVal,
+            locale: getGroupValue('locale-group', 'es'),
+            showEncryptionNotice: encryptionToggle.checked,
+            enableScrollTilt: scrollTiltToggle.checked,
+            enableHoverTilt: hoverTiltToggle.checked,
+            speedMultiplier: speedVal,
+            showRestartButton: restartVis !== 'never',
+            restartButtonVisibility: restartVis,
+            restartButtonPosition: getGroupValue('restart-pos-group', 'bottom-right'),
+            enableSound: soundToggle.checked,
+            soundTyping: soundTypingToggle.checked,
+            soundSent: soundSentToggle.checked,
+            soundReceive: soundReceiveToggle.checked
+          };
+          try {
+            localStorage.setItem('simulator_theme', newCfg.theme);
+          } catch (e) { }
+          currentConfig = newCfg;
+          setConfig(newCfg);
+          updateGeneratedCode();
+        };
+
+        avatarFileInput?.addEventListener('change', (e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              customAvatarUrl = evt.target?.result;
+              updateAvatarUI();
+              handleChange();
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        wallpaperFileInput?.addEventListener('change', (e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              customWallpaperUrl = evt.target?.result;
+              handleChange();
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        const setupScriptCardEvents = () => {
+          const cards = document.querySelectorAll('#script-card-list .script-card-item');
+          cards.forEach(card => {
+            card.addEventListener('click', () => {
+              cards.forEach(c => c.classList.remove('active'));
+              card.classList.add('active');
+              handleChange();
+            });
+          });
+        };
+
+        const setupGroupEvents = (groupId) => {
+          const group = document.getElementById(groupId);
+          if (!group) return;
+          const buttons = group.querySelectorAll('.btn-group-btn, .btn-grid-btn');
+          buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+              buttons.forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+              handleChange();
+              if (groupId === 'wallpaper-group' && btn.dataset.value === 'custom' && !customWallpaperUrl) {
+                wallpaperFileInput?.click();
+              }
+            });
+          });
+        };
+
+        setupScriptCardEvents();
+        setupGroupEvents('chat-type-group');
+        setupGroupEvents('wallpaper-group');
+        setupGroupEvents('typing-mode-group');
+        setupGroupEvents('theme-group');
+        setupGroupEvents('device-group');
+        setupGroupEvents('locale-group');
+        setupGroupEvents('restart-vis-group');
+        setupGroupEvents('restart-pos-group');
+
+        // Sync initial simulator theme button in config panel
+        if (savedSimulatorTheme === 'light') {
+          const themeBtns = document.querySelectorAll('#theme-group .btn-group-btn');
+          themeBtns.forEach(b => {
+            b.classList.toggle('active', b.dataset.value === 'light');
+          });
+        }
+
+        // Top Navbar Demo Page Theme Toggle Handler
+        const topNavThemeBtn = document.getElementById('top-nav-theme-toggle');
+        const topNavThemeText = document.getElementById('top-nav-theme-text');
+
+        const updateDemoPageThemeUI = (theme) => {
+          document.body.classList.toggle('demo-theme-light', theme === 'light');
+          if (topNavThemeText) {
+            topNavThemeText.textContent = theme === 'light' ? 'Modo Oscuro' : 'Modo Claro';
+          }
+        };
+
+        updateDemoPageThemeUI(demoPageTheme);
+
+        topNavThemeBtn?.addEventListener('click', () => {
+          demoPageTheme = demoPageTheme === 'dark' ? 'light' : 'dark';
+          try {
+            localStorage.setItem('demo_page_theme', demoPageTheme);
+          } catch (e) { }
+          updateDemoPageThemeUI(demoPageTheme);
+        });
+
+        nameInput?.addEventListener('input', handleChange);
+        encryptionToggle?.addEventListener('change', handleChange);
+        scrollTiltToggle?.addEventListener('change', handleChange);
+        hoverTiltToggle?.addEventListener('change', handleChange);
+        speedSlider?.addEventListener('input', handleChange);
+        widthSlider?.addEventListener('input', handleChange);
+        heightSlider?.addEventListener('input', handleChange);
+        soundToggle?.addEventListener('change', handleChange);
+        soundTypingToggle?.addEventListener('change', handleChange);
+        soundSentToggle?.addEventListener('change', handleChange);
+        soundReceiveToggle?.addEventListener('change', handleChange);
+
+        updateGeneratedCode();
+      }, []);
+
+      return React.createElement(WhatsAppSimulator, {
+        key: `${config.scriptId}-${config.assistantName}-${config.assistantAvatarUrl ? 'custom-avatar' : 'no-avatar'}-${config.chatType}-${config.wallpaperPattern}-${config.customWallpaperUrl ? 'custom-bg' : 'no-bg'}-${config.typingMode}-${config.theme}-${config.deviceStyle}-${config.width}-${config.height}-${config.locale}-${config.showEncryptionNotice}-${config.enableScrollTilt}-${config.enableHoverTilt}-${config.speedMultiplier}-${config.showRestartButton}-${config.restartButtonVisibility}-${config.restartButtonPosition}-${config.enableSound}-${config.soundTyping}-${config.soundSent}-${config.soundReceive}`,
         scripts: DEMO_SCRIPTS,
-        defaultActiveScriptId: "ai_support",
-        assistantName: "Asistenxa IA",
-        title: "Simulador Interactivo de WhatsApp",
-        description: "Elige un escenario para ver la simulación en tiempo real",
-        locale: "es",
-        enable3DTilt: true,
-        enableSound: true
-      })
-    );
+        defaultActiveScriptId: config.scriptId,
+        assistantName: config.assistantName,
+        assistantAvatarUrl: config.assistantAvatarUrl,
+        chatType: config.chatType,
+        wallpaperPattern: config.wallpaperPattern,
+        customWallpaperUrl: config.customWallpaperUrl,
+        typingMode: config.typingMode,
+        hideSelector: true,
+        showEncryptionNotice: config.showEncryptionNotice,
+        showRestartButton: config.showRestartButton,
+        restartButtonVisibility: config.restartButtonVisibility,
+        restartButtonPosition: config.restartButtonPosition,
+        theme: config.theme,
+        deviceStyle: config.deviceStyle,
+        width: config.width,
+        height: config.height,
+        locale: config.locale,
+        enableScrollTilt: config.enableScrollTilt,
+        enableHoverTilt: config.enableHoverTilt,
+        speedMultiplier: config.speedMultiplier,
+        enableSound: config.enableSound,
+        soundTyping: config.soundTyping,
+        soundSent: config.soundSent,
+        soundReceive: config.soundReceive,
+        onMessageSent: (msg) => console.log("Mensaje enviado:", msg),
+        onScriptComplete: (scriptId) => console.log("Script completado:", scriptId)
+      });
+    }
+
+    // Render React App into DOM
+    const container = document.getElementById('simulator-target');
+    const root = createRoot(container);
+    root.render(React.createElement(PlaygroundApp));
+
+    // Tab Switching Logic
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        btn.classList.add('active');
+        const tabId = btn.getAttribute('data-tab');
+        const targetTab = document.getElementById(tabId);
+        if (targetTab) {
+          targetTab.classList.add('active');
+        }
+
+        if (tabId === 'tab-code') {
+          updateGeneratedCode();
+        }
+      });
+    });
+
+    // Copy Code Button Logic
+    document.getElementById('copy-code-btn')?.addEventListener('click', () => {
+      const codeSnippet = document.getElementById('code-snippet');
+      if (codeSnippet) {
+        navigator.clipboard.writeText(codeSnippet.textContent).then(() => {
+          const btn = document.getElementById('copy-code-btn');
+          const origText = btn.innerHTML;
+          btn.innerHTML = '¡Copiado!';
+          setTimeout(() => {
+            btn.innerHTML = origText;
+          }, 2000);
+        });
+      }
+    });
+
+    // Package Manager Install Command Switcher & Copy Logic
+    const pkgCommands = {
+      npm: "npm install rrortega-whatsimule",
+      pnpm: "pnpm add rrortega-whatsimule",
+      yarn: "yarn add rrortega-whatsimule",
+      bun: "bun add rrortega-whatsimule"
+    };
+
+    document.querySelectorAll('.install-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.install-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const pkg = btn.getAttribute('data-pkg');
+        const cmdText = document.getElementById('install-command-text');
+        if (cmdText && pkgCommands[pkg]) {
+          cmdText.textContent = pkgCommands[pkg];
+        }
+      });
+    });
+
+    document.getElementById('copy-install-cmd')?.addEventListener('click', () => {
+      const cmdText = document.getElementById('install-command-text')?.textContent || '';
+      navigator.clipboard.writeText(cmdText).then(() => {
+        const label = document.getElementById('copy-install-label');
+        if (label) {
+          label.textContent = "¡Copiado!";
+          setTimeout(() => { label.textContent = "Copiar"; }, 2000);
+        }
+      });
+    });
   </script>
 
 </body>
+
 </html>

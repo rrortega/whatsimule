@@ -1,7 +1,7 @@
 import React from "react";
 
 export type MessageSender = "user" | "resident" | "assistant" | "asistenxa";
-export type MessageType = "text" | "image";
+export type MessageType = "text" | "image" | "audio";
 
 export interface Message {
     id: string;
@@ -11,6 +11,11 @@ export interface Message {
     timestamp: string;
     isUploading?: boolean;
     uploadProgress?: number;
+    senderName?: string;
+    senderColor?: string;
+    caption?: string;
+    audioDuration?: string;
+    audioUrl?: string;
 }
 
 export interface ScriptStep {
@@ -18,6 +23,11 @@ export interface ScriptStep {
     type: MessageType;
     content: string;
     delay: number; // Delay before executing step (in ms)
+    senderName?: string;
+    senderColor?: string;
+    caption?: string;
+    audioDuration?: string;
+    audioUrl?: string;
 }
 
 export interface ChatScript {
@@ -33,15 +43,35 @@ export interface WhatsAppSimulatorOptions {
     defaultActiveScriptId?: string;
     assistantName?: string;
     assistantAvatarUrl?: string;
+    chatType?: "direct" | "group";
+    groupMembersText?: string;
+    wallpaperPattern?: "doodle" | "dots" | "grid";
+    customWallpaperUrl?: string;
+    typingMode?: "direct" | "keyboard";
     title?: string;
     description?: string;
     hideSelector?: boolean;
+    showRestartButton?: boolean;
+    restartButtonPosition?: "bottom-right" | "bottom-left" | "top-right" | "top-left" | "center" | "center-left" | "center-right";
+    restartButtonVisibility?: "always" | "on-complete" | "never";
+    showEncryptionNotice?: boolean;
     enableSound?: boolean;
+    soundTyping?: boolean;
+    soundSent?: boolean;
+    soundReceive?: boolean;
     enable3DTilt?: boolean;
+    enableScrollTilt?: boolean;
+    enableHoverTilt?: boolean;
+    theme?: "dark" | "light";
+    deviceStyle?: "iphone" | "android" | "none";
+    width?: string | number;
+    height?: string | number;
+    speedMultiplier?: number;
     locale?: "es" | "en";
     labels?: {
         onlineStatus?: string;
         typingStatus?: string;
+        recordingStatus?: string;
         inputPlaceholder?: string;
         speedMultiplier?: string;
         restartTooltip?: string;
