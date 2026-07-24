@@ -141,3 +141,4 @@ Contributions, issue reports, and feature requests are very welcome!
 ## 📄 License
 
 This project is open-source and licensed under the [MIT License](LICENSE). Anyone is free to use, modify, and distribute it in personal or commercial projects.
+
