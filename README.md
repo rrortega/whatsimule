@@ -3,10 +3,8 @@
 # rrortega-whatsimule
 
 [![npm version](https://img.shields.io/npm/v/rrortega-whatsimule.svg?color=00a884)](https://www.npmjs.com/package/rrortega-whatsimule)
-[![bundle size](https://img.shields.io/bundlephobia/minzip/rrortega-whatsimule?color=25d366)](https://bundlephobia.com/package/rrortega-whatsimule)
-[![npm downloads](https://img.shields.io/npm/dm/rrortega-whatsimule.svg?color=blue)](https://www.npmjs.com/package/rrortega-whatsimule)
-[![build status](https://github.com/rrortega/whatsimule/actions/workflows/deploy-demo.yml/badge.svg)](https://github.com/rrortega/whatsimule/actions)
 [![license](https://img.shields.io/npm/l/rrortega-whatsimule.svg?color=green)](LICENSE)
+[![build status](https://github.com/rrortega/whatsimule/actions/workflows/deploy-demo.yml/badge.svg)](https://github.com/rrortega/whatsimule/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178c6.svg)](https://www.typescriptlang.org/)
 
 An interactive, pixel-perfect WhatsApp conversation simulator library for **React** and **Next.js** applications. Designed to showcase AI assistants, customer support flows, incident intake, and sales lead qualification with real-time QWERTY typing simulation, fullscreen image upload staging, hands-free voice note recording, Web Audio API sound synthesis, and 3D perspective tilt effects.
