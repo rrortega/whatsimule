@@ -50,6 +50,17 @@ export interface ChatScript {
     steps: ScriptStep[];
 }
 
+export interface PerspectiveKeyframe {
+    id?: string;
+    second: number;
+    duration?: number;
+    rotateX: number;
+    rotateY: number;
+    rotateZ?: number;
+    zoom?: number;
+    yOffset?: number;
+}
+
 export interface WhatsAppSimulatorOptions {
     customScripts?: Record<string, ChatScript>;
     defaultActiveScriptId?: string;
@@ -74,6 +85,8 @@ export interface WhatsAppSimulatorOptions {
     enable3DTilt?: boolean;
     enableScrollTilt?: boolean;
     enableHoverTilt?: boolean;
+    enableTimelineTilt?: boolean;
+    perspectiveTimeline?: PerspectiveKeyframe[];
     theme?: "dark" | "light";
     deviceStyle?: "iphone" | "android" | "none";
     width?: string | number;

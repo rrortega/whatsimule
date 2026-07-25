@@ -235,6 +235,8 @@ Register `WhatSimuleElement` as a Web Component for non-React projects:
 | `enable3DTilt` | `boolean` | `undefined` | Enables 3D perspective tilt effect |
 | `enableScrollTilt` | `boolean` | `true` | Applies subtle tilt as container scrolls into view |
 | `enableHoverTilt` | `boolean` | `false` | Applies tilt on mouse hover |
+| `enableTimelineTilt` | `boolean` | `true` | Enables automatic keyframe perspective animation during conversation timeline |
+| `perspectiveTimeline` | `PerspectiveKeyframe[]` | `undefined` | Keyframe array setting perspective angles & zoom at specific seconds of conversation |
 | `theme` | `"dark" \| "light"` | `"dark"` | UI theme |
 | `deviceStyle` | `"iphone" \| "android" \| "none"` | `"iphone"` | Phone bezel casing frame style |
 | `width` | `string \| number` | `undefined` | Explicit container width |

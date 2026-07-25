@@ -7,6 +7,7 @@ export type {
     MessageType,
     ScriptStep,
     ChatScript,
+    PerspectiveKeyframe,
     WhatsAppSimulatorOptions,
     SimulatorEventHandlers,
 } from "./core/types";

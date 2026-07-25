@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { RotateCcw, Square, Circle, Triangle, X, Crop, Smile, Type, Pencil, Send, Mic } from "lucide-react";
-import { WhatsAppSimulatorOptions, ChatScript, SimulatorEventHandlers } from "../core/types";
+import { WhatsAppSimulatorOptions, ChatScript, SimulatorEventHandlers, PerspectiveKeyframe } from "../core/types";
 import { useWhatsAppSimulator } from "./useWhatsAppSimulator";
 import { ChatHeader } from "./components/ChatHeader";
 import { MessageBubble } from "./components/MessageBubble";
@@ -42,6 +42,8 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
     enable3DTilt,
     enableScrollTilt = true,
     enableHoverTilt = false,
+    enableTimelineTilt = true,
+    perspectiveTimeline,
     theme = "dark",
     deviceStyle = "iphone",
     width,
@@ -151,13 +153,50 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
         ? Math.min(100, Math.round((state.elapsedTime / state.totalDuration) * 100))
         : 0;
 
-    // Combine motion styles for scroll & hover tilt
+    // Timeline Perspective Keyframes logic
+    const activeKeyframe = useMemo(() => {
+        if (!perspectiveTimeline || perspectiveTimeline.length === 0) return null;
+        const currentSecond = state.elapsedTime / 1000;
+        const sorted = [...perspectiveTimeline].sort((a, b) => a.second - b.second);
+        let current: PerspectiveKeyframe | null = sorted[0];
+        for (const kf of sorted) {
+            if (kf.second <= currentSecond) {
+                current = kf;
+            } else {
+                break;
+            }
+        }
+        return current;
+    }, [perspectiveTimeline, state.elapsedTime]);
+
+    const isTimelineActive = !!(perspectiveTimeline && perspectiveTimeline.length > 0 && enableTimelineTilt !== false);
+    const isUserHovering = enableHoverTilt && (hoverRotation.x !== 0 || hoverRotation.y !== 0);
+
+    // Motion styles calculation
     const motionStyle = {
-        rotateX: enableHoverTilt ? hoverRotation.x : (actualScrollTilt ? rotateXSpring : 0),
-        rotateY: enableHoverTilt ? hoverRotation.y : (actualScrollTilt ? rotateYSpring : 0),
-        y: actualScrollTilt && !enableHoverTilt ? yFloatSpring : 0,
+        rotateX: isUserHovering
+            ? hoverRotation.x
+            : (isTimelineActive && activeKeyframe
+                ? activeKeyframe.rotateX
+                : (actualScrollTilt ? rotateXSpring : 0)),
+        rotateY: isUserHovering
+            ? hoverRotation.y
+            : (isTimelineActive && activeKeyframe
+                ? activeKeyframe.rotateY
+                : (actualScrollTilt ? rotateYSpring : 0)),
+        rotateZ: isTimelineActive && activeKeyframe ? (activeKeyframe.rotateZ || 0) : 0,
+        scale: isTimelineActive && activeKeyframe ? (activeKeyframe.zoom || 1) : 1,
+        y: isUserHovering
+            ? 0
+            : (isTimelineActive && activeKeyframe
+                ? (activeKeyframe.yOffset || 0)
+                : (actualScrollTilt ? yFloatSpring : 0)),
         transformStyle: "preserve-3d" as const,
     };
+
+    const motionTransition = isTimelineActive && activeKeyframe && !isUserHovering
+        ? { duration: activeKeyframe.duration ?? 0.8, ease: "easeInOut" as const }
+        : undefined;
 
     const shouldShowRestart = (() => {
         if (!showRestartButton) return false;
@@ -195,6 +234,14 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
                         ...motionStyle,
                         maxWidth: width !== undefined ? (typeof width === "number" ? `${width}px` : width) : undefined,
                     }}
+                    animate={isTimelineActive && activeKeyframe && !isUserHovering ? {
+                        rotateX: activeKeyframe.rotateX,
+                        rotateY: activeKeyframe.rotateY,
+                        rotateZ: activeKeyframe.rotateZ || 0,
+                        scale: activeKeyframe.zoom || 1,
+                        y: activeKeyframe.yOffset || 0,
+                    } : undefined}
+                    transition={motionTransition}
                     className={`rws-phone-wrapper rws-device-${deviceStyle}`}
                 >
                     {/* Physical Side Hardware Buttons on Wrapper */}
