@@ -122,6 +122,11 @@ export default function App() {
 | `deviceStyle` | `"iphone" \| "android" \| "none"` | `"iphone"` | Phone frame layout wrapper with notch/punch-hole. |
 | `width` | `string \| number` | `undefined` | Custom simulator container width. |
 | `height` | `string \| number` | `undefined` | Custom simulator container height. |
+| `enableScrollTilt` | `boolean` | `true` | Enables subtle 3D perspective tilt as container scrolls into view. |
+| `enableHoverTilt` | `boolean` | `false` | Enables mouse hover-driven 3D perspective rotation. |
+| `enableStepTilt` | `boolean` | `true` | Enables step-defined 3D tilt perspective animations as messages arrive. |
+| `enableTimelineTilt` | `boolean` | `true` | Enables automatic keyframe perspective timeline animations. |
+| `perspectiveTimeline` | `PerspectiveKeyframe[]` | `undefined` | Keyframe array setting perspective angles & zoom at specific seconds of conversation. |
 | `speedMultiplier` | `number` | `1` | Animation speed multiplier (`0.5x`, `1x`, `1.5x`, `2x`). |
 | `enableSound` | `boolean` | `true` | Enable or disable Web Audio API sound synthesis. |
 | `showRestartButton` | `boolean` | `true` | Show floating restart button. |
@@ -129,6 +134,27 @@ export default function App() {
 | `locale` | `"es" \| "en"` | `"es"` | Built-in UI language string translations. |
 | `onMessageSent` | `(message: Message) => void` | `undefined` | Event callback fired whenever a message is sent. |
 | `onScriptComplete` | `(scriptId: string) => void` | `undefined` | Event callback fired when a conversation script finishes. |
+
+---
+
+### 🎨 Step-Defined 3D Perspective Keyframes (`step.perspective`)
+
+You can define 3D tilt angles (`rotateX`, `rotateY`, `rotateZ`, `zoom`, `duration`) directly on individual script steps so the camera smoothly rotates and zooms dynamically as specific messages arrive:
+
+```tsx
+{
+  sender: "assistant",
+  type: "text",
+  content: "Here is our product catalog!",
+  delay: 1500,
+  perspective: {
+    rotateX: -6,   // Tilt X angle (-45° to 45°)
+    rotateY: 10,   // Tilt Y angle (-45° to 45°)
+    zoom: 1.05,    // Scale zoom factor
+    duration: 0.8  // Transition duration in seconds
+  }
+}
+```
 
 ---
 

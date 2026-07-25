@@ -235,6 +235,7 @@ Register `WhatSimuleElement` as a Web Component for non-React projects:
 | `enable3DTilt` | `boolean` | `undefined` | Enables 3D perspective tilt effect |
 | `enableScrollTilt` | `boolean` | `true` | Applies subtle tilt as container scrolls into view |
 | `enableHoverTilt` | `boolean` | `false` | Applies tilt on mouse hover |
+| `enableStepTilt` | `boolean` | `true` | Enables step-defined 3D tilt perspective animations as messages arrive |
 | `enableTimelineTilt` | `boolean` | `true` | Enables automatic keyframe perspective animation during conversation timeline |
 | `perspectiveTimeline` | `PerspectiveKeyframe[]` | `undefined` | Keyframe array setting perspective angles & zoom at specific seconds of conversation |
 | `theme` | `"dark" \| "light"` | `"dark"` | UI theme |
@@ -264,6 +265,14 @@ export interface LinkPreviewData {
   siteName?: string;
 }
 
+export interface StepPerspective {
+  rotateX?: number; // Tilt angle X in degrees (-45 to 45)
+  rotateY?: number; // Tilt angle Y in degrees (-45 to 45)
+  rotateZ?: number; // Rotation angle Z in degrees
+  zoom?: number; // Scale zoom factor (e.g. 1.05)
+  duration?: number; // Transition duration in seconds (default 0.8s)
+}
+
 export interface ScriptStep {
   sender: MessageSender;
   type: MessageType;
@@ -276,6 +285,7 @@ export interface ScriptStep {
   audioDuration?: string;
   audioUrl?: string;
   linkPreview?: LinkPreviewData;
+  perspective?: StepPerspective; // Step-defined 3D tilt angles & zoom
 }
 
 export interface ChatScript {

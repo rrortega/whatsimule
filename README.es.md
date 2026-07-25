@@ -123,6 +123,11 @@ export default function App() {
 | `deviceStyle` | `"iphone" \| "android" \| "none"` | `"iphone"` | Marco de teléfono para el simulador (iPhone, Android o sin marco). |
 | `width` | `string \| number` | `undefined` | Ancho personalizado del contenedor. |
 | `height` | `string \| number` | `undefined` | Alto personalizado del contenedor. |
+| `enableScrollTilt` | `boolean` | `true` | Aplica una inclinación 3D suave a medida que el contenedor entra en pantalla. |
+| `enableHoverTilt` | `boolean` | `false` | Aplica perspectiva 3D interactiva según el movimiento del mouse. |
+| `enableStepTilt` | `boolean` | `true` | Activa la inclinación 3D programada por cada mensaje del guión. |
+| `enableTimelineTilt` | `boolean` | `true` | Activa la animación automática de perspectiva programada por línea de tiempo. |
+| `perspectiveTimeline` | `PerspectiveKeyframe[]` | `undefined` | Arreglo de puntos clave (keyframes) de ángulo X/Y y zoom en segundos específicos. |
 | `speedMultiplier` | `number` | `1` | Multiplicador de velocidad de animación (`0.5x`, `1x`, `1.5x`, `2x`). |
 | `enableSound` | `boolean` | `true` | Habilitar o deshabilitar sonidos sintéticos con Web Audio API. |
 | `showRestartButton` | `boolean` | `true` | Mostrar u ocultar el botón flotante de reinicio. |
@@ -130,6 +135,27 @@ export default function App() {
 | `locale` | `"es" \| "en"` | `"es"` | Idioma de las etiquetas de la interfaz. |
 | `onMessageSent` | `(message: Message) => void` | `undefined` | Callback disparado al enviar cada mensaje. |
 | `onScriptComplete` | `(scriptId: string) => void` | `undefined` | Callback disparado al finalizar un guión conversacional. |
+
+---
+
+### 🎨 Perspectiva 3D Programada por Mensaje (`step.perspective`)
+
+Puedes definir ángulos de inclinación 3D (`rotateX`, `rotateY`, `rotateZ`, `zoom`, `duration`) directamente en cada mensaje del guión para que la cámara gire y aplique zoom dinámicamente cuando aparece un mensaje específico:
+
+```tsx
+{
+  sender: "assistant",
+  type: "text",
+  content: "¡Aquí tienes nuestro catálogo de productos!",
+  delay: 1500,
+  perspective: {
+    rotateX: -6,   // Ángulo de inclinación X (-45° a 45°)
+    rotateY: 10,   // Ángulo de inclinación Y (-45° a 45°)
+    zoom: 1.05,    // Escala de zoom
+    duration: 0.8  // Duración de la transición en segundos
+  }
+}
+```
 
 ---
 
