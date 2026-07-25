@@ -17,6 +17,9 @@ Try the live playground and customize all options in real-time:
 👉 **[https://rrortega.github.io/whatsimule/](https://rrortega.github.io/whatsimule/)**
 
 ![whatsimule Cinematic Demo](demo.gif)
+<p align="center">
+  <sub>Demo video recorded with <a href="https://openvid.dev/">OpenVid</a> by <a href="https://github.com/CristianOlivera1">Cristian Olivera Chávez</a></sub>
+</p>
 
 ---
 

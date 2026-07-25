@@ -17,6 +17,9 @@ Prueba el playground interactivo y personaliza todas las opciones en tiempo real
 👉 **[https://rrortega.github.io/whatsimule/](https://rrortega.github.io/whatsimule/)**
 
 ![whatsimule Demostración Animada](demo.gif)
+<p align="center">
+  <sub>Video demostrativo grabado con <a href="https://openvid.dev/">OpenVid</a> por <a href="https://github.com/CristianOlivera1">Cristian Olivera Chávez</a></sub>
+</p>
 
 ---
 
