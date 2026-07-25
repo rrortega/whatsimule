@@ -42,6 +42,7 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
     enable3DTilt,
     enableScrollTilt = true,
     enableHoverTilt = false,
+    enableStepTilt = true,
     enableTimelineTilt = true,
     perspectiveTimeline,
     theme = "dark",
@@ -153,6 +154,18 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
         ? Math.min(100, Math.round((state.elapsedTime / state.totalDuration) * 100))
         : 0;
 
+    // Step-defined Perspective Keyframe logic
+    const activeStepPerspective = useMemo(() => {
+        if (enableStepTilt === false) return null;
+        if (state.activeStepPerspective) return state.activeStepPerspective;
+        for (let i = state.messages.length - 1; i >= 0; i--) {
+            if (state.messages[i].perspective) {
+                return state.messages[i].perspective;
+            }
+        }
+        return null;
+    }, [enableStepTilt, state.activeStepPerspective, state.messages]);
+
     // Timeline Perspective Keyframes logic
     const activeKeyframe = useMemo(() => {
         if (!perspectiveTimeline || perspectiveTimeline.length === 0) return null;
@@ -169,33 +182,56 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
         return current;
     }, [perspectiveTimeline, state.elapsedTime]);
 
-    const isTimelineActive = !!(perspectiveTimeline && perspectiveTimeline.length > 0 && enableTimelineTilt !== false);
+    const isStepPerspectiveActive = !!(enableStepTilt !== false && activeStepPerspective);
+    const isTimelineActive = !isStepPerspectiveActive && !!(perspectiveTimeline && perspectiveTimeline.length > 0 && enableTimelineTilt !== false);
     const isUserHovering = enableHoverTilt && (hoverRotation.x !== 0 || hoverRotation.y !== 0);
+
+    const activeRotateX = isUserHovering
+        ? hoverRotation.x
+        : (isStepPerspectiveActive && activeStepPerspective?.rotateX !== undefined
+            ? activeStepPerspective.rotateX
+            : (isTimelineActive && activeKeyframe
+                ? activeKeyframe.rotateX
+                : (actualScrollTilt ? rotateXSpring : 0)));
+
+    const activeRotateY = isUserHovering
+        ? hoverRotation.y
+        : (isStepPerspectiveActive && activeStepPerspective?.rotateY !== undefined
+            ? activeStepPerspective.rotateY
+            : (isTimelineActive && activeKeyframe
+                ? activeKeyframe.rotateY
+                : (actualScrollTilt ? rotateYSpring : 0)));
+
+    const activeRotateZ = isStepPerspectiveActive && activeStepPerspective?.rotateZ !== undefined
+        ? activeStepPerspective.rotateZ
+        : (isTimelineActive && activeKeyframe ? (activeKeyframe.rotateZ || 0) : 0);
+
+    const activeScale = isStepPerspectiveActive && activeStepPerspective?.zoom !== undefined
+        ? activeStepPerspective.zoom
+        : (isTimelineActive && activeKeyframe ? (activeKeyframe.zoom || 1) : 1);
+
+    const activeYOffset = isUserHovering
+        ? 0
+        : (isTimelineActive && activeKeyframe
+            ? (activeKeyframe.yOffset || 0)
+            : (actualScrollTilt ? yFloatSpring : 0));
 
     // Motion styles calculation
     const motionStyle = {
-        rotateX: isUserHovering
-            ? hoverRotation.x
-            : (isTimelineActive && activeKeyframe
-                ? activeKeyframe.rotateX
-                : (actualScrollTilt ? rotateXSpring : 0)),
-        rotateY: isUserHovering
-            ? hoverRotation.y
-            : (isTimelineActive && activeKeyframe
-                ? activeKeyframe.rotateY
-                : (actualScrollTilt ? rotateYSpring : 0)),
-        rotateZ: isTimelineActive && activeKeyframe ? (activeKeyframe.rotateZ || 0) : 0,
-        scale: isTimelineActive && activeKeyframe ? (activeKeyframe.zoom || 1) : 1,
-        y: isUserHovering
-            ? 0
-            : (isTimelineActive && activeKeyframe
-                ? (activeKeyframe.yOffset || 0)
-                : (actualScrollTilt ? yFloatSpring : 0)),
+        rotateX: activeRotateX,
+        rotateY: activeRotateY,
+        rotateZ: activeRotateZ,
+        scale: activeScale,
+        y: activeYOffset,
         transformStyle: "preserve-3d" as const,
     };
 
-    const motionTransition = isTimelineActive && activeKeyframe && !isUserHovering
-        ? { duration: activeKeyframe.duration ?? 0.8, ease: "easeInOut" as const }
+    const currentDuration = isStepPerspectiveActive
+        ? (activeStepPerspective?.duration ?? 0.8)
+        : (isTimelineActive && activeKeyframe ? (activeKeyframe.duration ?? 0.8) : undefined);
+
+    const motionTransition = (isStepPerspectiveActive || isTimelineActive) && !isUserHovering
+        ? { duration: currentDuration ?? 0.8, ease: "easeInOut" as const }
         : undefined;
 
     const shouldShowRestart = (() => {
@@ -234,12 +270,12 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
                         ...motionStyle,
                         maxWidth: width !== undefined ? (typeof width === "number" ? `${width}px` : width) : undefined,
                     }}
-                    animate={isTimelineActive && activeKeyframe && !isUserHovering ? {
-                        rotateX: activeKeyframe.rotateX,
-                        rotateY: activeKeyframe.rotateY,
-                        rotateZ: activeKeyframe.rotateZ || 0,
-                        scale: activeKeyframe.zoom || 1,
-                        y: activeKeyframe.yOffset || 0,
+                    animate={(isStepPerspectiveActive || isTimelineActive) && !isUserHovering ? {
+                        rotateX: typeof activeRotateX === "number" ? activeRotateX : 0,
+                        rotateY: typeof activeRotateY === "number" ? activeRotateY : 0,
+                        rotateZ: activeRotateZ,
+                        scale: activeScale,
+                        y: typeof activeYOffset === "number" ? activeYOffset : 0,
                     } : undefined}
                     transition={motionTransition}
                     className={`rws-phone-wrapper rws-device-${deviceStyle}`}

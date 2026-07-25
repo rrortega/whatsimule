@@ -1,4 +1,4 @@
-import { Message, ChatScript, WhatsAppSimulatorOptions, SimulatorEventHandlers } from "./types";
+import { Message, ChatScript, WhatsAppSimulatorOptions, SimulatorEventHandlers, StepPerspective } from "./types";
 import { playKeyClickSound, playSentSound, playReceiveSound } from "./audio-synth";
 
 export type StateListener = (state: SimulatorState) => void;
@@ -32,6 +32,7 @@ export interface SimulatorState {
     isComplete: boolean;
     isKeyboardOpen: boolean;
     pressedKey: string | null;
+    activeStepPerspective?: StepPerspective | null;
 }
 
 export class WhatsAppSimulatorEngine {
@@ -128,6 +129,7 @@ export class WhatsAppSimulatorEngine {
             elapsedTime: 0,
             totalDuration,
             isComplete: false,
+            activeStepPerspective: null,
         });
 
         this.handlers.onScriptChange?.(scriptId);
@@ -159,6 +161,9 @@ export class WhatsAppSimulatorEngine {
             if (this.activeRunId !== runId) return;
 
             const step = script.steps[i];
+            if (step.perspective) {
+                this.updateState({ activeStepPerspective: step.perspective });
+            }
             await this.sleep(step.delay);
             if (this.activeRunId !== runId) return;
 
@@ -219,6 +224,7 @@ export class WhatsAppSimulatorEngine {
                         senderAvatarUrl: step.senderAvatarUrl,
                         senderColor: step.senderColor,
                         linkPreview: step.linkPreview,
+                        perspective: step.perspective,
                     };
 
                     this.updateState({
@@ -327,6 +333,7 @@ export class WhatsAppSimulatorEngine {
                         senderAvatarUrl: step.senderAvatarUrl,
                         senderColor: step.senderColor,
                         caption: step.caption,
+                        perspective: step.perspective,
                     };
 
                     this.updateState({
@@ -406,6 +413,7 @@ export class WhatsAppSimulatorEngine {
                         senderColor: step.senderColor,
                         audioDuration: step.audioDuration || "0:14",
                         audioUrl: step.audioUrl,
+                        perspective: step.perspective,
                     };
 
                     this.updateState({
@@ -444,6 +452,7 @@ export class WhatsAppSimulatorEngine {
                     caption: step.caption,
                     audioDuration: step.audioDuration || "0:14",
                     audioUrl: step.audioUrl,
+                    perspective: step.perspective,
                 };
 
                 this.updateState({

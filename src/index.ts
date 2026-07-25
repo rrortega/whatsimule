@@ -7,6 +7,7 @@ export type {
     MessageType,
     ScriptStep,
     ChatScript,
+    StepPerspective,
     PerspectiveKeyframe,
     WhatsAppSimulatorOptions,
     SimulatorEventHandlers,

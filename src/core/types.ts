@@ -11,6 +11,14 @@ export interface LinkPreviewData {
     siteName?: string;
 }
 
+export interface StepPerspective {
+    rotateX?: number;
+    rotateY?: number;
+    rotateZ?: number;
+    zoom?: number;
+    duration?: number;
+}
+
 export interface Message {
     id: string;
     sender: MessageSender;
@@ -26,6 +34,7 @@ export interface Message {
     audioDuration?: string;
     audioUrl?: string;
     linkPreview?: LinkPreviewData;
+    perspective?: StepPerspective;
 }
 
 export interface ScriptStep {
@@ -40,6 +49,7 @@ export interface ScriptStep {
     audioDuration?: string;
     audioUrl?: string;
     linkPreview?: LinkPreviewData;
+    perspective?: StepPerspective;
 }
 
 export interface ChatScript {
@@ -85,6 +95,7 @@ export interface WhatsAppSimulatorOptions {
     enable3DTilt?: boolean;
     enableScrollTilt?: boolean;
     enableHoverTilt?: boolean;
+    enableStepTilt?: boolean;
     enableTimelineTilt?: boolean;
     perspectiveTimeline?: PerspectiveKeyframe[];
     theme?: "dark" | "light";
