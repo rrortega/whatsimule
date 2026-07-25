@@ -150,13 +150,17 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                             </button>
                             <div className="rws-audio-waveform-container">
                                 <div className="rws-audio-waveform-track">
-                                    {[35, 60, 40, 85, 50, 75, 90, 45, 65, 80, 55, 30, 70, 95, 40, 60, 50, 75, 35, 65, 45].map((h, i) => (
-                                        <span
-                                            key={i}
-                                            className={`rws-waveform-bar ${i < 10 ? "active" : ""}`}
-                                            style={{ height: `${h}%` }}
-                                        />
-                                    ))}
+                                    {[35, 60, 40, 85, 50, 75, 90, 45, 65, 80, 55, 30, 70, 95, 40, 60, 50, 75, 35, 65, 45].map((h, i, arr) => {
+                                        const barThreshold = (i / arr.length) * 100;
+                                        const isActive = isPlaying ? barThreshold <= playbackProgress : i < Math.floor(arr.length * 0.45);
+                                        return (
+                                            <span
+                                                key={i}
+                                                className={`rws-waveform-bar ${isActive ? "active" : ""}`}
+                                                style={{ height: `${h}%` }}
+                                            />
+                                        );
+                                    })}
                                 </div>
                                 <div className="rws-audio-duration">{message.audioDuration || "0:14"}</div>
                             </div>

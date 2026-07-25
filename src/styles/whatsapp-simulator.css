@@ -1817,3 +1817,19 @@
     border-radius: 6px;
     z-index: 20;
 }
+
+/* Live progressive recording waveform animation */
+.rws-rec-wave-bar {
+    width: 3px;
+    border-radius: 2px;
+    background: #00a884;
+    transition: height 0.15s ease-in-out, opacity 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.rws-rec-wave-bar.pending {
+    background: #8696a0;
+}
+
+.rws-rec-wave-bar.recorded {
+    background: #ea4335;
+}

@@ -37,13 +37,21 @@ export const ChatInput: React.FC<ChatInputProps> = ({
                         <span className="rws-rec-timer">{audioRecording.timer || "0:01"}</span>
                     </div>
                     <div className="rws-rec-waveform">
-                        {[40, 75, 30, 90, 60, 100, 45, 80, 55, 95, 35, 70, 85, 50, 90, 65, 40, 80].map((h, i) => (
-                            <span
-                                key={i}
-                                className={`rws-rec-wave-bar ${audioRecording.isPaused ? "paused" : ""}`}
-                                style={{ height: `${h}%` }}
-                            />
-                        ))}
+                        {[40, 75, 35, 90, 60, 100, 45, 80, 55, 95, 35, 70, 85, 50, 90, 65, 40, 80, 60, 85, 45, 75].map((h, i, arr) => {
+                            const currentProgress = audioRecording.progress ?? 0;
+                            const barThreshold = (i / arr.length) * 100;
+                            const isRecorded = barThreshold <= currentProgress;
+                            return (
+                                <span
+                                    key={i}
+                                    className={`rws-rec-wave-bar ${audioRecording.isPaused ? "paused" : ""} ${isRecorded ? "recorded" : "pending"}`}
+                                    style={{
+                                        height: isRecorded ? `${h}%` : "16%",
+                                        opacity: isRecorded ? 1 : 0.3,
+                                    }}
+                                />
+                            );
+                        })}
                     </div>
                     <div className="rws-rec-view-once" title="Ver una sola vez">
                         <span>1</span>

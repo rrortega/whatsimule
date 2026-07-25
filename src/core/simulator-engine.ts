@@ -394,31 +394,39 @@ export class WhatsAppSimulatorEngine {
                     }
                     await this.sleep(400);
                 } else if (step.type === "audio") {
-                    // Activate WhatsApp Hands-Free Voice Recording Bar
-                    const recDuration = 4; // 4 seconds recording simulation
-                    for (let sec = 1; sec <= recDuration; sec++) {
+                    // Activate WhatsApp Hands-Free Voice Recording Bar with live progressive waveform
+                    const totalDurationMs = 3500;
+                    const intervalMs = 100;
+                    const totalSteps = totalDurationMs / intervalMs;
+
+                    for (let s = 1; s <= totalSteps; s++) {
                         if (this.activeRunId !== runId) return;
-                        const timer = `0:0${sec}`;
+
+                        const progress = Math.min(100, Math.round((s / totalSteps) * 100));
+                        const currentSec = Math.floor((s * intervalMs) / 1000);
+                        const timer = `0:0${currentSec}`;
+
                         this.updateState({
                             audioRecording: {
                                 isRecording: true,
                                 timer,
                                 isPaused: false,
-                                progress: (sec / recDuration) * 100,
+                                progress,
                             }
                         });
-                        if (this.options.enableSound !== false && this.options.soundTyping !== false) {
+
+                        if (s % 4 === 0 && this.options.enableSound !== false && this.options.soundTyping !== false) {
                             playKeyClickSound();
                         }
-                        await this.sleep(350);
+                        await this.sleep(intervalMs);
                     }
                     if (this.activeRunId !== runId) return;
 
-                    // Pause moment
+                    // Pause moment (recording completed)
                     this.updateState({
                         audioRecording: {
                             isRecording: true,
-                            timer: `0:0${recDuration}`,
+                            timer: "0:03",
                             isPaused: true,
                             progress: 100,
                         }
