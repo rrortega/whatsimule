@@ -1,4 +1,4 @@
-import { Message, ChatScript, WhatsAppSimulatorOptions, SimulatorEventHandlers, StepPerspective } from "./types";
+import { Message, ScriptStep, ChatScript, WhatsAppSimulatorOptions, SimulatorEventHandlers, StepPerspective } from "./types";
 import { playKeyClickSound, playSentSound, playReceiveSound } from "./audio-synth";
 
 export type StateListener = (state: SimulatorState) => void;
@@ -111,6 +111,24 @@ export class WhatsAppSimulatorEngine {
         }
     }
 
+    private createMessageFromStep(step: ScriptStep, id: string, timestamp: string): Message {
+        return {
+            id,
+            sender: step.sender,
+            type: step.type,
+            content: step.content || "",
+            timestamp,
+            senderName: step.senderName,
+            senderAvatarUrl: step.senderAvatarUrl,
+            senderColor: step.senderColor,
+            caption: step.caption,
+            audioDuration: step.audioDuration || "0:14",
+            audioUrl: step.audioUrl,
+            linkPreview: step.linkPreview,
+            perspective: step.perspective,
+        };
+    }
+
     public startScript(scriptId: string, scripts: Record<string, ChatScript>): void {
         this.clearAllTimers();
         this.activeRunId++;
@@ -119,17 +137,32 @@ export class WhatsAppSimulatorEngine {
         const script = scripts[scriptId];
         if (!script) return;
 
+        const rawInitialIndex = this.options.initialStepIndex ?? 0;
+        const startIndex = Math.max(0, Math.min(rawInitialIndex, Math.max(0, script.steps.length - 1)));
+
+        const initialMessages: Message[] = [];
+        const now = new Date();
+
+        for (let i = 0; i < startIndex; i++) {
+            const step = script.steps[i];
+            const pastTime = new Date(now.getTime() - (startIndex - i) * 60000);
+            const timestamp = `${pastTime.getHours().toString().padStart(2, "0")}:${pastTime.getMinutes().toString().padStart(2, "0")}`;
+            initialMessages.push(this.createMessageFromStep(step, `${script.id}-initial-${i}`, timestamp));
+        }
+
+        const lastInitialStep = startIndex > 0 ? script.steps[startIndex - 1] : null;
+
         const totalDuration = this.calculateScriptDuration(script);
         this.updateState({
             activeScriptId: scriptId,
-            messages: [],
+            messages: initialMessages,
             isTyping: false,
             inputValue: "",
             attachedImage: null,
             elapsedTime: 0,
             totalDuration,
             isComplete: false,
-            activeStepPerspective: null,
+            activeStepPerspective: lastInitialStep?.perspective || null,
         });
 
         this.handlers.onScriptChange?.(scriptId);
@@ -157,7 +190,10 @@ export class WhatsAppSimulatorEngine {
     }
 
     private async runScriptAsync(script: ChatScript, runId: number): Promise<void> {
-        for (let i = 0; i < script.steps.length; i++) {
+        const rawInitialIndex = this.options.initialStepIndex ?? 0;
+        const startIndex = Math.max(0, Math.min(rawInitialIndex, Math.max(0, script.steps.length - 1)));
+
+        for (let i = startIndex; i < script.steps.length; i++) {
             if (this.activeRunId !== runId) return;
 
             const step = script.steps[i];

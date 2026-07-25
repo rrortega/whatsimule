@@ -113,6 +113,7 @@ export default function App() {
 | :--- | :--- | :--- | :--- |
 | `scripts` | `Record<string, ChatScript>` | `{}` | Diccionario de guiones conversacionales con pasos (`text`, `image`, `audio`). |
 | `defaultActiveScriptId` | `string` | `undefined` | ID del guión activo predeterminado a ejecutar. |
+| `initialStepIndex` | `number` | `0` | Índice del paso (base 0) desde el que inicia la animación (los mensajes previos aparecen ya renderizados). |
 | `assistantName` | `string` | `"RRORTEGA"` | Nombre del contacto o grupo mostrado en el encabezado. |
 | `assistantAvatarUrl` | `string` | `undefined` | URL de la imagen de perfil del contacto. |
 | `chatType` | `"direct" \| "group"` | `"direct"` | Modo de conversación en encabezado (Chat Privado o Grupal). |

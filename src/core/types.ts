@@ -74,6 +74,7 @@ export interface PerspectiveKeyframe {
 export interface WhatsAppSimulatorOptions {
     customScripts?: Record<string, ChatScript>;
     defaultActiveScriptId?: string;
+    initialStepIndex?: number;
     assistantName?: string;
     assistantAvatarUrl?: string;
     chatType?: "direct" | "group";

@@ -112,6 +112,7 @@ export default function App() {
 | :--- | :--- | :--- | :--- |
 | `scripts` | `Record<string, ChatScript>` | `{}` | Dictionary of conversation scripts with steps (`text`, `image`, `audio`). |
 | `defaultActiveScriptId` | `string` | `undefined` | ID of the default active script to run automatically. |
+| `initialStepIndex` | `number` | `0` | 0-based step index to start typing animation from (prior messages are pre-rendered). |
 | `assistantName` | `string` | `"RRORTEGA"` | Contact or group name displayed in the header. |
 | `assistantAvatarUrl` | `string` | `undefined` | Image URL for the contact profile picture. |
 | `chatType` | `"direct" \| "group"` | `"direct"` | Chat header layout mode (Direct or Group chat). |

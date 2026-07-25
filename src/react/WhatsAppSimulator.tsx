@@ -21,6 +21,7 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
     scripts = {},
     customScripts,
     defaultActiveScriptId,
+    initialStepIndex,
     assistantName = "RRORTEGA",
     assistantAvatarUrl,
     chatType = "direct",
@@ -69,6 +70,7 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
         activeScripts,
         {
             defaultActiveScriptId,
+            initialStepIndex,
             assistantName,
             assistantAvatarUrl,
             enableSound,

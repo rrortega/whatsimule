@@ -214,6 +214,7 @@ Register `WhatSimuleElement` as a Web Component for non-React projects:
 | --- | --- | --- | --- |
 | `customScripts` / `scripts` | `Record<string, ChatScript>` | `{}` | Key-value map of playable conversation scripts |
 | `defaultActiveScriptId` | `string` | First key in `customScripts` | ID of script to run automatically on load |
+| `initialStepIndex` | `number` | `0` | 0-based step index to start simulation from (prior steps are pre-rendered) |
 | `assistantName` | `string` | `"RRORTEGA"` | Name displayed in chat header |
 | `assistantAvatarUrl` | `string` | `undefined` | Custom avatar image URL for chat header |
 | `chatType` | `"direct" \| "group"` | `"direct"` | Single contact or group chat interface |
