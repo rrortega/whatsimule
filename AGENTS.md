@@ -267,8 +267,9 @@ export interface ScriptStep {
   type: MessageType;
   content: string;
   delay: number; // Delay in milliseconds before executing this step
-  senderName?: string;
-  senderColor?: string;
+  senderName?: string; // Display name shown above message in group chats
+  senderAvatarUrl?: string; // Custom avatar URL for member photo in group chats
+  senderColor?: string; // Color for name & initial avatar background
   caption?: string;
   audioDuration?: string;
   audioUrl?: string;
@@ -282,6 +283,40 @@ export interface ChatScript {
   description: string;
   steps: ScriptStep[];
 }
+```
+
+#### Group Chat Avatars (`chatType="group"`)
+
+When `chatType="group"` is set:
+- Incoming/assistant messages display an avatar to the left of the message bubble.
+- If `senderAvatarUrl` is provided in the step (or `assistantAvatarUrl` on `<WhatSimule />`), the avatar photo image is rendered.
+- If no avatar URL is provided, an initial circle badge is automatically rendered using the first letter of `senderName` (or `assistantName`) and colored with `senderColor` (or `#00a884`).
+
+```tsx
+const groupScript: ChatScript = {
+  id: 'team_group',
+  label: 'Team Group Chat',
+  description: 'Group simulation with member avatars',
+  steps: [
+    {
+      sender: 'assistant',
+      type: 'text',
+      content: 'Welcome to the project launch group!',
+      delay: 1000,
+      senderName: 'Carlos M.',
+      senderColor: '#34b7f1',
+      senderAvatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100',
+    },
+    {
+      sender: 'assistant',
+      type: 'text',
+      content: 'All systems are go 🚀',
+      delay: 1400,
+      senderName: 'Ana R.',
+      senderColor: '#e542a3', // Fallback to initial 'A' with pink background
+    },
+  ],
+};
 ```
 
 ---

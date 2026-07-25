@@ -6,11 +6,26 @@ import { LinkPreviewBadge } from "./LinkPreviewBadge";
 
 interface MessageBubbleProps {
     message: Message;
+    chatType?: "direct" | "group";
+    assistantAvatarUrl?: string;
+    assistantName?: string;
 }
 
-export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
+export const MessageBubble: React.FC<MessageBubbleProps> = ({
+    message,
+    chatType = "direct",
+    assistantAvatarUrl,
+    assistantName,
+}) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const isUser = message.sender === "resident" || message.sender === "user";
+    const isGroup = chatType === "group";
+    const showAvatar = isGroup && !isUser;
+
+    const avatarUrl = message.senderAvatarUrl || (!isUser && message.sender === "assistant" ? assistantAvatarUrl : undefined);
+    const displayName = message.senderName || (!isUser && message.sender === "assistant" ? assistantName : "") || "";
+    const initial = displayName.trim() ? displayName.trim().charAt(0).toUpperCase() : "?";
+    const avatarColor = message.senderColor || "#00a884";
 
     const parseLinkFromContent = (content: string) => {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -36,8 +51,21 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
             initial={{ opacity: 0, y: 8, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className={`rws-message-wrapper ${isUser ? "rws-message-user" : "rws-message-assistant"}`}
+            className={`rws-message-wrapper ${isUser ? "rws-message-user" : "rws-message-assistant"} ${showAvatar ? "rws-has-avatar" : ""}`}
         >
+            {showAvatar && (
+                <div
+                    className="rws-group-avatar"
+                    style={{ backgroundColor: avatarUrl ? "transparent" : avatarColor }}
+                >
+                    {avatarUrl ? (
+                        <img src={avatarUrl} alt={displayName} className="rws-avatar-img" />
+                    ) : (
+                        <span className="rws-avatar-initial">{initial}</span>
+                    )}
+                </div>
+            )}
+
             <div className="rws-message-bubble">
                 {/* SVG Bubble Tail */}
                 <svg

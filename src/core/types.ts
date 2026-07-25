@@ -20,6 +20,7 @@ export interface Message {
     isUploading?: boolean;
     uploadProgress?: number;
     senderName?: string;
+    senderAvatarUrl?: string;
     senderColor?: string;
     caption?: string;
     audioDuration?: string;
@@ -33,6 +34,7 @@ export interface ScriptStep {
     content: string;
     delay: number; // Delay before executing step (in ms)
     senderName?: string;
+    senderAvatarUrl?: string;
     senderColor?: string;
     caption?: string;
     audioDuration?: string;

@@ -269,7 +269,13 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
                             <div className="rws-messages-list">
                                 <AnimatePresence mode="popLayout">
                                     {state.messages.map((message) => (
-                                        <MessageBubble key={message.id} message={message} />
+                                        <MessageBubble
+                                            key={message.id}
+                                            message={message}
+                                            chatType={chatType}
+                                            assistantAvatarUrl={assistantAvatarUrl}
+                                            assistantName={assistantName}
+                                        />
                                     ))}
                                 </AnimatePresence>
 

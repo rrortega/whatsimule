@@ -133,6 +133,27 @@ export default function App() {
 
 ---
 
+### 👥 Chat de Grupo y Avatares de Miembros (`chatType="group"`)
+
+Al configurar un chat en modo grupo (`chatType="group"`):
+- Los mensajes recibidos de miembros del grupo muestran su avatar al lado izquierdo de la burbuja del mensaje.
+- Puedes especificar un `senderAvatarUrl` en cualquier `ScriptStep` para mostrar la foto de perfil del miembro.
+- Si no se especifica `senderAvatarUrl`, se muestra automáticamente un avatar con la letra inicial de `senderName` y el fondo de color `senderColor`.
+
+```tsx
+{
+  sender: "assistant",
+  type: "text",
+  content: "¡Hola a todos! Aquí está el reporte del proyecto.",
+  delay: 1200,
+  senderName: "Sofia M.",
+  senderColor: "#00a884",
+  senderAvatarUrl: "https://example.com/avatar.jpg" // URL opcional de imagen de perfil
+}
+```
+
+---
+
 ## 👨‍💻 Autor & Comunidad Open Source
 
 Creado y mantenido por **Rolando R. Ortega**.

@@ -132,6 +132,27 @@ export default function App() {
 
 ---
 
+### 👥 Group Chat & Member Avatars (`chatType="group"`)
+
+When configuring a group chat (`chatType="group"`):
+- Messages sent by group members (`assistant` / non-user senders) display an avatar next to the message bubble on the left.
+- You can specify a custom `senderAvatarUrl` in any `ScriptStep` to render the member's profile image.
+- If no `senderAvatarUrl` is supplied, an avatar badge with the sender's initial letter and custom `senderColor` background is automatically rendered.
+
+```tsx
+{
+  sender: "assistant",
+  type: "text",
+  content: "Hi everyone! Here is the latest update.",
+  delay: 1200,
+  senderName: "Sofia M.",
+  senderColor: "#00a884",
+  senderAvatarUrl: "https://example.com/avatar.jpg" // Optional member photo URL
+}
+```
+
+---
+
 ## 👨‍💻 Author & Open Source Community
 
 Created and maintained by **Rolando R. Ortega**.

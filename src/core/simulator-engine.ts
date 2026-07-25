@@ -216,6 +216,7 @@ export class WhatsAppSimulatorEngine {
                         content: step.content,
                         timestamp,
                         senderName: step.senderName,
+                        senderAvatarUrl: step.senderAvatarUrl,
                         senderColor: step.senderColor,
                         linkPreview: step.linkPreview,
                     };
@@ -323,6 +324,7 @@ export class WhatsAppSimulatorEngine {
                         isUploading: true,
                         uploadProgress: 10,
                         senderName: step.senderName,
+                        senderAvatarUrl: step.senderAvatarUrl,
                         senderColor: step.senderColor,
                         caption: step.caption,
                     };
@@ -400,6 +402,7 @@ export class WhatsAppSimulatorEngine {
                         content: step.content || "",
                         timestamp,
                         senderName: step.senderName,
+                        senderAvatarUrl: step.senderAvatarUrl,
                         senderColor: step.senderColor,
                         audioDuration: step.audioDuration || "0:14",
                         audioUrl: step.audioUrl,
@@ -436,6 +439,7 @@ export class WhatsAppSimulatorEngine {
                     content: step.content,
                     timestamp,
                     senderName: step.senderName,
+                    senderAvatarUrl: step.senderAvatarUrl,
                     senderColor: step.senderColor,
                     caption: step.caption,
                     audioDuration: step.audioDuration || "0:14",
