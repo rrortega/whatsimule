@@ -1,0 +1,353 @@
+# AGENTS.md - AI Agent & Developer Guide
+
+> **Package:** `rrortega-whatsimule` (React WhatsApp Simulator)  
+> **Repository:** `react-whatsapp-simulator`  
+> **Purpose:** Interactive, animated 3D WhatsApp conversation simulator component for React and Web Applications with procedural Web Audio API sound synthesis.
+
+---
+
+## 🚀 Quick Overview & Installation
+
+`rrortega-whatsimule` provides a framework-agnostic core engine, a native React component (`WhatsAppSimulator` / `WhatSimule`), a headless hook (`useWhatsAppSimulator`), and a Web Component (`<whatsapp-simulator>`) for Vue, Svelte, or Vanilla JS.
+
+### 1. Install Package & Peer Dependencies
+
+```bash
+# pnpm (recommended)
+pnpm add rrortega-whatsimule framer-motion lucide-react
+
+# npm
+npm install rrortega-whatsimule framer-motion lucide-react
+
+# yarn
+yarn add rrortega-whatsimule framer-motion lucide-react
+
+# bun
+bun add rrortega-whatsimule framer-motion lucide-react
+```
+
+> **Note:** `framer-motion` (>=10.0.0) and `lucide-react` (>=0.200.0) are peer dependencies for the React component.
+
+### 2. Import Required CSS Stylesheet
+
+You **must** import the library CSS file in your application entry point (e.g. `main.tsx`, `App.tsx`, or Next.js `layout.tsx` / `_app.tsx`):
+
+```tsx
+import 'rrortega-whatsimule/dist/whatsapp-simulator.css';
+```
+
+---
+
+## 💻 Usage Patterns
+
+### A. Basic React Component (`WhatsAppSimulator` / `WhatSimule`)
+
+Both `WhatsAppSimulator` and `WhatSimule` refer to the same React component.
+
+```tsx
+'use client'; // Required if using Next.js App Router
+
+import React from 'react';
+import { WhatsAppSimulator, ChatScript } from 'rrortega-whatsimule';
+import 'rrortega-whatsimule/dist/whatsapp-simulator.css';
+
+const demoScripts: Record<string, ChatScript> = {
+  sales_demo: {
+    id: 'sales_demo',
+    label: 'Sales Assistant Demo',
+    description: 'Automated lead qualification flow',
+    steps: [
+      {
+        sender: 'user',
+        type: 'text',
+        content: 'Hi! I want to schedule a demo of your product.',
+        delay: 800,
+      },
+      {
+        sender: 'assistant',
+        type: 'text',
+        content: 'Awesome! I can help you with that. What is your full name and company name?',
+        delay: 1500,
+        senderName: 'AI Sales Lead',
+      },
+      {
+        sender: 'user',
+        type: 'text',
+        content: 'Alex Rivera from Acme Corp.',
+        delay: 1200,
+      },
+      {
+        sender: 'assistant',
+        type: 'text',
+        content: 'Great! You can pick a slot directly from our calendar:',
+        delay: 1600,
+        senderName: 'AI Sales Lead',
+        linkPreview: {
+          url: 'https://example.com/booking',
+          title: 'Schedule a 15-min Demo',
+          description: 'Pick a convenient date and time on Cal.com',
+          siteName: 'cal.com',
+        },
+      },
+    ],
+  },
+};
+
+export function SimulatorWidget() {
+  return (
+    <div style={{ height: '700px', display: 'flex', justifyContent: 'center' }}>
+      <WhatsAppSimulator
+        customScripts={demoScripts}
+        defaultActiveScriptId="sales_demo"
+        assistantName="ChambaPro AI"
+        theme="dark"
+        deviceStyle="iphone"
+        typingMode="direct"
+        enableSound={true}
+        speedMultiplier={1}
+        locale="en"
+        onScriptComplete={(scriptId) => console.log(`Script ${scriptId} completed!`)}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+### B. Headless React Hook (`useWhatsAppSimulator`)
+
+For custom rendering when you want full control over the DOM and styles using the core engine state machine:
+
+```tsx
+import { useWhatsAppSimulator } from 'rrortega-whatsimule';
+
+function CustomChatUI({ scripts }) {
+  const {
+    messages,
+    activeScriptId,
+    activeScript,
+    isRunning,
+    isTyping,
+    typingSender,
+    speedMultiplier,
+    startScript,
+    pauseScript,
+    resumeScript,
+    restartScript,
+    setSpeedMultiplier,
+  } = useWhatsAppSimulator({
+    customScripts: scripts,
+    defaultActiveScriptId: 'sales_demo',
+    enableSound: true,
+  });
+
+  return (
+    <div>
+      <p>Status: {isTyping ? `${typingSender} is typing...` : 'Idle'}</p>
+      <ul>
+        {messages.map((msg) => (
+          <li key={msg.id}>
+            <strong>{msg.sender}:</strong> {msg.content}
+          </li>
+        ))}
+      </ul>
+      <button onClick={() => restartScript()}>Restart</button>
+    </div>
+  );
+}
+```
+
+---
+
+### C. Web Component / HTML / Vue / Svelte (`<whatsapp-simulator>`)
+
+Register `WhatsAppSimulatorElement` as a Web Component for non-React projects:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WhatsApp Simulator Web Component</title>
+  <link rel="stylesheet" href="node_modules/rrortega-whatsimule/dist/whatsapp-simulator.css">
+</head>
+<body>
+  <whatsapp-simulator
+    id="sim-element"
+    assistant-name="AI Assistant"
+    locale="en"
+    enable-sound="true">
+  </whatsapp-simulator>
+
+  <script type="module">
+    import { WhatsAppSimulatorElement } from 'rrortega-whatsimule';
+
+    if (!customElements.get('whatsapp-simulator')) {
+      customElements.define('whatsapp-simulator', WhatsAppSimulatorElement);
+    }
+
+    const sim = document.getElementById('sim-element');
+    sim.setScripts({
+      demo: {
+        id: 'demo',
+        label: 'Demo Flow',
+        description: 'Web component example script',
+        steps: [
+          { sender: 'user', type: 'text', content: 'Hello world!', delay: 1000 },
+          { sender: 'assistant', type: 'text', content: 'Hi there!', delay: 1200 }
+        ]
+      }
+    });
+  </script>
+</body>
+</html>
+```
+
+---
+
+## ⚙️ Props & Configuration Reference
+
+### `WhatsAppSimulatorProps` / `WhatsAppSimulatorOptions`
+
+| Option / Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `customScripts` / `scripts` | `Record<string, ChatScript>` | `{}` | Key-value map of playable conversation scripts |
+| `defaultActiveScriptId` | `string` | First key in `customScripts` | ID of script to run automatically on load |
+| `assistantName` | `string` | `"RRORTEGA"` | Name displayed in chat header |
+| `assistantAvatarUrl` | `string` | `undefined` | Custom avatar image URL for chat header |
+| `chatType` | `"direct" \| "group"` | `"direct"` | Single contact or group chat interface |
+| `groupMembersText` | `string` | `undefined` | Subtitle listing members when `chatType="group"` |
+| `wallpaperPattern` | `"doodle" \| "dots" \| "grid"` | `"doodle"` | Built-in WhatsApp chat background pattern |
+| `customWallpaperUrl` | `string` | `undefined` | Custom background image URL override |
+| `typingMode` | `"direct" \| "keyboard"` | `"direct"` | `"direct"` shows bubble typing indicator; `"keyboard"` animates on-screen keys |
+| `title` | `string` | `undefined` | Header title string |
+| `description` | `string` | `undefined` | Subtitle description string |
+| `hideSelector` | `boolean` | `false` | Hides script switcher dropdown if `true` |
+| `showRestartButton` | `boolean` | `true` | Enables floating restart button |
+| `restartButtonPosition` | `"bottom-right" \| "bottom-left" \| "top-right" \| "top-left" \| "center" \| "center-left" \| "center-right"` | `"bottom-right"` | Position of floating restart button |
+| `restartButtonVisibility` | `"always" \| "on-complete" \| "never"` | `"always"` | When floating restart button is visible |
+| `showEncryptionNotice` | `boolean` | `true` | Displays end-to-end encryption badge at top of chat |
+| `enableSound` | `boolean` | `true` | Global audio toggle |
+| `soundTyping` | `boolean` | `true` | Web Audio keypress clicking sound |
+| `soundSent` | `boolean` | `true` | Web Audio message send pop sound |
+| `soundReceive` | `boolean` | `true` | Web Audio incoming message chime |
+| `enable3DTilt` | `boolean` | `undefined` | Enables 3D perspective tilt effect |
+| `enableScrollTilt` | `boolean` | `true` | Applies subtle tilt as container scrolls into view |
+| `enableHoverTilt` | `boolean` | `false` | Applies tilt on mouse hover |
+| `theme` | `"dark" \| "light"` | `"dark"` | UI theme |
+| `deviceStyle` | `"iphone" \| "android" \| "none"` | `"iphone"` | Phone bezel casing frame style |
+| `width` | `string \| number` | `undefined` | Explicit container width |
+| `height` | `string \| number` | `undefined` | Explicit container height |
+| `speedMultiplier` | `number` | `1` | Playback speed multiplier (e.g. `1.5`, `2`) |
+| `locale` | `"es" \| "en"` | `"es"` | Built-in i18n label set |
+| `labels` | `object` | `{}` | Custom string overrides for UI labels |
+| `onMessageSent` | `(message: Message) => void` | `undefined` | Callback fired when a message renders |
+| `onScriptComplete` | `(scriptId: string) => void` | `undefined` | Callback fired when script finishes playback |
+| `onScriptChange` | `(scriptId: string) => void` | `undefined` | Callback fired when user switches active script |
+
+---
+
+### Data Structures (`ChatScript` & `ScriptStep`)
+
+```ts
+export type MessageSender = "user" | "resident" | "assistant" | "asistenxa";
+export type MessageType = "text" | "image" | "audio";
+
+export interface LinkPreviewData {
+  url: string;
+  title?: string;
+  description?: string;
+  image?: string;
+  siteName?: string;
+}
+
+export interface ScriptStep {
+  sender: MessageSender;
+  type: MessageType;
+  content: string;
+  delay: number; // Delay in milliseconds before executing this step
+  senderName?: string;
+  senderColor?: string;
+  caption?: string;
+  audioDuration?: string;
+  audioUrl?: string;
+  linkPreview?: LinkPreviewData;
+}
+
+export interface ChatScript {
+  id: string;
+  label: string;
+  icon?: React.ReactNode | string;
+  description: string;
+  steps: ScriptStep[];
+}
+```
+
+---
+
+## 🏗️ Codebase Architecture
+
+```text
+src/
+├── core/                       # 1. Pure TypeScript Framework-Agnostic Layer
+│   ├── types.ts                # Master TypeScript interfaces & options
+│   ├── audio-synth.ts          # Web Audio API procedural sound synthesizer
+│   └── simulator-engine.ts     # Core state machine & script runner
+│
+├── react/                      # 2. React UI & Motion Layer
+│   ├── WhatsAppSimulator.tsx   # Primary React component (WhatSimule / WhatsAppSimulator)
+│   ├── useWhatsAppSimulator.ts # React state binding hook for engine
+│   └── components/             # Subcomponents (ChatHeader, MessageBubble, VirtualKeyboard, etc.)
+│
+├── web-component/              # 3. Web Component Layer
+│   └── whatsapp-simulator-element.ts # CustomElement adapter (<whatsapp-simulator>)
+│
+├── styles/                     # 4. CSS Styling Layer
+│   └── whatsapp-simulator.css  # Scoped library stylesheet (rws-* namespace)
+│
+└── index.ts                    # Main entry point exporting components, hooks, engine & types
+```
+
+---
+
+## 🎯 Mandatory Development & Transformation Rules
+
+When modifying or contributing to this repository:
+
+1. **No Application-Specific Imports (`@/utils/*` or Next.js internals)**
+   - Do NOT import `next/image`, `next/link`, or host project utils.
+   - Pass custom localization, labels, or callbacks through props.
+
+2. **No Binary Sound Files in NPM Package**
+   - Sound effects for keypresses, message send, and message receive are generated procedurally via `audio-synth.ts` using the browser's `AudioContext`.
+   - Do NOT add binary `.mp3` or `.wav` files into the package assets.
+
+3. **Strict CSS Scope Isolation (`rws-`)**
+   - All CSS class names MUST use the `rws-` prefix (e.g., `.rws-phone-frame`, `.rws-chat-body`, `.rws-message-bubble`).
+   - Do NOT depend on external Tailwind CSS or global utility classes.
+
+4. **Public Media URLs**
+   - Media items in scripts (images/audio) must be supplied as valid HTTP/HTTPS URLs or base64 data URIs. Do not rely on local file paths.
+
+---
+
+## 🛠️ Build & Verification Commands
+
+| Command | Action |
+| --- | --- |
+| `pnpm run build` | Builds ESM (`dist/index.mjs`), CJS (`dist/index.js`), typings (`dist/index.d.ts`), and CSS (`dist/whatsapp-simulator.css`) using `tsup`. |
+| `pnpm run dev` | Starts `tsup` watcher during development. |
+| `pnpm run typecheck` | Runs `tsc --noEmit` to verify strict TypeScript safety. |
+| `pnpm run lint` | Lints typescript files in `src/`. |
+
+---
+
+## 📋 Quality Assurance Checklist
+
+Before pushing changes or releasing new npm versions:
+
+1. [ ] Run `pnpm run typecheck` to confirm zero TypeScript compilation errors.
+2. [ ] Run `pnpm run build` to confirm all output files compile cleanly into `dist/`.
+3. [ ] Verify `dist/whatsapp-simulator.css` is present and correctly linked in `package.json`.
+4. [ ] Ensure peer dependencies (`framer-motion`, `lucide-react`, `react`, `react-dom`) are not bundled into `dist/`.
