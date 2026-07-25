@@ -121,3 +121,26 @@ export interface SimulatorEventHandlers {
     onScriptComplete?: (scriptId: string) => void;
     onScriptChange?: (scriptId: string) => void;
 }
+
+export interface WhatSimuleRef {
+    setPerspective: (
+        perspectiveOrX?: StepPerspective | number,
+        rotateY?: number,
+        rotateZ?: number,
+        zoom?: number,
+        duration?: number
+    ) => void;
+    resetPerspective: () => void;
+    goToStep: (index: number) => void;
+    jumpToStep: (index: number) => void;
+    nextStep: () => void;
+    previousStep: () => void;
+    play: () => void;
+    resume: () => void;
+    pause: () => void;
+    stop: () => void;
+    restart: () => void;
+    setSpeedMultiplier: (multiplier: number) => void;
+    setSpeed: (multiplier: number) => void;
+    setScript: (scriptId: string, startIndex?: number) => void;
+}

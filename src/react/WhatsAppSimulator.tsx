@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, { useRef, useEffect, useState, useMemo, forwardRef, useImperativeHandle } from "react";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { RotateCcw, Square, Circle, Triangle, X, Crop, Smile, Type, Pencil, Send, Mic } from "lucide-react";
-import { WhatsAppSimulatorOptions, ChatScript, SimulatorEventHandlers, PerspectiveKeyframe } from "../core/types";
+import { WhatsAppSimulatorOptions, ChatScript, SimulatorEventHandlers, PerspectiveKeyframe, WhatSimuleRef } from "../core/types";
 import { useWhatsAppSimulator } from "./useWhatsAppSimulator";
 import { ChatHeader } from "./components/ChatHeader";
 import { MessageBubble } from "./components/MessageBubble";
@@ -17,7 +17,7 @@ export interface WhatSimuleProps extends WhatsAppSimulatorOptions, SimulatorEven
 
 export type WhatsAppSimulatorProps = WhatSimuleProps;
 
-export const WhatSimule: React.FC<WhatSimuleProps> = ({
+export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
     scripts = {},
     customScripts,
     defaultActiveScriptId,
@@ -58,7 +58,7 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
     onMessageSent,
     onScriptComplete,
     onScriptChange,
-}) => {
+}, ref) => {
     const activeScripts = customScripts || scripts;
     const containerRef = useRef<HTMLDivElement>(null);
     const chatBodyRef = useRef<HTMLDivElement>(null);
@@ -66,7 +66,7 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
 
     const actualScrollTilt = enable3DTilt !== undefined ? enable3DTilt : enableScrollTilt;
 
-    const { state, activeScriptId, startScript, restartCurrentScript } = useWhatsAppSimulator(
+    const sim = useWhatsAppSimulator(
         activeScripts,
         {
             defaultActiveScriptId,
@@ -84,6 +84,25 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
         },
         { onMessageSent, onScriptComplete, onScriptChange }
     );
+    const { state, activeScriptId, startScript, restartCurrentScript } = sim;
+
+    useImperativeHandle(ref, () => ({
+        setPerspective: (perspectiveOrX, rotateY, rotateZ, zoom, duration) =>
+            sim.setPerspective(perspectiveOrX, rotateY, rotateZ, zoom, duration),
+        resetPerspective: () => sim.resetPerspective(),
+        goToStep: (index) => sim.goToStep(index),
+        jumpToStep: (index) => sim.jumpToStep(index),
+        nextStep: () => sim.nextStep(),
+        previousStep: () => sim.previousStep(),
+        play: () => sim.play(),
+        resume: () => sim.resume(),
+        pause: () => sim.pause(),
+        stop: () => sim.stop(),
+        restart: () => sim.restart(),
+        setSpeedMultiplier: (speed) => sim.setSpeedMultiplier(speed),
+        setSpeed: (speed) => sim.setSpeed(speed),
+        setScript: (scriptId, startIndex) => sim.setScript(scriptId, startIndex),
+    }), [sim]);
 
     // Scroll 3D perspective effect
     const { scrollYProgress } = useScroll({
@@ -184,33 +203,42 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
         return current;
     }, [perspectiveTimeline, state.elapsedTime]);
 
-    const isStepPerspectiveActive = !!(enableStepTilt !== false && activeStepPerspective);
-    const isTimelineActive = !isStepPerspectiveActive && !!(perspectiveTimeline && perspectiveTimeline.length > 0 && enableTimelineTilt !== false);
+    const isCustomPerspectiveActive = !!state.customPerspective;
+    const isStepPerspectiveActive = !isCustomPerspectiveActive && !!(enableStepTilt !== false && activeStepPerspective);
+    const isTimelineActive = !isCustomPerspectiveActive && !isStepPerspectiveActive && !!(perspectiveTimeline && perspectiveTimeline.length > 0 && enableTimelineTilt !== false);
     const isUserHovering = enableHoverTilt && (hoverRotation.x !== 0 || hoverRotation.y !== 0);
 
     const activeRotateX = isUserHovering
         ? hoverRotation.x
-        : (isStepPerspectiveActive && activeStepPerspective?.rotateX !== undefined
-            ? activeStepPerspective.rotateX
-            : (isTimelineActive && activeKeyframe
-                ? activeKeyframe.rotateX
-                : (actualScrollTilt ? rotateXSpring : 0)));
+        : (isCustomPerspectiveActive && state.customPerspective?.rotateX !== undefined
+            ? state.customPerspective.rotateX
+            : (isStepPerspectiveActive && activeStepPerspective?.rotateX !== undefined
+                ? activeStepPerspective.rotateX
+                : (isTimelineActive && activeKeyframe
+                    ? activeKeyframe.rotateX
+                    : (actualScrollTilt ? rotateXSpring : 0))));
 
     const activeRotateY = isUserHovering
         ? hoverRotation.y
-        : (isStepPerspectiveActive && activeStepPerspective?.rotateY !== undefined
-            ? activeStepPerspective.rotateY
-            : (isTimelineActive && activeKeyframe
-                ? activeKeyframe.rotateY
-                : (actualScrollTilt ? rotateYSpring : 0)));
+        : (isCustomPerspectiveActive && state.customPerspective?.rotateY !== undefined
+            ? state.customPerspective.rotateY
+            : (isStepPerspectiveActive && activeStepPerspective?.rotateY !== undefined
+                ? activeStepPerspective.rotateY
+                : (isTimelineActive && activeKeyframe
+                    ? activeKeyframe.rotateY
+                    : (actualScrollTilt ? rotateYSpring : 0))));
 
-    const activeRotateZ = isStepPerspectiveActive && activeStepPerspective?.rotateZ !== undefined
-        ? activeStepPerspective.rotateZ
-        : (isTimelineActive && activeKeyframe ? (activeKeyframe.rotateZ || 0) : 0);
+    const activeRotateZ = isCustomPerspectiveActive && state.customPerspective?.rotateZ !== undefined
+        ? state.customPerspective.rotateZ
+        : (isStepPerspectiveActive && activeStepPerspective?.rotateZ !== undefined
+            ? activeStepPerspective.rotateZ
+            : (isTimelineActive && activeKeyframe ? (activeKeyframe.rotateZ || 0) : 0));
 
-    const activeScale = isStepPerspectiveActive && activeStepPerspective?.zoom !== undefined
-        ? activeStepPerspective.zoom
-        : (isTimelineActive && activeKeyframe ? (activeKeyframe.zoom || 1) : 1);
+    const activeScale = isCustomPerspectiveActive && state.customPerspective?.zoom !== undefined
+        ? state.customPerspective.zoom
+        : (isStepPerspectiveActive && activeStepPerspective?.zoom !== undefined
+            ? activeStepPerspective.zoom
+            : (isTimelineActive && activeKeyframe ? (activeKeyframe.zoom || 1) : 1));
 
     const activeYOffset = isUserHovering
         ? 0
@@ -228,17 +256,17 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
         transformStyle: "preserve-3d" as const,
     };
 
-    const currentDuration = isStepPerspectiveActive
-        ? (activeStepPerspective?.duration ?? 0.8)
-        : (isTimelineActive && activeKeyframe ? (activeKeyframe.duration ?? 0.8) : undefined);
+    const currentDuration = isCustomPerspectiveActive
+        ? (state.customPerspective?.duration ?? 1.2)
+        : (isStepPerspectiveActive
+            ? (activeStepPerspective?.duration ?? 1.2)
+            : (isTimelineActive && activeKeyframe ? (activeKeyframe.duration ?? 1.2) : 1.2));
 
-    const motionTransition = (isStepPerspectiveActive || isTimelineActive) && !isUserHovering
+    const motionTransition = (isCustomPerspectiveActive || isStepPerspectiveActive || isTimelineActive) && !isUserHovering
         ? {
-            type: "spring" as const,
-            stiffness: 85,
-            damping: 15,
-            mass: 0.9,
-            restDelta: 0.001,
+            type: "tween" as const,
+            duration: currentDuration,
+            ease: [0.25, 0.1, 0.25, 1.0] as [number, number, number, number],
           }
         : undefined;
 
@@ -510,6 +538,6 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
             </div>
         </div>
     );
-};
+});
 
 export const WhatsAppSimulator = WhatSimule;

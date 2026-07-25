@@ -252,6 +252,40 @@ Register `WhatSimuleElement` as a Web Component for non-React projects:
 
 ---
 
+### 🕹️ Imperative Remote Control Methods (`WhatSimuleRef` / DOM Element)
+
+Both `<WhatSimule ref={simRef} />` (React) and `<what-simule id="sim">` (Web Component) expose mnemonic imperative control methods for external manipulation:
+
+```ts
+export interface WhatSimuleRef {
+  setPerspective: (perspectiveOrX?: StepPerspective | number, rotateY?: number, rotateZ?: number, zoom?: number, duration?: number) => void;
+  resetPerspective: () => void;
+  goToStep: (index: number) => void;
+  jumpToStep: (index: number) => void;
+  nextStep: () => void;
+  previousStep: () => void;
+  play: () => void;
+  resume: () => void;
+  pause: () => void;
+  stop: () => void;
+  restart: () => void;
+  setSpeedMultiplier: (multiplier: number) => void;
+  setSpeed: (multiplier: number) => void;
+  setScript: (scriptId: string, startIndex?: number) => void;
+}
+```
+
+```javascript
+// Example Vanilla JS DOM call:
+const sim = document.getElementById('my-sim');
+sim.setPerspective({ rotateX: 10, rotateY: -15, zoom: 1.05, duration: 1.2 });
+sim.goToStep(3);
+sim.pause();
+sim.play();
+```
+
+---
+
 ### Data Structures (`ChatScript` & `ScriptStep`)
 
 ```ts

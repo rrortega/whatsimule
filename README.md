@@ -180,6 +180,62 @@ When configuring a group chat (`chatType="group"`):
 
 ---
 
+### 🕹️ External Imperative Control API (`ref` & DOM `element`)
+
+You can control `<WhatSimule ref={simRef} />` in React via `ref` or `<what-simule id="sim">` in Vanilla JS / Web Component via `document.getElementById(...)`:
+
+```tsx
+// React ref usage:
+import { useRef } from 'react';
+import { WhatSimule, WhatSimuleRef } from 'rrortega-whatsimule';
+
+const simRef = useRef<WhatSimuleRef>(null);
+
+// Set camera 3D perspective / rotation dynamically from outside:
+simRef.current?.setPerspective({ rotateX: 12, rotateY: -15, zoom: 1.06, duration: 1.2 });
+// Or with positional arguments: simRef.current?.setPerspective(12, -15, 0, 1.06, 1.2);
+simRef.current?.resetPerspective(); // Reverts to step perspective
+
+// Navigation & Playback Controls:
+simRef.current?.goToStep(3);        // Jump to step index 3
+simRef.current?.nextStep();        // Advance to next step
+simRef.current?.previousStep();    // Go to previous step
+simRef.current?.pause();           // Pause execution
+simRef.current?.play();            // Resume / play execution
+simRef.current?.stop();            // Stop simulation
+simRef.current?.restart();         // Restart script from beginning
+simRef.current?.setSpeed(2);       // Set speed multiplier (e.g. 2x)
+simRef.current?.setScript('demo'); // Switch active script
+```
+
+```javascript
+// Web Component DOM usage:
+const sim = document.getElementById('my-sim');
+sim.setPerspective({ rotateX: 10, rotateY: -10, zoom: 1.04, duration: 1.0 });
+sim.goToStep(2);
+sim.pause();
+sim.play();
+sim.setSpeedMultiplier(1.5);
+```
+
+#### Imperative Methods Summary:
+
+| Method | Signature | Description |
+| --- | --- | --- |
+| `setPerspective` | `(perspectiveOrX, rotateY?, rotateZ?, zoom?, duration?)` | Set/override custom 3D rotation angles & zoom dynamically |
+| `resetPerspective` | `()` | Clear custom perspective override and return to default / step tilt |
+| `goToStep` / `jumpToStep` | `(index: number)` | Jump directly to a step index, pre-rendering prior steps |
+| `nextStep` | `()` | Instantly advance to the next step |
+| `previousStep` | `()` | Instantly go back to the previous step |
+| `play` / `resume` | `()` | Resume or start conversation playback |
+| `pause` | `()` | Pause conversation playback |
+| `stop` | `()` | Stop simulation and reset state |
+| `restart` | `()` | Restart current script from step 0 |
+| `setSpeed` / `setSpeedMultiplier` | `(multiplier: number)` | Change playback speed multiplier (e.g. `0.5`, `1`, `1.5`, `2`) |
+| `setScript` | `(scriptId: string, startIndex?: number)` | Switch active script |
+
+---
+
 ## 👨‍💻 Author & Open Source Community
 
 Created and maintained by **Rolando R. Ortega**.

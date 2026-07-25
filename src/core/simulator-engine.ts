@@ -33,6 +33,10 @@ export interface SimulatorState {
     isKeyboardOpen: boolean;
     pressedKey: string | null;
     activeStepPerspective?: StepPerspective | null;
+    customPerspective?: StepPerspective | null;
+    isPaused?: boolean;
+    currentStepIndex?: number;
+    speedMultiplier?: number;
 }
 
 export class WhatsAppSimulatorEngine {
@@ -43,6 +47,7 @@ export class WhatsAppSimulatorEngine {
     private activeRunId: number = 0;
     private timeoutIds: ReturnType<typeof setTimeout>[] = [];
     private intervalId: ReturnType<typeof setInterval> | null = null;
+    private isPausedState: boolean = false;
 
     private state: SimulatorState;
 
@@ -71,6 +76,9 @@ export class WhatsAppSimulatorEngine {
             isComplete: false,
             isKeyboardOpen: false,
             pressedKey: null,
+            isPaused: false,
+            currentStepIndex: 0,
+            speedMultiplier: options.speedMultiplier || 1,
         };
     }
 
@@ -129,15 +137,28 @@ export class WhatsAppSimulatorEngine {
         };
     }
 
-    public startScript(scriptId: string, scripts: Record<string, ChatScript>): void {
+    public startScript(
+        scriptId: string,
+        scriptsOrStartIndex?: Record<string, ChatScript> | number,
+        overrideStartIndex?: number
+    ): void {
         this.clearAllTimers();
         this.activeRunId++;
         const currentRunId = this.activeRunId;
 
+        let scripts: Record<string, ChatScript> = this.options.customScripts || {};
+        let startIndexOverride: number | undefined = overrideStartIndex;
+
+        if (typeof scriptsOrStartIndex === "object" && scriptsOrStartIndex !== null) {
+            scripts = scriptsOrStartIndex;
+        } else if (typeof scriptsOrStartIndex === "number") {
+            startIndexOverride = scriptsOrStartIndex;
+        }
+
         const script = scripts[scriptId];
         if (!script) return;
 
-        const rawInitialIndex = this.options.initialStepIndex ?? 0;
+        const rawInitialIndex = startIndexOverride ?? this.options.initialStepIndex ?? 0;
         const startIndex = Math.max(0, Math.min(rawInitialIndex, Math.max(0, script.steps.length - 1)));
 
         const initialMessages: Message[] = [];
@@ -162,6 +183,8 @@ export class WhatsAppSimulatorEngine {
             elapsedTime: 0,
             totalDuration,
             isComplete: false,
+            isPaused: false,
+            currentStepIndex: startIndex,
             activeStepPerspective: lastInitialStep?.perspective || null,
         });
 
@@ -170,6 +193,7 @@ export class WhatsAppSimulatorEngine {
         // Progress timer
         const stepTime = 50;
         this.intervalId = setInterval(() => {
+            if (this.isPausedState) return;
             if (this.state.elapsedTime >= totalDuration) {
                 if (this.intervalId) clearInterval(this.intervalId);
                 return;
@@ -177,23 +201,34 @@ export class WhatsAppSimulatorEngine {
             this.updateState({ elapsedTime: this.state.elapsedTime + stepTime });
         }, stepTime);
 
-        this.runScriptAsync(script, currentRunId);
+        this.runScriptAsync(script, currentRunId, startIndex);
     }
 
     private async sleep(ms: number): Promise<void> {
-        const speed = this.options.speedMultiplier && this.options.speedMultiplier > 0 ? this.options.speedMultiplier : 1;
-        const adjustedMs = Math.max(10, Math.round(ms / speed));
-        return new Promise((resolve) => {
-            const id = setTimeout(resolve, adjustedMs);
-            this.timeoutIds.push(id);
-        });
+        const checkInterval = 50;
+        let elapsed = 0;
+        while (elapsed < ms) {
+            if (this.isPausedState) {
+                await new Promise((r) => setTimeout(r, checkInterval));
+                continue;
+            }
+            const speed = this.options.speedMultiplier && this.options.speedMultiplier > 0 ? this.options.speedMultiplier : 1;
+            const stepMs = Math.max(10, Math.round(checkInterval * speed));
+            await new Promise((r) => {
+                const id = setTimeout(r, checkInterval);
+                this.timeoutIds.push(id);
+            });
+            elapsed += stepMs;
+        }
     }
 
-    private async runScriptAsync(script: ChatScript, runId: number): Promise<void> {
-        const rawInitialIndex = this.options.initialStepIndex ?? 0;
+    private async runScriptAsync(script: ChatScript, runId: number, startIndexParam?: number): Promise<void> {
+        const rawInitialIndex = startIndexParam ?? this.options.initialStepIndex ?? 0;
         const startIndex = Math.max(0, Math.min(rawInitialIndex, Math.max(0, script.steps.length - 1)));
 
         for (let i = startIndex; i < script.steps.length; i++) {
+            if (this.activeRunId !== runId) return;
+            this.updateState({ currentStepIndex: i });
             if (this.activeRunId !== runId) return;
 
             const step = script.steps[i];
@@ -510,5 +545,110 @@ export class WhatsAppSimulatorEngine {
             this.updateState({ isComplete: true });
             this.handlers.onScriptComplete?.(script.id);
         }
+    }
+
+    public setPerspective(
+        perspectiveOrX?: StepPerspective | number,
+        rotateY?: number,
+        rotateZ?: number,
+        zoom?: number,
+        duration?: number
+    ): void {
+        if (typeof perspectiveOrX === "object" && perspectiveOrX !== null) {
+            this.updateState({ customPerspective: perspectiveOrX });
+        } else if (typeof perspectiveOrX === "number") {
+            this.updateState({
+                customPerspective: {
+                    rotateX: perspectiveOrX,
+                    rotateY: rotateY,
+                    rotateZ: rotateZ,
+                    zoom: zoom,
+                    duration: duration,
+                },
+            });
+        } else {
+            this.updateState({ customPerspective: null });
+        }
+    }
+
+    public resetPerspective(): void {
+        this.updateState({ customPerspective: null });
+    }
+
+    public goToStep(index: number): void {
+        const scriptId = this.state.activeScriptId;
+        this.startScript(scriptId, index);
+    }
+
+    public jumpToStep(index: number): void {
+        this.goToStep(index);
+    }
+
+    public nextStep(): void {
+        const currentIndex = this.state.currentStepIndex ?? 0;
+        this.goToStep(currentIndex + 1);
+    }
+
+    public previousStep(): void {
+        const currentIndex = this.state.currentStepIndex ?? 0;
+        this.goToStep(Math.max(0, currentIndex - 1));
+    }
+
+    public play(): void {
+        this.isPausedState = false;
+        this.updateState({ isPaused: false });
+    }
+
+    public resume(): void {
+        this.play();
+    }
+
+    public pause(): void {
+        this.isPausedState = true;
+        this.updateState({ isPaused: true });
+    }
+
+    public stop(): void {
+        this.clearAllTimers();
+        this.activeRunId++;
+        this.updateState({
+            messages: [],
+            isTyping: false,
+            isRecordingAudio: false,
+            inputValue: "",
+            sendRipple: false,
+            attachedImage: null,
+            mediaPreview: null,
+            audioRecording: null,
+            isComplete: false,
+            isKeyboardOpen: false,
+            pressedKey: null,
+            isPaused: false,
+            currentStepIndex: 0,
+        });
+    }
+
+    public restartCurrentScript(): void {
+        if (this.state.activeScriptId) {
+            this.startScript(this.state.activeScriptId, 0);
+        }
+    }
+
+    public restart(): void {
+        this.restartCurrentScript();
+    }
+
+    public setSpeedMultiplier(multiplier: number): void {
+        const validMultiplier = Math.max(0.1, multiplier);
+        this.options.speedMultiplier = validMultiplier;
+        this.updateState({ speedMultiplier: validMultiplier });
+    }
+
+    public setSpeed(multiplier: number): void {
+        this.setSpeedMultiplier(multiplier);
+    }
+
+    public setScript(scriptId: string, startIndex: number = 0): void {
+        this.startScript(scriptId, startIndex);
     }
 }

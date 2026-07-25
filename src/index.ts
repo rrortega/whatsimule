@@ -11,6 +11,7 @@ export type {
     PerspectiveKeyframe,
     WhatsAppSimulatorOptions,
     SimulatorEventHandlers,
+    WhatSimuleRef,
 } from "./core/types";
 
 // React exports

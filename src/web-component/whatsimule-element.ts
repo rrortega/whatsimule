@@ -52,6 +52,68 @@ export class WhatSimuleElement extends HTMLElement {
         }
     }
 
+    public setPerspective(
+        perspectiveOrX?: any,
+        rotateY?: number,
+        rotateZ?: number,
+        zoom?: number,
+        duration?: number
+    ): void {
+        this.engine?.setPerspective(perspectiveOrX, rotateY, rotateZ, zoom, duration);
+    }
+
+    public resetPerspective(): void {
+        this.engine?.resetPerspective();
+    }
+
+    public goToStep(index: number): void {
+        this.engine?.goToStep(index);
+    }
+
+    public jumpToStep(index: number): void {
+        this.engine?.jumpToStep(index);
+    }
+
+    public nextStep(): void {
+        this.engine?.nextStep();
+    }
+
+    public previousStep(): void {
+        this.engine?.previousStep();
+    }
+
+    public play(): void {
+        this.engine?.play();
+    }
+
+    public resume(): void {
+        this.engine?.resume();
+    }
+
+    public pause(): void {
+        this.engine?.pause();
+    }
+
+    public stop(): void {
+        this.engine?.stop();
+    }
+
+    public restart(): void {
+        this.engine?.restart();
+    }
+
+    public setSpeedMultiplier(multiplier: number): void {
+        this.engine?.setSpeedMultiplier(multiplier);
+    }
+
+    public setSpeed(multiplier: number): void {
+        this.engine?.setSpeed(multiplier);
+    }
+
+    public setScript(scriptId: string, startIndex: number = 0): void {
+        this.engine?.setScript(scriptId, startIndex);
+    }
+
     private initEngine() {
         // Initializes engine with internal container state
     }

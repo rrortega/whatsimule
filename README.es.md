@@ -181,6 +181,62 @@ Al configurar un chat en modo grupo (`chatType="group"`):
 
 ---
 
+### 🕹️ API de Control Imperativo Externo (`ref` y elemento `DOM`)
+
+Puedes controlar `<WhatSimule ref={simRef} />` en React usando `ref` o `<what-simule id="sim">` en JavaScript Vanilla / Web Component usando `document.getElementById(...)`:
+
+```tsx
+// Uso con React ref:
+import { useRef } from 'react';
+import { WhatSimule, WhatSimuleRef } from 'rrortega-whatsimule';
+
+const simRef = useRef<WhatSimuleRef>(null);
+
+// Cambiar la perspectiva 3D / rotación de la cámara externamente:
+simRef.current?.setPerspective({ rotateX: 12, rotateY: -15, zoom: 1.06, duration: 1.2 });
+// O pasando argumentos posicionales: simRef.current?.setPerspective(12, -15, 0, 1.06, 1.2);
+simRef.current?.resetPerspective(); // Vuelve a la perspectiva automática del paso
+
+// Controles de Navegación y Reproducción:
+simRef.current?.goToStep(3);        // Saltar directamente al paso #3 (index 3)
+simRef.current?.nextStep();        // Avanzar al siguiente mensaje
+simRef.current?.previousStep();    // Retroceder al mensaje anterior
+simRef.current?.pause();           // Pausar la simulación
+simRef.current?.play();            // Reanudar / iniciar reproducción
+simRef.current?.stop();            // Detener la simulación y limpiar
+simRef.current?.restart();         // Reiniciar guion desde el inicio
+simRef.current?.setSpeed(2);       // Cambiar velocidad (ej. 2x)
+simRef.current?.setScript('demo'); // Cambiar guion activo
+```
+
+```javascript
+// Uso con Web Component (DOM):
+const sim = document.getElementById('my-sim');
+sim.setPerspective({ rotateX: 10, rotateY: -10, zoom: 1.04, duration: 1.0 });
+sim.goToStep(2);
+sim.pause();
+sim.play();
+sim.setSpeedMultiplier(1.5);
+```
+
+#### Resumen de Métodos Imperativos Disponibles:
+
+| Método | Firma | Descripción |
+| --- | --- | --- |
+| `setPerspective` | `(perspectiveOrX, rotateY?, rotateZ?, zoom?, duration?)` | Asigna u sobrescribe la rotación 3D y zoom dinámicamente |
+| `resetPerspective` | `()` | Limpia el giro personalizado y vuelve a la perspectiva del guion |
+| `goToStep` / `jumpToStep` | `(index: number)` | Navega/salta directamente a un paso del guion por su índice |
+| `nextStep` | `()` | Avanza al siguiente paso inmediatamente |
+| `previousStep` | `()` | Retrocede al paso anterior inmediatamente |
+| `play` / `resume` | `()` | Reanuda o inicia la reproducción de la conversación |
+| `pause` | `()` | Pausa la reproducción de la conversación |
+| `stop` | `()` | Detiene la simulación y limpia los mensajes |
+| `restart` | `()` | Reinicia el guion activo desde el paso 0 |
+| `setSpeed` / `setSpeedMultiplier` | `(multiplier: number)` | Cambia el multiplicador de velocidad (ej. `0.5`, `1`, `1.5`, `2`) |
+| `setScript` | `(scriptId: string, startIndex?: number)` | Cambia el guion activo |
+
+---
+
 ## 👨‍💻 Autor & Comunidad Open Source
 
 Creado y mantenido por **Rolando R. Ortega**.

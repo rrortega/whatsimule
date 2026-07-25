@@ -18,6 +18,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     assistantName,
 }) => {
     const [isPlaying, setIsPlaying] = useState(false);
+    const [playbackProgress, setPlaybackProgress] = useState(0);
     const isUser = message.sender === "resident" || message.sender === "user";
     const isGroup = chatType === "group";
     const showAvatar = isGroup && !isUser;
