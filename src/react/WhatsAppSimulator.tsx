@@ -233,7 +233,13 @@ export const WhatSimule: React.FC<WhatSimuleProps> = ({
         : (isTimelineActive && activeKeyframe ? (activeKeyframe.duration ?? 0.8) : undefined);
 
     const motionTransition = (isStepPerspectiveActive || isTimelineActive) && !isUserHovering
-        ? { duration: currentDuration ?? 0.8, ease: "easeInOut" as const }
+        ? {
+            type: "spring" as const,
+            stiffness: 85,
+            damping: 15,
+            mass: 0.9,
+            restDelta: 0.001,
+          }
         : undefined;
 
     const shouldShowRestart = (() => {
