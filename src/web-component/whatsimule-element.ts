@@ -2,14 +2,14 @@ import { WhatsAppSimulatorEngine } from "../core/simulator-engine";
 import { ChatScript, WhatsAppSimulatorOptions } from "../core/types";
 
 /**
- * Web Component wrapper `<whatsapp-simulator>` for framework-agnostic usage.
+ * Web Component wrapper `<what-simule>` for framework-agnostic usage.
  * Usage in HTML / Vue / Svelte:
- * <whatsapp-simulator id="my-sim"></whatsapp-simulator>
+ * <what-simule id="my-sim"></what-simule>
  * <script>
  *   document.getElementById('my-sim').setScripts(myScripts);
  * </script>
  */
-export class WhatsAppSimulatorElement extends HTMLElement {
+export class WhatSimuleElement extends HTMLElement {
     private engine: WhatsAppSimulatorEngine | null = null;
     private rootElement: HTMLDivElement | null = null;
 
@@ -109,10 +109,10 @@ export class WhatsAppSimulatorElement extends HTMLElement {
         this.rootElement = document.createElement("div");
         this.rootElement.className = "rws-wc-frame";
         this.rootElement.innerHTML = `
-            <div className="rws-wc-header">
-                <strong>${this.getAttribute("assistant-name") || "WhatsApp Simulator"}</strong>
+            <div class="rws-wc-header">
+                <strong>${this.getAttribute("assistant-name") || "AI Assistant"}</strong>
             </div>
-            <div className="rws-wc-body" id="messages-container"></div>
+            <div class="rws-wc-body" id="messages-container"></div>
         `;
 
         shadow.appendChild(style);
@@ -127,7 +127,7 @@ export class WhatsAppSimulatorElement extends HTMLElement {
         container.innerHTML = state.messages
             .map(
                 (m: any) => `
-                <div className="rws-wc-message ${m.sender === "resident" || m.sender === "user" ? "rws-wc-user" : "rws-wc-assistant"}">
+                <div class="rws-wc-message ${m.sender === "resident" || m.sender === "user" ? "rws-wc-user" : "rws-wc-assistant"}">
                     ${m.content}
                 </div>
             `
@@ -138,6 +138,8 @@ export class WhatsAppSimulatorElement extends HTMLElement {
     }
 }
 
-if (typeof window !== "undefined" && !customElements.get("whatsapp-simulator")) {
-    customElements.define("whatsapp-simulator", WhatsAppSimulatorElement);
+if (typeof window !== "undefined" && "customElements" in window) {
+    if (!customElements.get("what-simule")) {
+        customElements.define("what-simule", WhatSimuleElement);
+    }
 }

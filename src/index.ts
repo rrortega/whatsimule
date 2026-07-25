@@ -18,4 +18,4 @@ export { VirtualKeyboard } from "./react/components/VirtualKeyboard";
 export type { WhatSimuleProps, WhatsAppSimulatorProps } from "./react/WhatsAppSimulator";
 
 // Web Component export
-export { WhatsAppSimulatorElement } from "./web-component/whatsapp-simulator-element";
+export { WhatSimuleElement } from "./web-component/whatsimule-element";

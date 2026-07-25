@@ -1,14 +1,14 @@
 # AGENTS.md - AI Agent & Developer Guide
 
-> **Package:** `rrortega-whatsimule` (React WhatsApp Simulator)  
-> **Repository:** `react-whatsapp-simulator`  
-> **Purpose:** Interactive, animated 3D WhatsApp conversation simulator component for React and Web Applications with procedural Web Audio API sound synthesis.
+> **Package:** `rrortega-whatsimule`  
+> **Repository:** `whatsimule`  
+> **Purpose:** Interactive, animated 3D WhatsApp conversation simulator component (`<WhatSimule />`) for React and Web Applications with procedural Web Audio API sound synthesis.
 
 ---
 
 ## 🚀 Quick Overview & Installation
 
-`rrortega-whatsimule` provides a framework-agnostic core engine, a native React component (`WhatsAppSimulator` / `WhatSimule`), a headless hook (`useWhatsAppSimulator`), and a Web Component (`<whatsapp-simulator>`) for Vue, Svelte, or Vanilla JS.
+`rrortega-whatsimule` provides a framework-agnostic core engine, a native React component (`WhatSimule`), a headless hook (`useWhatsAppSimulator`), and a Web Component (`<what-simule>`) for Vue, Svelte, or Vanilla JS.
 
 ### 1. Install Package & Peer Dependencies
 
@@ -40,15 +40,15 @@ import 'rrortega-whatsimule/dist/whatsapp-simulator.css';
 
 ## 💻 Usage Patterns
 
-### A. Basic React Component (`WhatsAppSimulator` / `WhatSimule`)
+### A. Basic React Component (`WhatSimule`)
 
-Both `WhatsAppSimulator` and `WhatSimule` refer to the same React component.
+`<WhatSimule />` is the primary React component (with `WhatsAppSimulator` kept as an export alias).
 
 ```tsx
 'use client'; // Required if using Next.js App Router
 
 import React from 'react';
-import { WhatsAppSimulator, ChatScript } from 'rrortega-whatsimule';
+import { WhatSimule, ChatScript } from 'rrortega-whatsimule';
 import 'rrortega-whatsimule/dist/whatsapp-simulator.css';
 
 const demoScripts: Record<string, ChatScript> = {
@@ -96,7 +96,7 @@ const demoScripts: Record<string, ChatScript> = {
 export function SimulatorWidget() {
   return (
     <div style={{ height: '700px', display: 'flex', justifyContent: 'center' }}>
-      <WhatsAppSimulator
+      <WhatSimule
         customScripts={demoScripts}
         defaultActiveScriptId="sales_demo"
         assistantName="ChambaPro AI"
@@ -160,31 +160,31 @@ function CustomChatUI({ scripts }) {
 
 ---
 
-### C. Web Component / HTML / Vue / Svelte (`<whatsapp-simulator>`)
+### C. Web Component / HTML / Vue / Svelte (`<what-simule>`)
 
-Register `WhatsAppSimulatorElement` as a Web Component for non-React projects:
+Register `WhatSimuleElement` as a Web Component for non-React projects:
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>WhatsApp Simulator Web Component</title>
+  <title>WhatSimule Web Component</title>
   <link rel="stylesheet" href="node_modules/rrortega-whatsimule/dist/whatsapp-simulator.css">
 </head>
 <body>
-  <whatsapp-simulator
+  <what-simule
     id="sim-element"
     assistant-name="AI Assistant"
     locale="en"
     enable-sound="true">
-  </whatsapp-simulator>
+  </what-simule>
 
   <script type="module">
-    import { WhatsAppSimulatorElement } from 'rrortega-whatsimule';
+    import { WhatSimuleElement } from 'rrortega-whatsimule';
 
-    if (!customElements.get('whatsapp-simulator')) {
-      customElements.define('whatsapp-simulator', WhatsAppSimulatorElement);
+    if (!customElements.get('what-simule')) {
+      customElements.define('what-simule', WhatSimuleElement);
     }
 
     const sim = document.getElementById('sim-element');
@@ -208,7 +208,7 @@ Register `WhatsAppSimulatorElement` as a Web Component for non-React projects:
 
 ## ⚙️ Props & Configuration Reference
 
-### `WhatsAppSimulatorProps` / `WhatsAppSimulatorOptions`
+### `WhatSimuleProps` / `WhatsAppSimulatorProps` / `WhatsAppSimulatorOptions`
 
 | Option / Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -296,12 +296,12 @@ src/
 │   └── simulator-engine.ts     # Core state machine & script runner
 │
 ├── react/                      # 2. React UI & Motion Layer
-│   ├── WhatsAppSimulator.tsx   # Primary React component (WhatSimule / WhatsAppSimulator)
+│   ├── WhatsAppSimulator.tsx   # Primary React component (<WhatSimule /> / WhatsAppSimulator alias)
 │   ├── useWhatsAppSimulator.ts # React state binding hook for engine
 │   └── components/             # Subcomponents (ChatHeader, MessageBubble, VirtualKeyboard, etc.)
 │
 ├── web-component/              # 3. Web Component Layer
-│   └── whatsapp-simulator-element.ts # CustomElement adapter (<whatsapp-simulator>)
+│   └── whatsimule-element.ts   # CustomElement adapter (<what-simule>)
 │
 ├── styles/                     # 4. CSS Styling Layer
 │   └── whatsapp-simulator.css  # Scoped library stylesheet (rws-* namespace)
