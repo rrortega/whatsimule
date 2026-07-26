@@ -115,24 +115,75 @@
     border-radius: 2px;
     z-index: 60;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    transform: translateZ(-5px);
 }
 
-/* iPhone Specific Phone Frame & Hardware Buttons */
+/* Physical 3D Phone Back Chassis (Volumetric 3D Depth Layer) */
+.rws-phone-3d-back {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: translateZ(-14px);
+    pointer-events: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease;
+}
+
+.rws-phone-3d-back.rws-device-iphone {
+    border-radius: 44px;
+    background: linear-gradient(135deg, #2b303c 0%, #171a22 50%, #0a0b0e 100%);
+    border: 3px solid #3c4354;
+    box-shadow: 
+        inset 0 0 25px rgba(0, 0, 0, 0.85),
+        -18px 28px 55px rgba(0, 0, 0, 0.8);
+}
+
+.rws-phone-3d-back.rws-device-android {
+    border-radius: 24px;
+    background: linear-gradient(135deg, #2f3442 0%, #191c25 50%, #0c0d11 100%);
+    border: 3px solid #434a5d;
+    box-shadow: 
+        inset 0 0 25px rgba(0, 0, 0, 0.85),
+        -18px 28px 55px rgba(0, 0, 0, 0.8);
+}
+
+/* iPhone Specific Phone Frame & 3D Extruded Chassis Thickness */
 .rws-device-iphone.rws-phone-frame {
     border-radius: 44px;
     border: 10px solid #282c37;
     box-shadow: 
-        0 0 0 2px #4b5266,
-        0 0 0 4px rgba(0, 0, 0, 0.6),
-        0 25px 70px rgba(0, 0, 0, 0.9),
-        0 0 40px rgba(0, 168, 132, 0.25);
+        /* Physical 3D Chassis Bezel Thickness / Volumetric Lateral Extrusions */
+        -1px 1px 0 #1f222b,
+        -2px 2px 0 #1c1e26,
+        -3px 3px 0 #191b22,
+        -4px 4px 0 #16171e,
+        -5px 5px 0 #13141a,
+        -6px 6px 0 #101116,
+        -7px 7px 0 #0e0f13,
+        -8px 8px 0 #0b0c0f,
+        -9px 9px 0 #090a0c,
+        -10px 10px 0 #070709,
+        -11px 11px 0 #050506,
+        -12px 12px 0 #030304,
+        /* Ambient and floor drop shadows */
+        -20px 30px 65px rgba(0, 0, 0, 0.85),
+        0 10px 35px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(0, 168, 132, 0.2);
 }
 
-/* Frameless (No Phone Outer Border or Hardware Shell) */
+/* Frameless (No Phone Bezel/Shell - Thin Flat Layer with Square Corners) */
+.rws-device-none.rws-phone-frame,
+.rws-device-none .rws-header-wrapper,
+.rws-device-none .rws-header,
+.rws-device-none .rws-input-bar,
+.rws-device-none .rws-phone-home-indicator,
+.rws-device-none .rws-android-nav-bar {
+    border-radius: 0 !important;
+}
+
 .rws-device-none.rws-phone-frame {
-    border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    transform-style: flat;
 }
 
 .rws-phone-wrapper .rws-iphone-mute {
@@ -212,15 +263,28 @@
     border: 1px solid #182230;
 }
 
-/* Android Specific Phone Frame & Hardware Buttons */
+/* Android Specific Phone Frame & 3D Extruded Chassis Thickness */
 .rws-device-android.rws-phone-frame {
     border-radius: 24px;
     border: 8px solid #2d323e;
     box-shadow: 
-        0 0 0 2px #4f576b,
-        0 0 0 4px rgba(0, 0, 0, 0.6),
-        0 25px 70px rgba(0, 0, 0, 0.9),
-        0 0 40px rgba(0, 168, 132, 0.25);
+        /* Physical 3D Chassis Bezel Thickness / Volumetric Lateral Extrusions */
+        -1px 1px 0 #242731,
+        -2px 2px 0 #20232b,
+        -3px 3px 0 #1d1f27,
+        -4px 4px 0 #191b22,
+        -5px 5px 0 #16171e,
+        -6px 6px 0 #131419,
+        -7px 7px 0 #101115,
+        -8px 8px 0 #0d0e11,
+        -9px 9px 0 #0a0a0d,
+        -10px 10px 0 #070709,
+        -11px 11px 0 #040405,
+        -12px 12px 0 #020203,
+        /* Ambient and floor drop shadows */
+        -20px 30px 65px rgba(0, 0, 0, 0.85),
+        0 10px 35px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(0, 168, 132, 0.2);
 }
 
 .rws-phone-wrapper .rws-android-vol {

@@ -1,6 +1,6 @@
 {
   "name": "rrortega-whatsimule",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "Interactive, animated 3D WhatsApp conversation simulator component for React and Web framework applications with Web Audio API sound synthesis.",
   "homepage": "https://rrortega.github.io/whatsimule/",
   "repository": {
@@ -13,6 +13,15 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./dist/whatsapp-simulator.css": "./dist/whatsapp-simulator.css",
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist",
     "README.md",

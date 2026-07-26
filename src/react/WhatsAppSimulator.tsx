@@ -316,6 +316,11 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                     transition={motionTransition}
                     className={`rws-phone-wrapper rws-device-${deviceStyle}`}
                 >
+                    {/* Physical 3D Back Chassis Layer for Phone Depth Thickness */}
+                    {deviceStyle !== "none" && (
+                        <div className={`rws-phone-3d-back rws-device-${deviceStyle}`} />
+                    )}
+
                     {/* Physical Side Hardware Buttons on Wrapper */}
                     {deviceStyle === "iphone" ? (
                         <>
