@@ -111,14 +111,13 @@
 /* Physical Phone Hardware Side Buttons */
 .rws-side-btn {
     position: absolute;
-    background: linear-gradient(180deg, #5a6478 0%, #3e4656 100%);
+    background: linear-gradient(180deg, #5c667a 0%, #3a4252 100%);
     border-radius: 2px;
     z-index: 60;
-    box-shadow: 
-        0 1px 3px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transform: translateZ(-6px);
+    transform-style: preserve-3d;
+    transform: translateZ(-7px);
     border: 1px solid #333a48;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Physical 3D Phone Back Chassis (Volumetric 3D Depth Layer) */
@@ -186,43 +185,59 @@
 }
 
 .rws-phone-wrapper .rws-iphone-mute {
-    left: -13px;
+    left: -10px;
     top: 60px;
     width: 3px;
     height: 16px;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
-    box-shadow: -1px 0 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 
+        -1px 0 0 #3a4154,
+        -2px 0 0 #282d3b,
+        -3px 0 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .rws-phone-wrapper .rws-iphone-vol-up {
-    left: -13px;
+    left: -10px;
     top: 95px;
     width: 3px;
     height: 34px;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
-    box-shadow: -1px 0 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 
+        -1px 0 0 #3a4154,
+        -2px 0 0 #282d3b,
+        -3px 0 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .rws-phone-wrapper .rws-iphone-vol-down {
-    left: -13px;
+    left: -10px;
     top: 140px;
     width: 3px;
     height: 34px;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
-    box-shadow: -1px 0 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 
+        -1px 0 0 #3a4154,
+        -2px 0 0 #282d3b,
+        -3px 0 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .rws-phone-wrapper .rws-iphone-power {
-    right: -13px;
+    right: -10px;
     top: 110px;
     width: 3px;
     height: 48px;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    box-shadow: 1px 0 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 
+        1px 0 0 #3a4154,
+        2px 0 0 #282d3b,
+        3px 0 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* Dynamic Island / iPhone Top Notch */
@@ -273,23 +288,31 @@
 }
 
 .rws-phone-wrapper .rws-android-vol {
-    right: -11px;
+    right: -8px;
     top: 80px;
     width: 3px;
     height: 52px;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    box-shadow: 1px 0 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 
+        1px 0 0 #3a4154,
+        2px 0 0 #282d3b,
+        3px 0 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .rws-phone-wrapper .rws-android-power {
-    right: -11px;
+    right: -8px;
     top: 148px;
     width: 3px;
     height: 28px;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    box-shadow: 1px 0 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 
+        1px 0 0 #3a4154,
+        2px 0 0 #282d3b,
+        3px 0 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .rws-android-speaker-slit {
@@ -1686,7 +1709,28 @@
 }
 
 .rws-theme-light .rws-side-btn {
-    background: #94a3b8;
+    background: linear-gradient(180deg, #a0aec0 0%, #718096 100%);
+    border: 1px solid #a0aec0;
+}
+
+.rws-theme-light .rws-phone-wrapper .rws-iphone-mute,
+.rws-theme-light .rws-phone-wrapper .rws-iphone-vol-up,
+.rws-theme-light .rws-phone-wrapper .rws-iphone-vol-down {
+    box-shadow: 
+        -1px 0 0 #cbd5e1,
+        -2px 0 0 #94a3b8,
+        -3px 0 3px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.rws-theme-light .rws-phone-wrapper .rws-iphone-power,
+.rws-theme-light .rws-phone-wrapper .rws-android-vol,
+.rws-theme-light .rws-phone-wrapper .rws-android-power {
+    box-shadow: 
+        1px 0 0 #cbd5e1,
+        2px 0 0 #94a3b8,
+        3px 0 3px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 /* ==========================================================================
