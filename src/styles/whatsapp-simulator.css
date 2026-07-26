@@ -111,11 +111,14 @@
 /* Physical Phone Hardware Side Buttons */
 .rws-side-btn {
     position: absolute;
-    background: #52596b;
+    background: linear-gradient(180deg, #5a6478 0%, #3e4656 100%);
     border-radius: 2px;
     z-index: 60;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
-    transform: translateZ(-5px);
+    box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transform: translateZ(-6px);
+    border: 1px solid #333a48;
 }
 
 /* Physical 3D Phone Back Chassis (Volumetric 3D Depth Layer) */
@@ -130,43 +133,41 @@
 
 .rws-phone-3d-back.rws-device-iphone {
     border-radius: 44px;
-    background: linear-gradient(135deg, #2b303c 0%, #171a22 50%, #0a0b0e 100%);
-    border: 3px solid #3c4354;
+    background: linear-gradient(135deg, #373e50 0%, #222734 50%, #12151e 100%);
+    border: 2px solid #4a546d;
     box-shadow: 
-        inset 0 0 25px rgba(0, 0, 0, 0.85),
-        -18px 28px 55px rgba(0, 0, 0, 0.8);
+        inset 0 0 25px rgba(0, 0, 0, 0.75),
+        -16px 24px 50px rgba(0, 0, 0, 0.7);
 }
 
 .rws-phone-3d-back.rws-device-android {
     border-radius: 24px;
-    background: linear-gradient(135deg, #2f3442 0%, #191c25 50%, #0c0d11 100%);
-    border: 3px solid #434a5d;
+    background: linear-gradient(135deg, #373e50 0%, #222734 50%, #12151e 100%);
+    border: 2px solid #4a546d;
     box-shadow: 
-        inset 0 0 25px rgba(0, 0, 0, 0.85),
-        -18px 28px 55px rgba(0, 0, 0, 0.8);
+        inset 0 0 25px rgba(0, 0, 0, 0.75),
+        -16px 24px 50px rgba(0, 0, 0, 0.7);
 }
 
-/* iPhone Specific Phone Frame & 3D Extruded Chassis Thickness */
+/* iPhone Specific Phone Frame & 3D Extruded Metallic Slate Chassis */
 .rws-device-iphone.rws-phone-frame {
     border-radius: 44px;
-    border: 10px solid #282c37;
+    border: 10px solid #2d3342;
     box-shadow: 
-        /* Physical 3D Chassis Bezel Thickness / Volumetric Lateral Extrusions */
-        -1px 1px 0 #1f222b,
-        -2px 2px 0 #1c1e26,
-        -3px 3px 0 #191b22,
-        -4px 4px 0 #16171e,
-        -5px 5px 0 #13141a,
-        -6px 6px 0 #101116,
-        -7px 7px 0 #0e0f13,
-        -8px 8px 0 #0b0c0f,
-        -9px 9px 0 #090a0c,
-        -10px 10px 0 #070709,
-        -11px 11px 0 #050506,
-        -12px 12px 0 #030304,
+        /* Physical 3D Metallic Slate Extrusions (Dark Mode) */
+        -1px 1px 0 #3a4154,
+        -2px 2px 0 #343a4b,
+        -3px 3px 0 #2e3443,
+        -4px 4px 0 #282d3b,
+        -5px 5px 0 #232733,
+        -6px 6px 0 #1d212c,
+        -7px 7px 0 #181b24,
+        -8px 8px 0 #13161e,
+        -9px 9px 0 #0f1118,
+        -10px 10px 0 #0b0d12,
         /* Ambient and floor drop shadows */
-        -20px 30px 65px rgba(0, 0, 0, 0.85),
-        0 10px 35px rgba(0, 0, 0, 0.5),
+        -18px 26px 55px rgba(0, 0, 0, 0.75),
+        0 10px 30px rgba(0, 0, 0, 0.45),
         0 0 40px rgba(0, 168, 132, 0.2);
 }
 
@@ -263,27 +264,25 @@
     border: 1px solid #182230;
 }
 
-/* Android Specific Phone Frame & 3D Extruded Chassis Thickness */
+/* Android Specific Phone Frame & 3D Extruded Metallic Slate Chassis */
 .rws-device-android.rws-phone-frame {
     border-radius: 24px;
-    border: 8px solid #2d323e;
+    border: 8px solid #313848;
     box-shadow: 
-        /* Physical 3D Chassis Bezel Thickness / Volumetric Lateral Extrusions */
-        -1px 1px 0 #242731,
-        -2px 2px 0 #20232b,
-        -3px 3px 0 #1d1f27,
-        -4px 4px 0 #191b22,
-        -5px 5px 0 #16171e,
-        -6px 6px 0 #131419,
-        -7px 7px 0 #101115,
-        -8px 8px 0 #0d0e11,
-        -9px 9px 0 #0a0a0d,
-        -10px 10px 0 #070709,
-        -11px 11px 0 #040405,
-        -12px 12px 0 #020203,
+        /* Physical 3D Metallic Slate Extrusions (Dark Mode) */
+        -1px 1px 0 #3a4154,
+        -2px 2px 0 #343a4b,
+        -3px 3px 0 #2e3443,
+        -4px 4px 0 #282d3b,
+        -5px 5px 0 #232733,
+        -6px 6px 0 #1d212c,
+        -7px 7px 0 #181b24,
+        -8px 8px 0 #13161e,
+        -9px 9px 0 #0f1118,
+        -10px 10px 0 #0b0d12,
         /* Ambient and floor drop shadows */
-        -20px 30px 65px rgba(0, 0, 0, 0.85),
-        0 10px 35px rgba(0, 0, 0, 0.5),
+        -18px 26px 55px rgba(0, 0, 0, 0.75),
+        0 10px 30px rgba(0, 0, 0, 0.45),
         0 0 40px rgba(0, 168, 132, 0.2);
 }
 
@@ -1606,19 +1605,50 @@
 }
 
 .rws-theme-light.rws-device-iphone {
-    border-color: #d1d5db;
+    border-color: #cbd5e1;
     box-shadow: 
-        0 0 0 2px #e5e7eb,
-        0 25px 60px rgba(0, 0, 0, 0.22),
-        0 10px 25px rgba(0, 168, 132, 0.15);
+        /* Space Gray / Satin Aluminum Lateral 3D Extrusions (Light Mode) */
+        -1px 1px 0 #94a3b8,
+        -2px 2px 0 #8493a8,
+        -3px 3px 0 #748398,
+        -4px 4px 0 #64748b,
+        -5px 5px 0 #57677d,
+        -6px 6px 0 #475569,
+        -7px 7px 0 #3c495c,
+        -8px 8px 0 #334155,
+        -9px 9px 0 #283344,
+        -10px 10px 0 #1e293b,
+        /* Ambient floor drop shadow */
+        -16px 24px 50px rgba(0, 0, 0, 0.25),
+        0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .rws-theme-light.rws-device-android {
     border-color: #cbd5e1;
     box-shadow: 
-        0 0 0 2px #e2e8f0,
-        0 25px 60px rgba(0, 0, 0, 0.22),
-        0 10px 25px rgba(0, 168, 132, 0.15);
+        /* Space Gray / Satin Aluminum Lateral 3D Extrusions (Light Mode) */
+        -1px 1px 0 #94a3b8,
+        -2px 2px 0 #8493a8,
+        -3px 3px 0 #748398,
+        -4px 4px 0 #64748b,
+        -5px 5px 0 #57677d,
+        -6px 6px 0 #475569,
+        -7px 7px 0 #3c495c,
+        -8px 8px 0 #334155,
+        -9px 9px 0 #283344,
+        -10px 10px 0 #1e293b,
+        /* Ambient floor drop shadow */
+        -16px 24px 50px rgba(0, 0, 0, 0.25),
+        0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.rws-theme-light .rws-phone-3d-back.rws-device-iphone,
+.rws-theme-light .rws-phone-3d-back.rws-device-android {
+    background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 50%, #64748b 100%);
+    border: 2px solid #94a3b8;
+    box-shadow: 
+        inset 0 0 20px rgba(0, 0, 0, 0.18),
+        -15px 22px 45px rgba(0, 0, 0, 0.25);
 }
 
 .rws-theme-light .rws-header-wrapper,
