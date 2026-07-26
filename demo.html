@@ -2098,6 +2098,51 @@
             <span class="slider"></span>
           </label>
         </div>
+
+        <div class="toggle-row" style="margin-top: 4px;">
+          <div>
+            <div class="toggle-label">Seteo Manual de Perspectiva 3D y Zoom</div>
+            <div class="toggle-sub">Ajusta ángulos de inclinación y escala en tiempo real</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="manual-tilt-toggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div id="manual-tilt-sliders-container" style="display: none; margin-top: 8px; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
+          <div class="form-group">
+            <div class="range-header">
+              <label class="form-label">Inclinación X (Rotate X)</label>
+              <span class="range-badge" id="rot-x-badge">0°</span>
+            </div>
+            <input type="range" id="rot-x-input" min="-45" max="45" step="1" value="0" class="range-slider" />
+          </div>
+
+          <div class="form-group" style="margin-top: 6px;">
+            <div class="range-header">
+              <label class="form-label">Rotación Y (Rotate Y)</label>
+              <span class="range-badge" id="rot-y-badge">0°</span>
+            </div>
+            <input type="range" id="rot-y-input" min="-45" max="45" step="1" value="0" class="range-slider" />
+          </div>
+
+          <div class="form-group" style="margin-top: 6px;">
+            <div class="range-header">
+              <label class="form-label">Zoom (Escala)</label>
+              <span class="range-badge" id="zoom-badge">1x</span>
+            </div>
+            <input type="range" id="zoom-input" min="0.5" max="2" step="0.05" value="1" class="range-slider" />
+          </div>
+
+          <div class="form-group" style="margin-top: 6px;">
+            <div class="range-header">
+              <label class="form-label">Duración Transición</label>
+              <span class="range-badge" id="duration-badge">0.8s</span>
+            </div>
+            <input type="range" id="duration-input" min="0.1" max="3" step="0.1" value="0.8" class="range-slider" />
+          </div>
+        </div>
       </div>
 
       <!-- 5. Botón de Reinicio -->
@@ -2998,6 +3043,47 @@ export default function App() {
           updateDemoPageThemeUI(demoPageTheme);
         });
 
+        const manualTiltToggle = document.getElementById('manual-tilt-toggle');
+        const manualTiltSlidersContainer = document.getElementById('manual-tilt-sliders-container');
+        const rotXInput = document.getElementById('rot-x-input');
+        const rotYInput = document.getElementById('rot-y-input');
+        const zoomInput = document.getElementById('zoom-input');
+        const durationInput = document.getElementById('duration-input');
+        const rotXBadge = document.getElementById('rot-x-badge');
+        const rotYBadge = document.getElementById('rot-y-badge');
+        const zoomBadge = document.getElementById('zoom-badge');
+        const durationBadge = document.getElementById('duration-badge');
+
+        const applyManualTilt = () => {
+          if (!manualTiltToggle || !manualTiltToggle.checked) {
+            if (manualTiltSlidersContainer) manualTiltSlidersContainer.style.display = 'none';
+            if (window.__simRef) {
+              window.__simRef.resetPerspective();
+            }
+            return;
+          }
+          if (manualTiltSlidersContainer) manualTiltSlidersContainer.style.display = 'flex';
+          const rotX = parseInt(rotXInput?.value || 0, 10);
+          const rotY = parseInt(rotYInput?.value || 0, 10);
+          const zoom = parseFloat(zoomInput?.value || 1);
+          const duration = parseFloat(durationInput?.value || 0.8);
+
+          if (rotXBadge) rotXBadge.textContent = `${rotX}°`;
+          if (rotYBadge) rotYBadge.textContent = `${rotY}°`;
+          if (zoomBadge) zoomBadge.textContent = `${zoom.toFixed(2)}x`;
+          if (durationBadge) durationBadge.textContent = `${duration.toFixed(1)}s`;
+
+          if (window.__simRef) {
+            window.__simRef.setPerspective({ rotateX: rotX, rotateY: rotY, zoom: zoom, duration: duration });
+          }
+        };
+
+        manualTiltToggle?.addEventListener('change', applyManualTilt);
+        rotXInput?.addEventListener('input', applyManualTilt);
+        rotYInput?.addEventListener('input', applyManualTilt);
+        zoomInput?.addEventListener('input', applyManualTilt);
+        durationInput?.addEventListener('input', applyManualTilt);
+
         nameInput?.addEventListener('input', handleChange);
         encryptionToggle?.addEventListener('change', handleChange);
         scrollTiltToggle?.addEventListener('change', handleChange);
@@ -3014,6 +3100,7 @@ export default function App() {
       }, []);
 
       return React.createElement(WhatsAppSimulator, {
+        ref: (ref) => { window.__simRef = ref; },
         key: `${config.scriptId}-${config.assistantName}-${config.assistantAvatarUrl ? 'custom-avatar' : 'no-avatar'}-${config.chatType}-${config.wallpaperPattern}-${config.customWallpaperUrl ? 'custom-bg' : 'no-bg'}-${config.typingMode}-${config.theme}-${config.deviceStyle}-${config.width}-${config.height}-${config.locale}-${config.showEncryptionNotice}-${config.enableScrollTilt}-${config.enableHoverTilt}-${config.speedMultiplier}-${config.showRestartButton}-${config.restartButtonVisibility}-${config.restartButtonPosition}-${config.enableSound}-${config.soundTyping}-${config.soundSent}-${config.soundReceive}`,
         scripts: DEMO_SCRIPTS,
         defaultActiveScriptId: config.scriptId,
