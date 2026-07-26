@@ -115,8 +115,8 @@
     border-radius: 2px;
     z-index: 60;
     box-shadow: 
-        0 1px 3px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        0 1px 3px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transform: translateZ(-6px);
     border: 1px solid #333a48;
 }
@@ -131,13 +131,23 @@
     transition: background-color 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease;
 }
 
+.rws-phone-3d-back::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    transform: translateZ(7px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: inherit;
+}
+
 .rws-phone-3d-back.rws-device-iphone {
     border-radius: 44px;
     background: linear-gradient(135deg, #373e50 0%, #222734 50%, #12151e 100%);
     border: 2px solid #4a546d;
     box-shadow: 
-        inset 0 0 25px rgba(0, 0, 0, 0.75),
-        -16px 24px 50px rgba(0, 0, 0, 0.7);
+        0 15px 45px rgba(0, 0, 0, 0.65),
+        0 0 30px rgba(0, 168, 132, 0.15);
 }
 
 .rws-phone-3d-back.rws-device-android {
@@ -145,30 +155,18 @@
     background: linear-gradient(135deg, #373e50 0%, #222734 50%, #12151e 100%);
     border: 2px solid #4a546d;
     box-shadow: 
-        inset 0 0 25px rgba(0, 0, 0, 0.75),
-        -16px 24px 50px rgba(0, 0, 0, 0.7);
+        0 15px 45px rgba(0, 0, 0, 0.65),
+        0 0 30px rgba(0, 168, 132, 0.15);
 }
 
-/* iPhone Specific Phone Frame & 3D Extruded Metallic Slate Chassis */
+/* iPhone Specific Phone Frame (Clean & Symmetrical Front View) */
 .rws-device-iphone.rws-phone-frame {
     border-radius: 44px;
     border: 10px solid #2d3342;
     box-shadow: 
-        /* Physical 3D Metallic Slate Extrusions (Dark Mode) */
-        -1px 1px 0 #3a4154,
-        -2px 2px 0 #343a4b,
-        -3px 3px 0 #2e3443,
-        -4px 4px 0 #282d3b,
-        -5px 5px 0 #232733,
-        -6px 6px 0 #1d212c,
-        -7px 7px 0 #181b24,
-        -8px 8px 0 #13161e,
-        -9px 9px 0 #0f1118,
-        -10px 10px 0 #0b0d12,
-        /* Ambient and floor drop shadows */
-        -18px 26px 55px rgba(0, 0, 0, 0.75),
-        0 10px 30px rgba(0, 0, 0, 0.45),
-        0 0 40px rgba(0, 168, 132, 0.2);
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 35px rgba(0, 168, 132, 0.15);
 }
 
 /* Frameless (No Phone Bezel/Shell - Thin Flat Layer with Square Corners) */
@@ -264,26 +262,14 @@
     border: 1px solid #182230;
 }
 
-/* Android Specific Phone Frame & 3D Extruded Metallic Slate Chassis */
+/* Android Specific Phone Frame (Clean & Symmetrical Front View) */
 .rws-device-android.rws-phone-frame {
     border-radius: 24px;
     border: 8px solid #313848;
     box-shadow: 
-        /* Physical 3D Metallic Slate Extrusions (Dark Mode) */
-        -1px 1px 0 #3a4154,
-        -2px 2px 0 #343a4b,
-        -3px 3px 0 #2e3443,
-        -4px 4px 0 #282d3b,
-        -5px 5px 0 #232733,
-        -6px 6px 0 #1d212c,
-        -7px 7px 0 #181b24,
-        -8px 8px 0 #13161e,
-        -9px 9px 0 #0f1118,
-        -10px 10px 0 #0b0d12,
-        /* Ambient and floor drop shadows */
-        -18px 26px 55px rgba(0, 0, 0, 0.75),
-        0 10px 30px rgba(0, 0, 0, 0.45),
-        0 0 40px rgba(0, 168, 132, 0.2);
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 35px rgba(0, 168, 132, 0.15);
 }
 
 .rws-phone-wrapper .rws-android-vol {
@@ -1607,39 +1593,17 @@
 .rws-theme-light.rws-device-iphone {
     border-color: #cbd5e1;
     box-shadow: 
-        /* Space Gray / Satin Aluminum Lateral 3D Extrusions (Light Mode) */
-        -1px 1px 0 #94a3b8,
-        -2px 2px 0 #8493a8,
-        -3px 3px 0 #748398,
-        -4px 4px 0 #64748b,
-        -5px 5px 0 #57677d,
-        -6px 6px 0 #475569,
-        -7px 7px 0 #3c495c,
-        -8px 8px 0 #334155,
-        -9px 9px 0 #283344,
-        -10px 10px 0 #1e293b,
-        /* Ambient floor drop shadow */
-        -16px 24px 50px rgba(0, 0, 0, 0.25),
-        0 10px 25px rgba(0, 0, 0, 0.15);
+        0 0 0 1px rgba(0, 0, 0, 0.1),
+        0 20px 50px rgba(0, 0, 0, 0.2),
+        0 10px 25px rgba(0, 168, 132, 0.12);
 }
 
 .rws-theme-light.rws-device-android {
     border-color: #cbd5e1;
     box-shadow: 
-        /* Space Gray / Satin Aluminum Lateral 3D Extrusions (Light Mode) */
-        -1px 1px 0 #94a3b8,
-        -2px 2px 0 #8493a8,
-        -3px 3px 0 #748398,
-        -4px 4px 0 #64748b,
-        -5px 5px 0 #57677d,
-        -6px 6px 0 #475569,
-        -7px 7px 0 #3c495c,
-        -8px 8px 0 #334155,
-        -9px 9px 0 #283344,
-        -10px 10px 0 #1e293b,
-        /* Ambient floor drop shadow */
-        -16px 24px 50px rgba(0, 0, 0, 0.25),
-        0 10px 25px rgba(0, 0, 0, 0.15);
+        0 0 0 1px rgba(0, 0, 0, 0.1),
+        0 20px 50px rgba(0, 0, 0, 0.2),
+        0 10px 25px rgba(0, 168, 132, 0.12);
 }
 
 .rws-theme-light .rws-phone-3d-back.rws-device-iphone,
@@ -1647,8 +1611,8 @@
     background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 50%, #64748b 100%);
     border: 2px solid #94a3b8;
     box-shadow: 
-        inset 0 0 20px rgba(0, 0, 0, 0.18),
-        -15px 22px 45px rgba(0, 0, 0, 0.25);
+        inset 0 0 20px rgba(0, 0, 0, 0.15),
+        0 15px 40px rgba(0, 0, 0, 0.18);
 }
 
 .rws-theme-light .rws-header-wrapper,
