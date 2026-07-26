@@ -711,7 +711,7 @@
 
     .btn-grid-pos {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 5px;
       background: var(--bg-card);
       border: 1px solid var(--border-color);
@@ -2129,6 +2129,7 @@
         <div class="form-group" style="margin-top: 6px;">
           <label class="form-label">Posición del Botón de Reinicio</label>
           <div class="btn-grid-pos" id="restart-pos-group">
+            <!-- Fila 1: [Arriba Izq] [Espacio Blanco] [Arriba Der] -->
             <button type="button" class="btn-grid-btn" data-value="top-left" title="Arriba Izquierda">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -2137,6 +2138,9 @@
               </svg>
               Arriba Izq.
             </button>
+
+            <div aria-hidden="true"></div>
+
             <button type="button" class="btn-grid-btn" data-value="top-right" title="Arriba Derecha">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -2145,14 +2149,8 @@
               </svg>
               Arriba Der.
             </button>
-            <button type="button" class="btn-grid-btn active" data-value="center" title="Centro Pantalla">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              Centro
-            </button>
+
+            <!-- Fila 2: [Centro Izq] [Centro] [Centro Der] -->
             <button type="button" class="btn-grid-btn" data-value="center-left" title="Centro Izquierda">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -2161,6 +2159,16 @@
               </svg>
               Centro Izq.
             </button>
+
+            <button type="button" class="btn-grid-btn active" data-value="center" title="Centro Pantalla">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              Centro
+            </button>
+
             <button type="button" class="btn-grid-btn" data-value="center-right" title="Centro Derecha">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -2169,6 +2177,8 @@
               </svg>
               Centro Der.
             </button>
+
+            <!-- Fila 3: [Abajo Izq] [Espacio Blanco] [Abajo Der] -->
             <button type="button" class="btn-grid-btn" data-value="bottom-left" title="Abajo Izquierda">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -2177,6 +2187,9 @@
               </svg>
               Abajo Izq.
             </button>
+
+            <div aria-hidden="true"></div>
+
             <button type="button" class="btn-grid-btn" data-value="bottom-right" title="Abajo Derecha">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
