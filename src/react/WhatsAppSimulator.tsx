@@ -358,6 +358,36 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                         className={`rws-phone-frame rws-theme-${theme} rws-device-${deviceStyle}`}
                         style={height !== undefined ? { height: typeof height === "number" ? `${height}px` : height } : undefined}
                     >
+                        {/* Dynamic Realistic 3D Screen Glass Reflection & Sheen */}
+                        <motion.div
+                            className="rws-glass-reflection"
+                            animate={{
+                                opacity: isAnimatedPerspectiveActive
+                                    ? Math.min(0.85, Math.max(0.12, Math.abs(targetRotateX) * 0.028 + Math.abs(targetRotateY) * 0.018 + 0.15))
+                                    : (isUserHovering
+                                        ? Math.min(0.85, Math.max(0.12, Math.abs(hoverRotation.x) * 0.028 + Math.abs(hoverRotation.y) * 0.018 + 0.15))
+                                        : 0.15),
+                            }}
+                            transition={motionTransition || { duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            <motion.div
+                                className="rws-glass-sheen"
+                                animate={{
+                                    y: isAnimatedPerspectiveActive
+                                        ? -targetRotateX * 4.5
+                                        : (isUserHovering ? -hoverRotation.x * 4.5 : 0),
+                                    x: isAnimatedPerspectiveActive
+                                        ? targetRotateY * 3.5
+                                        : (isUserHovering ? hoverRotation.y * 3.5 : 0),
+                                    rotate: isAnimatedPerspectiveActive
+                                        ? targetRotateY * 0.6
+                                        : (isUserHovering ? hoverRotation.y * 0.6 : 0),
+                                }}
+                                transition={motionTransition || { duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                            />
+                        </motion.div>
+                        <div className="rws-glass-rim" />
+
                         {/* Top Camera Notch / Punch-hole */}
                         {deviceStyle === "iphone" ? (
                             <div className="rws-phone-notch-container">
