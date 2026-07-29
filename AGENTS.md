@@ -247,7 +247,7 @@ Register `WhatSimuleElement` as a Web Component for non-React projects:
 | `locale` | `"es" \| "en"` | `"es"` | Built-in i18n label set |
 | `labels` | `object` | `{}` | Custom string overrides for UI labels |
 | `onMessageSent` | `(message: Message) => void` | `undefined` | Callback fired when a message renders |
-| `onScriptComplete` | `(scriptId: string) => void` | `undefined` | Callback fired when script finishes playback |
+| `onScriptComplete` / `onComplete` | `(scriptId: string) => void` | `undefined` | Callback fired when script finishes playback (all messages rendered) |
 | `onScriptChange` | `(scriptId: string) => void` | `undefined` | Callback fired when user switches active script |
 
 ---

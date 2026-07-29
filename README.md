@@ -134,7 +134,7 @@ export default function App() {
 | `restartButtonPosition` | `"bottom-right" \| "bottom-left" \| "top-right" \| "top-left" \| "center"` | `"center"` | Floating restart button location. |
 | `locale` | `"es" \| "en"` | `"es"` | Built-in UI language string translations. |
 | `onMessageSent` | `(message: Message) => void` | `undefined` | Event callback fired whenever a message is sent. |
-| `onScriptComplete` | `(scriptId: string) => void` | `undefined` | Event callback fired when a conversation script finishes. |
+| `onScriptComplete` / `onComplete` | `(scriptId: string) => void` | `undefined` | Event callback fired when a conversation script finishes (all messages rendered). |
 
 ---
 

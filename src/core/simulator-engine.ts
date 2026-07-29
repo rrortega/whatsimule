@@ -544,6 +544,7 @@ export class WhatsAppSimulatorEngine {
         if (this.activeRunId === runId) {
             this.updateState({ isComplete: true });
             this.handlers.onScriptComplete?.(script.id);
+            this.handlers.onComplete?.(script.id);
         }
     }
 

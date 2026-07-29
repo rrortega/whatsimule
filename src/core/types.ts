@@ -120,6 +120,7 @@ export interface WhatsAppSimulatorOptions {
 export interface SimulatorEventHandlers {
     onMessageSent?: (message: Message) => void;
     onScriptComplete?: (scriptId: string) => void;
+    onComplete?: (scriptId: string) => void;
     onScriptChange?: (scriptId: string) => void;
 }
 

@@ -57,6 +57,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
     style,
     onMessageSent,
     onScriptComplete,
+    onComplete,
     onScriptChange,
 }, ref) => {
     const activeScripts = customScripts || scripts;
@@ -65,6 +66,19 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
     const [hoverRotation, setHoverRotation] = useState({ x: 0, y: 0 });
 
     const actualScrollTilt = enable3DTilt !== undefined ? enable3DTilt : enableScrollTilt;
+
+    const handleScriptComplete = (scriptId: string) => {
+        onScriptComplete?.(scriptId);
+        onComplete?.(scriptId);
+        if (containerRef.current) {
+            containerRef.current.dispatchEvent(
+                new CustomEvent("complete", { detail: { scriptId }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("scriptcomplete", { detail: { scriptId }, bubbles: true, composed: true })
+            );
+        }
+    };
 
     const sim = useWhatsAppSimulator(
         activeScripts,
@@ -82,7 +96,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
             locale,
             labels,
         },
-        { onMessageSent, onScriptComplete, onScriptChange }
+        { onMessageSent, onScriptComplete: handleScriptComplete, onComplete, onScriptChange }
     );
     const { state, activeScriptId, startScript, restartCurrentScript } = sim;
 

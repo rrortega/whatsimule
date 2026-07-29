@@ -43,7 +43,20 @@ export class WhatSimuleElement extends HTMLElement {
             enableSound: this.getAttribute("enable-sound") !== "false",
         };
 
-        this.engine = new WhatsAppSimulatorEngine(options);
+        const handlers = {
+            onScriptComplete: (scriptId: string) => {
+                this.dispatchEvent(new CustomEvent("complete", { detail: { scriptId }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("scriptcomplete", { detail: { scriptId }, bubbles: true, composed: true }));
+            },
+            onMessageSent: (message: any) => {
+                this.dispatchEvent(new CustomEvent("messagesent", { detail: { message }, bubbles: true, composed: true }));
+            },
+            onScriptChange: (scriptId: string) => {
+                this.dispatchEvent(new CustomEvent("scriptchange", { detail: { scriptId }, bubbles: true, composed: true }));
+            },
+        };
+
+        this.engine = new WhatsAppSimulatorEngine(options, handlers);
         this.engine.subscribe((state) => this.renderState(state));
 
         const firstId = defaultActiveScriptId || Object.keys(scripts)[0];

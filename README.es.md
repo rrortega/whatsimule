@@ -135,7 +135,7 @@ export default function App() {
 | `restartButtonPosition` | `"bottom-right" \| "bottom-left" \| "top-right" \| "top-left" \| "center"` | `"center"` | Ubicación del botón flotante de reinicio. |
 | `locale` | `"es" \| "en"` | `"es"` | Idioma de las etiquetas de la interfaz. |
 | `onMessageSent` | `(message: Message) => void` | `undefined` | Callback disparado al enviar cada mensaje. |
-| `onScriptComplete` | `(scriptId: string) => void` | `undefined` | Callback disparado al finalizar un guión conversacional. |
+| `onScriptComplete` / `onComplete` | `(scriptId: string) => void` | `undefined` | Callback disparado al finalizar un guión conversacional (todos los mensajes renderizados). |
 
 ---
 
