@@ -232,10 +232,21 @@ export class WhatsAppSimulatorEngine {
             if (this.activeRunId !== runId) return;
 
             const step = script.steps[i];
+            const nextStep = script.steps[i + 1];
+
             if (step.perspective) {
                 this.updateState({ activeStepPerspective: step.perspective });
             }
-            await this.sleep(step.delay);
+
+            if (nextStep?.perspective && step.delay >= 400) {
+                const halfDelay = Math.floor(step.delay / 2);
+                await this.sleep(halfDelay);
+                if (this.activeRunId !== runId) return;
+                this.updateState({ activeStepPerspective: nextStep.perspective });
+                await this.sleep(step.delay - halfDelay);
+            } else {
+                await this.sleep(step.delay);
+            }
             if (this.activeRunId !== runId) return;
 
             const isUserSender = step.sender === "resident" || step.sender === "user";
@@ -250,8 +261,14 @@ export class WhatsAppSimulatorEngine {
                     }
 
                     let currentText = "";
+                    const midpointChar = Math.floor(step.content.length / 2);
                     for (let charIndex = 0; charIndex < step.content.length; charIndex++) {
                         if (this.activeRunId !== runId) return;
+
+                        if (charIndex === midpointChar && nextStep?.perspective) {
+                            this.updateState({ activeStepPerspective: nextStep.perspective });
+                        }
+
                         const char = step.content[charIndex];
                         currentText += char;
                         this.updateState({
@@ -508,7 +525,13 @@ export class WhatsAppSimulatorEngine {
                 } else {
                     this.updateState({ isTyping: true, isRecordingAudio: false });
                 }
-                await this.sleep(1400);
+                const halfTypingTime = 700;
+                await this.sleep(halfTypingTime);
+                if (this.activeRunId !== runId) return;
+                if (nextStep?.perspective) {
+                    this.updateState({ activeStepPerspective: nextStep.perspective });
+                }
+                await this.sleep(1400 - halfTypingTime);
                 if (this.activeRunId !== runId) return;
 
                 this.updateState({ isTyping: false, isRecordingAudio: false });
