@@ -16,6 +16,7 @@ export interface StepPerspective {
     rotateY?: number;
     rotateZ?: number;
     zoom?: number;
+    yOffset?: number;
     duration?: number;
 }
 

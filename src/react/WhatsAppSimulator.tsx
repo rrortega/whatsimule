@@ -207,54 +207,57 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
     const isStepPerspectiveActive = !isCustomPerspectiveActive && !!(enableStepTilt !== false && activeStepPerspective);
     const isTimelineActive = !isCustomPerspectiveActive && !isStepPerspectiveActive && !!(perspectiveTimeline && perspectiveTimeline.length > 0 && enableTimelineTilt !== false);
     const isUserHovering = enableHoverTilt && (hoverRotation.x !== 0 || hoverRotation.y !== 0);
+    const isAnimatedPerspectiveActive = (isCustomPerspectiveActive || isStepPerspectiveActive || isTimelineActive) && !isUserHovering;
 
-    const activeRotateX = isUserHovering
-        ? hoverRotation.x
-        : (isCustomPerspectiveActive && state.customPerspective?.rotateX !== undefined
-            ? state.customPerspective.rotateX
-            : (isStepPerspectiveActive && activeStepPerspective?.rotateX !== undefined
-                ? activeStepPerspective.rotateX
-                : (isTimelineActive && activeKeyframe
-                    ? activeKeyframe.rotateX
-                    : (actualScrollTilt ? rotateXSpring : 0))));
+    const targetRotateX = isCustomPerspectiveActive && state.customPerspective?.rotateX !== undefined
+        ? state.customPerspective.rotateX
+        : (isStepPerspectiveActive && activeStepPerspective?.rotateX !== undefined
+            ? activeStepPerspective.rotateX
+            : (isTimelineActive && activeKeyframe?.rotateX !== undefined
+                ? activeKeyframe.rotateX
+                : 0));
 
-    const activeRotateY = isUserHovering
-        ? hoverRotation.y
-        : (isCustomPerspectiveActive && state.customPerspective?.rotateY !== undefined
-            ? state.customPerspective.rotateY
-            : (isStepPerspectiveActive && activeStepPerspective?.rotateY !== undefined
-                ? activeStepPerspective.rotateY
-                : (isTimelineActive && activeKeyframe
-                    ? activeKeyframe.rotateY
-                    : (actualScrollTilt ? rotateYSpring : 0))));
+    const targetRotateY = isCustomPerspectiveActive && state.customPerspective?.rotateY !== undefined
+        ? state.customPerspective.rotateY
+        : (isStepPerspectiveActive && activeStepPerspective?.rotateY !== undefined
+            ? activeStepPerspective.rotateY
+            : (isTimelineActive && activeKeyframe?.rotateY !== undefined
+                ? activeKeyframe.rotateY
+                : 0));
 
-    const activeRotateZ = isCustomPerspectiveActive && state.customPerspective?.rotateZ !== undefined
+    const targetRotateZ = isCustomPerspectiveActive && state.customPerspective?.rotateZ !== undefined
         ? state.customPerspective.rotateZ
         : (isStepPerspectiveActive && activeStepPerspective?.rotateZ !== undefined
             ? activeStepPerspective.rotateZ
-            : (isTimelineActive && activeKeyframe ? (activeKeyframe.rotateZ || 0) : 0));
+            : (isTimelineActive && activeKeyframe?.rotateZ !== undefined
+                ? (activeKeyframe.rotateZ || 0)
+                : 0));
 
-    const activeScale = isCustomPerspectiveActive && state.customPerspective?.zoom !== undefined
+    const targetScale = isCustomPerspectiveActive && state.customPerspective?.zoom !== undefined
         ? state.customPerspective.zoom
         : (isStepPerspectiveActive && activeStepPerspective?.zoom !== undefined
             ? activeStepPerspective.zoom
-            : (isTimelineActive && activeKeyframe ? (activeKeyframe.zoom || 1) : 1));
+            : (isTimelineActive && activeKeyframe?.zoom !== undefined
+                ? (activeKeyframe.zoom || 1)
+                : 1));
 
-    const activeYOffset = isUserHovering
-        ? 0
-        : (isTimelineActive && activeKeyframe
+    const targetYOffset = isCustomPerspectiveActive && state.customPerspective?.yOffset !== undefined
+        ? (state.customPerspective.yOffset || 0)
+        : (isTimelineActive && activeKeyframe?.yOffset !== undefined
             ? (activeKeyframe.yOffset || 0)
-            : (actualScrollTilt ? yFloatSpring : 0));
+            : 0);
 
-    // Motion styles calculation
-    const motionStyle = {
-        rotateX: activeRotateX,
-        rotateY: activeRotateY,
-        rotateZ: activeRotateZ,
-        scale: activeScale,
-        y: activeYOffset,
-        transformStyle: "preserve-3d" as const,
-    };
+    // Motion styles calculation (omits static numeric transform props when Framer Motion `animate` controls them)
+    const motionStyle = isAnimatedPerspectiveActive
+        ? { transformStyle: "preserve-3d" as const }
+        : {
+            rotateX: isUserHovering ? hoverRotation.x : (actualScrollTilt ? rotateXSpring : 0),
+            rotateY: isUserHovering ? hoverRotation.y : (actualScrollTilt ? rotateYSpring : 0),
+            rotateZ: 0,
+            scale: 1,
+            y: isUserHovering ? 0 : (actualScrollTilt ? yFloatSpring : 0),
+            transformStyle: "preserve-3d" as const,
+        };
 
     const currentDuration = isCustomPerspectiveActive
         ? (state.customPerspective?.duration ?? 1.2)
@@ -262,7 +265,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
             ? (activeStepPerspective?.duration ?? 1.2)
             : (isTimelineActive && activeKeyframe ? (activeKeyframe.duration ?? 1.2) : 1.2));
 
-    const motionTransition = (isCustomPerspectiveActive || isStepPerspectiveActive || isTimelineActive) && !isUserHovering
+    const motionTransition = isAnimatedPerspectiveActive
         ? {
             type: "tween" as const,
             duration: currentDuration,
@@ -306,12 +309,12 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                         ...motionStyle,
                         maxWidth: width !== undefined ? (typeof width === "number" ? `${width}px` : width) : undefined,
                     }}
-                    animate={(isStepPerspectiveActive || isTimelineActive) && !isUserHovering ? {
-                        rotateX: typeof activeRotateX === "number" ? activeRotateX : 0,
-                        rotateY: typeof activeRotateY === "number" ? activeRotateY : 0,
-                        rotateZ: activeRotateZ,
-                        scale: activeScale,
-                        y: typeof activeYOffset === "number" ? activeYOffset : 0,
+                    animate={isAnimatedPerspectiveActive ? {
+                        rotateX: targetRotateX,
+                        rotateY: targetRotateY,
+                        rotateZ: targetRotateZ,
+                        scale: targetScale,
+                        y: targetYOffset,
                     } : undefined}
                     transition={motionTransition}
                     className={`rws-phone-wrapper rws-device-${deviceStyle}`}
