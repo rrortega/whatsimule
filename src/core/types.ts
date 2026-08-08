@@ -76,7 +76,9 @@ export interface WhatsAppSimulatorOptions {
     customScripts?: Record<string, ChatScript>;
     defaultActiveScriptId?: string;
     initialStepIndex?: number;
+    contactName?: string;
     assistantName?: string;
+    contactAvatarUrl?: string;
     assistantAvatarUrl?: string;
     chatType?: "direct" | "group";
     groupMembersText?: string;

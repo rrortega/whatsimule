@@ -22,7 +22,9 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
     customScripts,
     defaultActiveScriptId,
     initialStepIndex,
+    contactName,
     assistantName = "RRORTEGA",
+    contactAvatarUrl,
     assistantAvatarUrl,
     chatType = "direct",
     groupMembersText,
@@ -409,7 +411,9 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
 
                         {/* WhatsApp Header & Status Bar */}
                         <ChatHeader
+                            contactName={contactName}
                             assistantName={assistantName}
+                            contactAvatarUrl={contactAvatarUrl}
                             assistantAvatarUrl={assistantAvatarUrl}
                             chatType={chatType}
                             groupMembersText={groupMembersText}

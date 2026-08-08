@@ -2,7 +2,9 @@ import React from "react";
 import { Phone, Video, MoreVertical, ArrowLeft, Wifi, WifiOff, Users } from "lucide-react";
 
 interface ChatHeaderProps {
+    contactName?: string;
     assistantName?: string;
+    contactAvatarUrl?: string;
     assistantAvatarUrl?: string;
     chatType?: "direct" | "group";
     groupMembersText?: string;
@@ -19,7 +21,9 @@ interface ChatHeaderProps {
 }
 
 export const ChatHeader: React.FC<ChatHeaderProps> = ({
-    assistantName = "RRORTEGA",
+    contactName,
+    assistantName,
+    contactAvatarUrl,
     assistantAvatarUrl,
     chatType = "direct",
     groupMembersText,
@@ -34,9 +38,12 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
     wifiSignalStrength = 4,
     statusBarTime = "09:41",
 }) => {
+    const nameToDisplay = contactName || assistantName || "RRORTEGA";
+    const avatarToDisplay = contactAvatarUrl || assistantAvatarUrl;
+
     const avatarContent = (() => {
-        if (assistantAvatarUrl) {
-            return <img src={assistantAvatarUrl} alt={assistantName} className="rws-avatar-img" />;
+        if (avatarToDisplay) {
+            return <img src={avatarToDisplay} alt={nameToDisplay} className="rws-avatar-img" />;
         }
         if (chatType === "group") {
             return (
@@ -47,7 +54,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
         }
         return (
             <div className="rws-avatar-fallback">
-                <span>{assistantName.charAt(0).toUpperCase()}</span>
+                <span>{nameToDisplay.charAt(0).toUpperCase()}</span>
             </div>
         );
     })();
@@ -55,7 +62,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
     const statusText = (() => {
         if (isRecordingAudio) return recordingStatusText;
         if (isTyping) return typingStatusText;
-        if (chatType === "group") return groupMembersText || `Tú, Alex, Sofía, ${assistantName}`;
+        if (chatType === "group") return groupMembersText || `Tú, Alex, Sofía, ${nameToDisplay}`;
         return onlineStatusText;
     })();
 
@@ -152,7 +159,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
                         {chatType !== "group" && <span className="rws-status-indicator" />}
                     </div>
                     <div className="rws-header-info">
-                        <h3 className="rws-header-title">{assistantName}</h3>
+                        <h3 className="rws-header-title">{nameToDisplay}</h3>
                         <p className={`rws-header-status ${isTyping || isRecordingAudio ? "rws-status-active" : ""}`}>
                             {statusText}
                         </p>
