@@ -1,6 +1,6 @@
 import React from "react";
 
-export type MessageSender = "user" | "resident" | "assistant" | "asistenxa";
+export type MessageSender = "user" | "contact" | "resident" | "assistant" | "asistenxa";
 export type MessageType = "text" | "image" | "audio";
 
 export interface LinkPreviewData {

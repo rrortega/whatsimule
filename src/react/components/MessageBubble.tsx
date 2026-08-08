@@ -23,8 +23,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     const isGroup = chatType === "group";
     const showAvatar = isGroup && !isUser;
 
-    const avatarUrl = message.senderAvatarUrl || (!isUser && message.sender === "assistant" ? assistantAvatarUrl : undefined);
-    const displayName = message.senderName || (!isUser && message.sender === "assistant" ? assistantName : "") || "";
+    const avatarUrl = message.senderAvatarUrl || (!isUser && (message.sender === "assistant" || message.sender === "contact") ? assistantAvatarUrl : undefined);
+    const displayName = message.senderName || (!isUser && (message.sender === "assistant" || message.sender === "contact") ? assistantName : "") || "";
     const initial = displayName.trim() ? displayName.trim().charAt(0).toUpperCase() : "?";
     const avatarColor = message.senderColor || "#00a884";
 
