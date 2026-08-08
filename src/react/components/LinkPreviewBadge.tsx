@@ -108,12 +108,12 @@ export const LinkPreviewBadge: React.FC<LinkPreviewBadgeProps> = ({ linkUrl, pre
     if (!data) return null;
 
     return (
-        <a
-            href={linkUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+        <div
             className="rws-og-card"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            }}
         >
             {data.image && (
                 <div className="rws-og-image-box">
@@ -129,6 +129,6 @@ export const LinkPreviewBadge: React.FC<LinkPreviewBadgeProps> = ({ linkUrl, pre
                     <ExternalLink size={10} style={{ marginLeft: "auto", opacity: 0.7 }} />
                 </div>
             </div>
-        </a>
+        </div>
     );
 };

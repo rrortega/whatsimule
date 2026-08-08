@@ -102,6 +102,10 @@ export interface WhatsAppSimulatorOptions {
     perspectiveTimeline?: PerspectiveKeyframe[];
     theme?: "dark" | "light";
     deviceStyle?: "iphone" | "android" | "none";
+    batteryLevel?: number;
+    networkType?: "2G" | "3G" | "4G" | "5G";
+    wifiSignalStrength?: number | string;
+    statusBarTime?: string;
     width?: string | number;
     height?: string | number;
     speedMultiplier?: number;

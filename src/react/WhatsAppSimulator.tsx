@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo, forwardRef, useImperativeHandle } from "react";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
-import { RotateCcw, Square, Circle, Triangle, X, Crop, Smile, Type, Pencil, Send, Mic } from "lucide-react";
+import { RotateCcw, Square, Circle, Triangle, X, Crop, Smile, Type, Pencil, Send, Mic, Lock } from "lucide-react";
 import { WhatsAppSimulatorOptions, ChatScript, SimulatorEventHandlers, PerspectiveKeyframe, WhatSimuleRef } from "../core/types";
 import { useWhatsAppSimulator } from "./useWhatsAppSimulator";
 import { ChatHeader } from "./components/ChatHeader";
@@ -48,6 +48,10 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
     perspectiveTimeline,
     theme = "dark",
     deviceStyle = "iphone",
+    batteryLevel = 63,
+    networkType = "5G",
+    wifiSignalStrength = 4,
+    statusBarTime = "09:41",
     width,
     height,
     speedMultiplier = 1,
@@ -363,10 +367,10 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             className="rws-glass-reflection"
                             animate={{
                                 opacity: isAnimatedPerspectiveActive
-                                    ? Math.min(0.85, Math.max(0.12, Math.abs(targetRotateX) * 0.028 + Math.abs(targetRotateY) * 0.018 + 0.15))
+                                    ? Math.min(0.9, Math.max(0.25, Math.abs(targetRotateX) * 0.035 + Math.abs(targetRotateY) * 0.025 + 0.22))
                                     : (isUserHovering
-                                        ? Math.min(0.85, Math.max(0.12, Math.abs(hoverRotation.x) * 0.028 + Math.abs(hoverRotation.y) * 0.018 + 0.15))
-                                        : 0.15),
+                                        ? Math.min(0.9, Math.max(0.25, Math.abs(hoverRotation.x) * 0.035 + Math.abs(hoverRotation.y) * 0.025 + 0.22))
+                                        : (actualScrollTilt ? 0.35 : 0.22)),
                             }}
                             transition={motionTransition || { duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                         >
@@ -374,14 +378,14 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                                 className="rws-glass-sheen"
                                 animate={{
                                     y: isAnimatedPerspectiveActive
-                                        ? -targetRotateX * 4.5
-                                        : (isUserHovering ? -hoverRotation.x * 4.5 : 0),
+                                        ? -targetRotateX * 6
+                                        : (isUserHovering ? -hoverRotation.x * 6 : (actualScrollTilt ? -5 : 0)),
                                     x: isAnimatedPerspectiveActive
-                                        ? targetRotateY * 3.5
-                                        : (isUserHovering ? hoverRotation.y * 3.5 : 0),
+                                        ? targetRotateY * 5
+                                        : (isUserHovering ? hoverRotation.y * 5 : (actualScrollTilt ? 5 : 0)),
                                     rotate: isAnimatedPerspectiveActive
-                                        ? targetRotateY * 0.6
-                                        : (isUserHovering ? hoverRotation.y * 0.6 : 0),
+                                        ? targetRotateY * 0.8
+                                        : (isUserHovering ? hoverRotation.y * 0.8 : 0),
                                 }}
                                 transition={motionTransition || { duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                             />
@@ -415,6 +419,10 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             typingStatusText={labels.typingStatus || (locale === "es" ? "escribiendo..." : "typing...")}
                             recordingStatusText={labels.recordingStatus || (locale === "es" ? "grabando audio..." : "recording audio...")}
                             deviceStyle={deviceStyle}
+                            batteryLevel={batteryLevel}
+                            networkType={networkType}
+                            wifiSignalStrength={wifiSignalStrength}
+                            statusBarTime={statusBarTime}
                         />
 
                         {/* Chat Messages Body */}
@@ -433,7 +441,8 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                         >
                             {showEncryptionNotice && (
                                 <div className="rws-encryption-notice">
-                                    <span>🔒 {locale === "es" ? "Los mensajes y llamadas están cifrados de extremo a extremo." : "Messages and calls are end-to-end encrypted."}</span>
+                                    <Lock size={12} className="rws-encryption-icon" />
+                                    <span>{locale === "es" ? "Los mensajes y llamadas están cifrados de extremo a extremo." : "Messages and calls are end-to-end encrypted."}</span>
                                 </div>
                             )}
 

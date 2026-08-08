@@ -47,6 +47,21 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     const progressPercent = message.uploadProgress || 0;
     const strokeDashoffset = 125.66 - (125.66 * progressPercent) / 100;
 
+    const renderFormattedText = (text: string) => {
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const parts = text.split(urlRegex);
+        return parts.map((part, index) => {
+            if (part.match(urlRegex)) {
+                return (
+                    <span key={index} className="rws-inline-link" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                        {part}
+                    </span>
+                );
+            }
+            return part;
+        });
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 8, scale: 0.97 }}
@@ -175,7 +190,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                     </div>
                 ) : (
                     <div className="rws-text-content">
-                        <span>{cleanContent}</span>
+                        <span>{renderFormattedText(cleanContent)}</span>
                         {link && <LinkPreviewBadge linkUrl={link} previewData={message.linkPreview} />}
                     </div>
                 )}
