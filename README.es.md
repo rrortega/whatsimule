@@ -26,6 +26,9 @@ Prueba el playground interactivo y personaliza todas las opciones en tiempo real
 ## ✨ Características Principales
 
 - 📱 **Interfaz Pixel-Perfect de WhatsApp**: Fiel a la experiencia oficial de WhatsApp Web y Mobile con temas Claro y Oscuro, marcos de teléfono para iPhone y Android, barra de estado, confirmaciones de lectura y tarjetas de vista previa de enlaces.
+- 📞 **Llamadas Entrantes Nativas en Pantalla Completa**: Simulación oficial de llamadas de voz/video para iOS y Android en 2 momentos: timbrado con dos botones circulares flotantes independientes (Rechazar/Aceptar), toque animado con aumento de escala, rotación de icono, despliegue de riel translúcido, arrastre horizontal (*swipe*), resaltado de corte rojo y salida `zoomOut`.
+- 🔔 **Notificaciones Push Interactivas**: Tarjetas de notificación del sistema en tiempo real con diseño glassmorphism en iOS y Material en Android, tono sintético de alerta y gestos animados de toque o descarte.
+- 💻 **Bloques de Código & Formato Markdown**: Renderizado de bloques monoespaciados (```código```), código inline, viñetas de lista (- / *), saltos de línea (\n), negritas, cursivas y simulación de borrado de borrador (`eraseBeforeSend`).
 - ⌨️ **Teclado Virtual Interactivo**: Animación de tipeo letra por letra con teclado QWERTY dinámico, respuesta háptica visual, sombras superiores ultra realistas y sonidos de teclas con Web Audio API.
 - 📸 **Envío & Carga de Medios**: Pantalla completa de previsualización de imagen con campo de comentario autoajustable, desenfoque progresivo en chat y anillo SVG circular de carga.
 - 🎙️ **Notas de Voz & Grabación Manos Libres**: Barra de grabación de voz interactiva con espectro de ondas en tiempo real, estado de encabezado `"Grabando audio..."` y transcripción automática en cursiva.

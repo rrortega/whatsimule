@@ -2599,6 +2599,42 @@
             perspectiva 3D (setPerspective), alterna la posición del botón de reinicio, velocidad de reproducción y
             navegación de pasos.</p>
         </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">📞 Llamadas Entrantes (iOS & Android)</h3>
+          <p class="feature-desc">Simula la experiencia de llamadas en pantalla completa. Muestra dos botones iniciales (Rechazar/Aceptar) con entrada zoomIn, toque animado, despliegue de cápsula translúcida y arrastre horizontal (swipe) para colgar.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+            </svg>
+          </div>
+          <h3 class="feature-title">🔔 Notificaciones Push Interactivas</h3>
+          <p class="feature-desc">Simula notificaciones push del sistema en tiempo real con alertas de sonido, diseño glassmorphism en iOS / Material en Android y gestos táctiles animados de toque o descarte.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4 7 4 4 20 4 20 7" />
+              <line x1="9" y1="20" x2="15" y2="20" />
+              <line x1="12" y1="4" x2="12" y2="20" />
+            </svg>
+          </div>
+          <h3 class="feature-title">💻 Bloques de Código & Markdown</h3>
+          <p class="feature-desc">Renderizado de mensajes en formato de código monoespaciado ```código```, preservación de saltos de línea, viñetas de lista (- / *), negritas/cursivas y simulación de borrado de borrador (eraseBeforeSend).</p>
+        </div>
       </div>
 
 
@@ -2797,6 +2833,15 @@
           { sender: "assistant", type: "text", content: "", delay: 1000, action: "incoming_call", callData: { callerName: "Carlos Gómez", callType: "voice" } },
           { sender: "assistant", type: "text", content: "", delay: 1200, action: "push_notification", notificationData: { title: "Calendario", text: "Recordatorio: Reunión en 15 min", action: "dismiss" } },
           { sender: "assistant", type: "text", content: "Disculpa la llamada. Quedó todo aprobado de mi lado.", delay: 1200 }
+        ]
+      },
+      code_and_formatting: {
+        id: "code_and_formatting",
+        label: "💻 Bloques de Código & Formato",
+        description: "Demuestra bloques ```code```, saltos de línea, viñetas, negrita y cursiva estilo WhatsApp",
+        steps: [
+          { sender: "user", type: "text", content: "¿Me pasás el snippet de configuración y la lista de requerimientos?", delay: 800 },
+          { sender: "assistant", type: "text", content: "```\n// Configuración Servidor API\nconst config = {\n  port: 8080,\n  env: 'production'\n};\n```\n\n- *Requerimiento 1*: Servidor Linux u OS X\n- *Requerimiento 2*: Node.js >= 18.0\n- _Nota_: ~Ambiente previo cancelado~", delay: 1500 }
         ]
       }
     };

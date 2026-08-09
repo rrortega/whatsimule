@@ -47,19 +47,102 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     const progressPercent = message.uploadProgress || 0;
     const strokeDashoffset = 125.66 - (125.66 * progressPercent) / 100;
 
-    const renderFormattedText = (text: string) => {
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        const parts = text.split(urlRegex);
-        return parts.map((part, index) => {
-            if (part.match(urlRegex)) {
-                return (
-                    <span key={index} className="rws-inline-link" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
-                        {part}
+    const parseInlineStyles = (text: string): React.ReactNode => {
+        if (!text) return "";
+        const tokenRegex = /(https?:\/\/[^\s]+)|`([^`]+)`|\*([^*]+)\*|_([^_]+)_|~([^~]+)~/g;
+        const elements: React.ReactNode[] = [];
+        let lastIndex = 0;
+        let match: RegExpExecArray | null;
+
+        while ((match = tokenRegex.exec(text)) !== null) {
+            if (match.index > lastIndex) {
+                elements.push(text.substring(lastIndex, match.index));
+            }
+
+            const [full, url, code, bold, italic, strike] = match;
+
+            if (url) {
+                elements.push(
+                    <span key={match.index} className="rws-inline-link" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                        {url}
                     </span>
                 );
+            } else if (code) {
+                elements.push(
+                    <code key={match.index} className="rws-formatted-inline-code">
+                        {code}
+                    </code>
+                );
+            } else if (bold) {
+                elements.push(<strong key={match.index}>{bold}</strong>);
+            } else if (italic) {
+                elements.push(<em key={match.index}>{italic}</em>);
+            } else if (strike) {
+                elements.push(<del key={match.index}>{strike}</del>);
             }
-            return part;
+
+            lastIndex = match.index + full.length;
+        }
+
+        if (lastIndex < text.length) {
+            elements.push(text.substring(lastIndex));
+        }
+
+        return elements;
+    };
+
+    const parseInlineFormatting = (text: string, keyPrefix: string): React.ReactNode[] => {
+        const lines = text.split("\n");
+        return lines.map((line, lineIdx) => {
+            const isBullet = /^\s*[-*]\s+/.test(line);
+            const cleanLine = isBullet ? line.replace(/^\s*[-*]\s+/, "") : line;
+            const formattedLine = parseInlineStyles(cleanLine);
+
+            return (
+                <React.Fragment key={`${keyPrefix}-line-${lineIdx}`}>
+                    {isBullet ? (
+                        <div className="rws-formatted-bullet-item">
+                            <span className="rws-bullet-dot">•</span>
+                            <span className="rws-bullet-text">{formattedLine}</span>
+                        </div>
+                    ) : (
+                        <span>{formattedLine}</span>
+                    )}
+                    {lineIdx < lines.length - 1 && !isBullet && <br />}
+                </React.Fragment>
+            );
         });
+    };
+
+    const renderFormattedText = (text: string) => {
+        if (!text) return null;
+        const codeBlockRegex = /```([\s\S]*?)```/g;
+        const parts: React.ReactNode[] = [];
+        let lastIndex = 0;
+        let match: RegExpExecArray | null;
+
+        while ((match = codeBlockRegex.exec(text)) !== null) {
+            if (match.index > lastIndex) {
+                const precedingText = text.substring(lastIndex, match.index);
+                parts.push(...parseInlineFormatting(precedingText, `pre-${lastIndex}`));
+            }
+
+            const codeContent = match[1];
+            parts.push(
+                <pre key={`code-${match.index}`} className="rws-formatted-code-block">
+                    <code>{codeContent}</code>
+                </pre>
+            );
+
+            lastIndex = match.index + match[0].length;
+        }
+
+        if (lastIndex < text.length) {
+            const remainingText = text.substring(lastIndex);
+            parts.push(...parseInlineFormatting(remainingText, `post-${lastIndex}`));
+        }
+
+        return parts;
     };
 
     return (

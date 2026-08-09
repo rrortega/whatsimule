@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, PhoneOff, Video, MessageSquare, Clock, ChevronRight } from "lucide-react";
 import { IncomingCallState } from "../../core/simulator-engine";
@@ -16,60 +16,107 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
     deviceStyle = "iphone",
     theme = "dark",
 }) => {
+    const [hasStartedSlide, setHasStartedSlide] = useState(false);
+
+    const isFingerDeclineActive = callState?.isFingerDeclineActive ?? false;
+
+    useEffect(() => {
+        if (isFingerDeclineActive) {
+            const timer = setTimeout(() => {
+                setHasStartedSlide(true);
+            }, 200);
+            return () => clearTimeout(timer);
+        } else {
+            setHasStartedSlide(false);
+        }
+    }, [isFingerDeclineActive]);
+
     if (!callState) return null;
 
-    const { callerName, callerAvatarUrl, callType = "voice", isFingerDeclineActive = false } = callState;
+    const { callerName, callerAvatarUrl, callType = "voice" } = callState;
     const isIos = deviceStyle === "iphone";
     const isAndroid = deviceStyle === "android";
 
     return (
         <AnimatePresence>
             {isIos ? (
-                /* iOS Authentic Full Screen Call UI with Both Decline and Accept Buttons Visible at Both Ends */
+                /* iOS Authentic Full Screen Call UI with ZoomOut + FadeOut Exit */
                 <motion.div
                     className={`rws-ios-call-screen rws-theme-${theme}`}
                     initial={{ opacity: 0, scale: 0.72 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.85 }}
-                    transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                    exit={{ opacity: 0, scale: 0.65 }}
+                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    {/* Top Caller Info Header */}
+                    {/* Top Caller Header (Subtitle on top, Name below) */}
                     <div className="rws-ios-call-header">
                         {callerAvatarUrl && (
                             <img src={callerAvatarUrl} alt={callerName} className="rws-ios-call-avatar-top" />
                         )}
-                        <h2 className="rws-ios-caller-name">{callerName}</h2>
-                        <p className="rws-ios-call-type-label">
+                        <p className="rws-ios-call-sub-tag">
                             {callType === "video" ? "Videollamada de WhatsApp" : "Llamada de voz de WhatsApp"}
                         </p>
+                        <h2 className="rws-ios-caller-name">{callerName}</h2>
                     </div>
 
-                    {/* Middle Utility Action Buttons */}
+                    {/* Middle Action Buttons (Message & Remind me) */}
                     <div className="rws-ios-call-mid-actions">
-                        <div className="rws-ios-mid-btn-group">
-                            <button type="button" className="rws-ios-mid-btn">
-                                <Clock size={20} />
-                            </button>
-                            <span className="rws-ios-mid-label">Recordármelo</span>
-                        </div>
                         <div className="rws-ios-mid-btn-group">
                             <button type="button" className="rws-ios-mid-btn">
                                 <MessageSquare size={20} />
                             </button>
                             <span className="rws-ios-mid-label">Mensaje</span>
                         </div>
+                        <div className="rws-ios-mid-btn-group">
+                            <button type="button" className="rws-ios-mid-btn">
+                                <Clock size={20} />
+                            </button>
+                            <span className="rws-ios-mid-label">Recordármelo</span>
+                        </div>
                     </div>
 
-                    {/* Bottom Controls: Both Red Decline (Left) & Green Accept (Right) Visible at Both Extremes */}
+                    {/* Bottom Section: Moment 1 -> Moment 2 (Tap, Hide Accept, Slide, Highlight & ZoomOut) */}
                     <div className="rws-ios-call-bottom-section">
-                        <div className="rws-ios-slide-track">
-                            {/* Draggable Red Decline Knob (Left) */}
+                        <motion.div
+                            className="rws-ios-slide-track"
+                            animate={{
+                                background: hasStartedSlide
+                                    ? "rgba(239, 68, 68, 0.4)"
+                                    : isFingerDeclineActive
+                                    ? "rgba(255, 255, 255, 0.16)"
+                                    : "transparent",
+                                borderColor: hasStartedSlide
+                                    ? "rgba(239, 68, 68, 0.8)"
+                                    : isFingerDeclineActive
+                                    ? "rgba(255, 255, 255, 0.25)"
+                                    : "transparent",
+                                boxShadow: hasStartedSlide
+                                    ? "0 0 24px rgba(239, 68, 68, 0.5)"
+                                    : isFingerDeclineActive
+                                    ? "0 4px 20px rgba(0, 0, 0, 0.3)"
+                                    : "none",
+                            }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            {/* Left Red Decline Knob: Moment 2 grows on tap, rotates icon, then slides right */}
                             <motion.div
                                 className="rws-ios-slide-knob rws-ios-knob-decline"
-                                animate={isFingerDeclineActive ? { x: 170 } : { x: 0 }}
-                                transition={{ duration: 0.65, ease: [0.34, 1.56, 0.64, 1] }}
+                                animate={{
+                                    x: hasStartedSlide ? 170 : 0,
+                                    scale: isFingerDeclineActive && !hasStartedSlide ? 1.15 : 1,
+                                }}
+                                transition={{
+                                    x: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] },
+                                    scale: { duration: 0.2, ease: "easeOut" },
+                                }}
                             >
-                                <PhoneOff size={22} className="rws-ios-knob-icon" />
+                                <motion.div
+                                    animate={{ rotate: isFingerDeclineActive ? 135 : 0 }}
+                                    transition={{ duration: 0.3, ease: "easeOut" }}
+                                    style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                                >
+                                    <PhoneOff size={24} className="rws-ios-knob-icon" />
+                                </motion.div>
 
                                 {isFingerDeclineActive && (
                                     <div className="rws-finger-slider-indicator">
@@ -79,36 +126,49 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                 )}
                             </motion.div>
 
-                            {/* Center Track Hint Text */}
-                            <div className="rws-ios-slide-text-box">
-                                <span className="rws-ios-slide-text">desliza a la derecha</span>
+                            {/* Center Slide Track Text: Fades in during Moment 2 */}
+                            <motion.div
+                                className="rws-ios-slide-text-box"
+                                animate={{ opacity: isFingerDeclineActive ? 1 : 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <span className="rws-ios-slide-text">desliza para rechazar</span>
                                 <div className="rws-ios-slide-arrows">
                                     <ChevronRight size={15} className="rws-arrow-1" />
                                     <ChevronRight size={15} className="rws-arrow-2" />
                                     <ChevronRight size={15} className="rws-arrow-3" />
                                 </div>
-                            </div>
+                            </motion.div>
 
-                            {/* Green Accept Knob (Right) */}
-                            <div className="rws-ios-slide-knob rws-ios-knob-accept-static">
-                                {callType === "video" ? <Video size={22} /> : <Phone size={22} />}
-                            </div>
-                        </div>
+                            {/* Right Green Accept Knob: Unmounts immediately when tap starts */}
+                            {!isFingerDeclineActive && (
+                                <motion.div
+                                    className="rws-ios-slide-knob rws-ios-knob-accept-static"
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.1 }}
+                                >
+                                    {callType === "video" ? <Video size={24} /> : <Phone size={24} />}
+                                </motion.div>
+                            )}
+                        </motion.div>
 
-                        <div className="rws-call-labels-row">
-                            <span className="rws-call-action-label-decline">Rechazar</span>
-                            <span className="rws-call-action-label-accept">Aceptar</span>
-                        </div>
+                        {/* Button Labels Row below: Unmounts immediately when tap starts */}
+                        {!isFingerDeclineActive && (
+                            <div className="rws-call-labels-row">
+                                <span className="rws-call-action-label-decline">Rechazar</span>
+                                <span className="rws-call-action-label-accept">Aceptar</span>
+                            </div>
+                        )}
                     </div>
                 </motion.div>
             ) : isAndroid ? (
-                /* Android Material Full Screen Call UI with Both Buttons Visible at Both Extremes */
+                /* Android Material Full Screen Call UI with ZoomOut + FadeOut Exit */
                 <motion.div
                     className={`rws-android-call-screen rws-theme-${theme}`}
                     initial={{ opacity: 0, scale: 0.72 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.85 }}
-                    transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                    exit={{ opacity: 0, scale: 0.65 }}
+                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <div className="rws-android-call-header">
                         {callerAvatarUrl ? (
@@ -118,20 +178,48 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                 <span>{callerName.charAt(0).toUpperCase()}</span>
                             </div>
                         )}
-                        <h2 className="rws-android-caller-name">{callerName}</h2>
                         <p className="rws-android-call-type">
                             {callType === "video" ? "Videollamada de WhatsApp" : "Llamada de voz de WhatsApp"}
                         </p>
+                        <h2 className="rws-android-caller-name">{callerName}</h2>
                     </div>
 
                     <div className="rws-android-call-bottom">
-                        <div className="rws-android-slide-track">
+                        <motion.div
+                            className="rws-android-slide-track"
+                            animate={{
+                                background: hasStartedSlide
+                                    ? "rgba(239, 68, 68, 0.4)"
+                                    : isFingerDeclineActive
+                                    ? "#334155"
+                                    : "transparent",
+                                borderColor: hasStartedSlide
+                                    ? "rgba(239, 68, 68, 0.8)"
+                                    : isFingerDeclineActive
+                                    ? "rgba(255, 255, 255, 0.12)"
+                                    : "transparent",
+                            }}
+                            transition={{ duration: 0.3 }}
+                        >
                             <motion.div
                                 className="rws-android-slide-knob rws-android-knob-decline"
-                                animate={isFingerDeclineActive ? { x: 170 } : { x: 0 }}
-                                transition={{ duration: 0.65, ease: [0.34, 1.56, 0.64, 1] }}
+                                animate={{
+                                    x: hasStartedSlide ? 170 : 0,
+                                    scale: isFingerDeclineActive && !hasStartedSlide ? 1.15 : 1,
+                                }}
+                                transition={{
+                                    x: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] },
+                                    scale: { duration: 0.2, ease: "easeOut" },
+                                }}
                             >
-                                <PhoneOff size={22} />
+                                <motion.div
+                                    animate={{ rotate: isFingerDeclineActive ? 135 : 0 }}
+                                    transition={{ duration: 0.3, ease: "easeOut" }}
+                                    style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                                >
+                                    <PhoneOff size={24} />
+                                </motion.div>
+
                                 {isFingerDeclineActive && (
                                     <div className="rws-finger-slider-indicator">
                                         <span className="rws-finger-circle rws-finger-pressing" />
@@ -140,24 +228,32 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                 )}
                             </motion.div>
 
-                            <div className="rws-android-slide-text-box">
+                            <motion.div
+                                className="rws-android-slide-text-box"
+                                animate={{ opacity: isFingerDeclineActive ? 1 : 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
                                 <span className="rws-android-slide-text">desliza para rechazar</span>
                                 <div className="rws-ios-slide-arrows">
                                     <ChevronRight size={15} className="rws-arrow-1" />
                                     <ChevronRight size={15} className="rws-arrow-2" />
                                     <ChevronRight size={15} className="rws-arrow-3" />
                                 </div>
-                            </div>
+                            </motion.div>
 
-                            <div className="rws-android-slide-knob rws-android-knob-accept-static">
-                                {callType === "video" ? <Video size={22} /> : <Phone size={22} />}
-                            </div>
-                        </div>
+                            {!isFingerDeclineActive && (
+                                <div className="rws-android-slide-knob rws-android-knob-accept-static">
+                                    {callType === "video" ? <Video size={24} /> : <Phone size={24} />}
+                                </div>
+                            )}
+                        </motion.div>
 
-                        <div className="rws-call-labels-row">
-                            <span className="rws-call-action-label-decline">Rechazar</span>
-                            <span className="rws-call-action-label-accept">Aceptar</span>
-                        </div>
+                        {!isFingerDeclineActive && (
+                            <div className="rws-call-labels-row">
+                                <span className="rws-call-action-label-decline">Rechazar</span>
+                                <span className="rws-call-action-label-accept">Aceptar</span>
+                            </div>
+                        )}
                     </div>
                 </motion.div>
             ) : (
@@ -166,7 +262,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                     className={`rws-call-modal-overlay rws-device-${deviceStyle} rws-theme-${theme}`}
                     initial={{ opacity: 0, scale: 0.8, y: -20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.85, y: -20 }}
+                    exit={{ opacity: 0, scale: 0.65, y: -20 }}
                     transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <div className="rws-call-card">

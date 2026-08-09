@@ -26,6 +26,9 @@ Try the live playground and customize all options in real-time:
 ## ✨ Features
 
 - 📱 **Pixel-Perfect WhatsApp UI**: Identical to WhatsApp Web and Mobile with dark & light themes, iPhone and Android device frames, status bar indicators, read receipts, and custom link preview cards.
+- 📞 **Fullscreen Native Incoming Calls**: Simulates authentic iOS & Android full-screen voice/video calls. Features 2-stage interaction: floating decline/accept circles in ringing state, animated tap, scale press, icon rotation, glassmorphism slide track reveal, horizontal swipe to decline, red highlight, and `zoomOut` exit.
+- 🔔 **Interactive Push Notifications**: Real-time iOS glassmorphism & Android Material push notification banners with sound alerts and animated touch/swipe dismiss gestures.
+- 💻 **Code Blocks & WhatsApp Markdown**: Monospace code blocks (```code```), inline code, bullet points (- / *), line breaks (\n), bold, italic, strikethrough, and draft text erasing simulation (`eraseBeforeSend`).
 - ⌨️ **Interactive Virtual Keyboard**: Letter-by-letter QWERTY typing simulation with keypress elevation, visual feedback, top-only shadows, and Web Audio API keyclick sounds.
 - 📸 **Fullscreen Image Upload & Staging**: Fullscreen media preview modal, caption field with auto-height expansion, in-chat progress blur, and a circular SVG upload ring.
 - 🎙️ **Voice Notes & Hands-Free Audio Bar**: Realistic voice note recording bar featuring real-time audio waveforms, `"Recording audio..."` header status, and automatic italic transcriptions.

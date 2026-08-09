@@ -365,12 +365,12 @@ export class WhatsAppSimulatorEngine {
                     playKeyClickSound();
                 }
 
-                await this.sleep(450);
+                await this.sleep(1100);
                 if (this.activeRunId !== runId) return;
 
                 // Call Declined & Screen Closed
                 this.updateState({ incomingCall: null });
-                await this.sleep(400);
+                await this.sleep(450);
                 continue;
             }
 
