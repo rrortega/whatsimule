@@ -8,6 +8,9 @@ import { MessageBubble } from "./components/MessageBubble";
 import { ChatInput } from "./components/ChatInput";
 import { VirtualKeyboard } from "./components/VirtualKeyboard";
 import { ScriptSelector } from "./components/ScriptSelector";
+import { AvatarModal } from "./components/AvatarModal";
+import { IncomingCallModal } from "./components/IncomingCallModal";
+import { PushNotificationBanner } from "./components/PushNotificationBanner";
 
 export interface WhatSimuleProps extends WhatsAppSimulatorOptions, SimulatorEventHandlers {
     scripts?: Record<string, ChatScript>;
@@ -122,6 +125,9 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
         setSpeedMultiplier: (speed) => sim.setSpeedMultiplier(speed),
         setSpeed: (speed) => sim.setSpeed(speed),
         setScript: (scriptId, startIndex) => sim.setScript(scriptId, startIndex),
+        openAvatarModal: () => sim.openAvatarModal(),
+        closeAvatarModal: () => sim.closeAvatarModal(),
+        toggleAvatarModal: () => sim.toggleAvatarModal(),
     }), [sim]);
 
     // Scroll 3D perspective effect
@@ -419,14 +425,44 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             groupMembersText={groupMembersText}
                             isTyping={state.isTyping}
                             isRecordingAudio={state.isRecordingAudio}
-                            onlineStatusText={labels.onlineStatus || (locale === "es" ? "en línea" : "online")}
-                            typingStatusText={labels.typingStatus || (locale === "es" ? "escribiendo..." : "typing...")}
-                            recordingStatusText={labels.recordingStatus || (locale === "es" ? "grabando audio..." : "recording audio...")}
+                            onlineStatusText={labels.onlineStatusText || (locale === "es" ? "en línea" : "online")}
+                            typingStatusText={labels.typingStatusText || (locale === "es" ? "escribiendo..." : "typing...")}
+                            recordingStatusText={labels.recordingStatusText || (locale === "es" ? "grabando audio..." : "recording audio...")}
                             deviceStyle={deviceStyle}
                             batteryLevel={batteryLevel}
                             networkType={networkType}
                             wifiSignalStrength={wifiSignalStrength}
                             statusBarTime={statusBarTime}
+                            onAvatarClick={sim.toggleAvatarModal}
+                            avatarRipple={state.avatarRipple}
+                        />
+
+                        {/* Push Notification Banner */}
+                        <PushNotificationBanner
+                            notificationState={state.pushNotification}
+                            onDismiss={() => {}}
+                            deviceStyle={deviceStyle}
+                            theme={theme}
+                        />
+
+                        {/* Incoming Call Screen Banner */}
+                        <IncomingCallModal
+                            callState={state.incomingCall}
+                            onDecline={() => {}}
+                            deviceStyle={deviceStyle}
+                            theme={theme}
+                        />
+
+                        {/* Contact Profile Photo & Info Viewer Modal */}
+                        <AvatarModal
+                            isOpen={Boolean(state.isAvatarModalOpen)}
+                            onClose={sim.closeAvatarModal}
+                            contactName={contactName}
+                            assistantName={assistantName}
+                            contactAvatarUrl={contactAvatarUrl}
+                            assistantAvatarUrl={assistantAvatarUrl}
+                            chatType={chatType}
+                            theme={theme}
                         />
 
                         {/* Chat Messages Body */}

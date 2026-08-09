@@ -68,6 +68,9 @@ export function useWhatsAppSimulator(
     const setSpeedMultiplier = (speed: number) => engineRef.current?.setSpeedMultiplier(speed);
     const setSpeed = (speed: number) => engineRef.current?.setSpeed(speed);
     const setScript = (scriptId: string, startIndex?: number) => engineRef.current?.setScript(scriptId, startIndex);
+    const openAvatarModal = () => engineRef.current?.openAvatarModal();
+    const closeAvatarModal = () => engineRef.current?.closeAvatarModal();
+    const toggleAvatarModal = () => engineRef.current?.toggleAvatarModal();
 
     return {
         state,
@@ -89,5 +92,8 @@ export function useWhatsAppSimulator(
         setSpeedMultiplier,
         setSpeed,
         setScript,
+        openAvatarModal,
+        closeAvatarModal,
+        toggleAvatarModal,
     };
 }

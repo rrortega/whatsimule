@@ -2721,10 +2721,11 @@
       ai_support: {
         id: "ai_support",
         label: "🤖 Asistente IA 24/7",
-        description: "Demostración de atención al cliente automatizada",
+        description: "Demostración de atención al cliente automatizada con llamada entrante",
         steps: [
           { sender: "user", type: "text", content: "Hola! Quisiera saber el estado de mi solicitud #4092.", delay: 800 },
           { sender: "assistant", type: "text", content: "¡Hola! Con gusto te ayudo. Estoy verificando tu solicitud en el sistema... 🔍", delay: 1500 },
+          { sender: "assistant", type: "text", content: "", delay: 800, action: "incoming_call", callData: { callerName: "Soporte Técnico", callType: "voice" } },
           { sender: "assistant", type: "text", content: "¡Listo! Tu solicitud de servicio ha sido aprobada y el técnico está asignado para hoy a las 15:00 hs. 🛠️", delay: 2000 },
           { sender: "user", type: "text", content: "Excelente, ¡muchas gracias por la rapidez!", delay: 1200 },
           { sender: "assistant", type: "text", content: "¡De nada! Recuerda que estoy disponible 24/7 si necesitas algo más. 👋", delay: 1000 }
@@ -2733,10 +2734,11 @@
       lead_qualifier: {
         id: "lead_qualifier",
         label: "💼 Cotización de Servicios",
-        description: "Calificación rápida de prospectos comerciales",
+        description: "Calificación rápida de prospectos comerciales con notificación push",
         steps: [
           { sender: "user", type: "text", content: "Buenas tardes, me interesa cotizar una plataforma web.", delay: 600 },
           { sender: "assistant", type: "text", content: "¡Hola! Excelente decisión. Para darte un estimado preciso, ¿qué tipo de proyecto es?", delay: 1400 },
+          { sender: "assistant", type: "text", content: "", delay: 800, action: "push_notification", notificationData: { title: "CRM Ventas", text: "Nuevo lead asignado a tu cartera", action: "dismiss" } },
           { sender: "user", type: "text", content: "Es un e-commerce para venta de productos digitales.", delay: 1000 },
           { sender: "assistant", type: "text", content: "Perfecto. Te enviamos una propuesta preliminar en PDF con opciones de diseño y pasarela de pago. 📑", delay: 1800 }
         ]
@@ -2773,6 +2775,28 @@
           { sender: "assistant", type: "text", content: "Gracias por enviar la imagen. He transferido el caso a la división de infraestructura.", delay: 1500 },
           { sender: "assistant", type: "audio", content: "Dictamen preliminar en audio por el ingeniero a cargo.", audioDuration: "0:18", delay: 2200 },
           { sender: "user", type: "text", content: "Excelente, quedo a la espera del equipo de campo.", delay: 1000 }
+        ]
+      },
+      profile_and_regret: {
+        id: "profile_and_regret",
+        label: "🤔 Ver Perfil & Arrepentimiento",
+        description: "Simula tocar la foto de perfil del contacto y borrar un mensaje borrador antes de enviar",
+        steps: [
+          { sender: "assistant", type: "text", content: "¡Hola! Te escribo de la consultora sobre tu postulación.", delay: 800 },
+          { sender: "user", type: "text", content: "", delay: 1200, action: "tap_avatar" },
+          { sender: "user", type: "text", content: "Buenas tardes, estaba a punto de consultar por la tarifa de...", delay: 1000, eraseBeforeSend: true },
+          { sender: "user", type: "text", content: "¡Hola Sofía! Genial, decime qué información necesitan.", delay: 1200 }
+        ]
+      },
+      call_and_notification: {
+        id: "call_and_notification",
+        label: "📞 Llamada Entrante & Push Notification",
+        description: "Simula llamada entrante rechazada con click en botón rojo y descarte de notificación push",
+        steps: [
+          { sender: "user", type: "text", content: "Hola, estoy revisando la propuesta de contrato.", delay: 800 },
+          { sender: "assistant", type: "text", content: "", delay: 1000, action: "incoming_call", callData: { callerName: "Carlos Gómez", callType: "voice" } },
+          { sender: "assistant", type: "text", content: "", delay: 1200, action: "push_notification", notificationData: { title: "Calendario", text: "Recordatorio: Reunión en 15 min", action: "dismiss" } },
+          { sender: "assistant", type: "text", content: "Disculpa la llamada. Quedó todo aprobado de mi lado.", delay: 1200 }
         ]
       }
     };

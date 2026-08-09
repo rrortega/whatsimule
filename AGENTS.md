@@ -321,6 +321,8 @@ export interface ScriptStep {
   audioUrl?: string;
   linkPreview?: LinkPreviewData;
   perspective?: StepPerspective; // Step-defined 3D tilt angles & zoom
+  eraseBeforeSend?: boolean; // Simulates user typing text and erasing it back to 0 chars before sending
+  action?: "tap_avatar" | "view_avatar" | "close_avatar" | string; // Simulates clicking contact avatar photo to view profile info
 }
 
 export interface ChatScript {

@@ -38,6 +38,21 @@ export interface Message {
     perspective?: StepPerspective;
 }
 
+export interface IncomingCallData {
+    callerName?: string;
+    callerAvatarUrl?: string;
+    callType?: "voice" | "video";
+    action?: "decline" | "answer";
+}
+
+export interface PushNotificationData {
+    title?: string;
+    text?: string;
+    app?: string;
+    avatarUrl?: string;
+    action?: "swipe_dismiss" | "tap" | "dismiss";
+}
+
 export interface ScriptStep {
     sender: MessageSender;
     type: MessageType;
@@ -51,6 +66,10 @@ export interface ScriptStep {
     audioUrl?: string;
     linkPreview?: LinkPreviewData;
     perspective?: StepPerspective;
+    eraseBeforeSend?: boolean; // Erase typed text character by character before sending (simulates regret/cancellation)
+    action?: "tap_avatar" | "view_avatar" | "close_avatar" | "incoming_call" | "push_notification" | string; // Optional interactive step action
+    callData?: IncomingCallData;
+    notificationData?: PushNotificationData;
 }
 
 export interface ChatScript {
@@ -113,9 +132,10 @@ export interface WhatsAppSimulatorOptions {
     speedMultiplier?: number;
     locale?: "es" | "en";
     labels?: {
-        onlineStatus?: string;
-        typingStatus?: string;
-        recordingStatus?: string;
+        onlineStatusText?: string;
+        typingStatusText?: string;
+        recordingStatusText?: string;
+        groupMembersText?: string;
         inputPlaceholder?: string;
         speedMultiplier?: string;
         restartTooltip?: string;
@@ -151,4 +171,7 @@ export interface WhatSimuleRef {
     setSpeedMultiplier: (multiplier: number) => void;
     setSpeed: (multiplier: number) => void;
     setScript: (scriptId: string, startIndex?: number) => void;
+    openAvatarModal: () => void;
+    closeAvatarModal: () => void;
+    toggleAvatarModal: () => void;
 }

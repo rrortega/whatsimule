@@ -1966,16 +1966,17 @@
 }
 
 .rws-kb-device-android .rws-kb-send {
-    flex: 1.2;
-    background: #3b82f6;
-    border-radius: 50%;
-    width: 38px;
+    flex: 1.4;
+    background: #38475c;
+    color: #f8fafc;
+    border-radius: 14px;
     height: 38px;
-    padding: 0;
+    width: auto;
+    padding: 0 10px;
 }
 
 .rws-kb-device-android .rws-kb-send:hover {
-    background: #2563eb;
+    background: #45566f;
 }
 
 .rws-kb-theme-light.rws-kb-device-android {
@@ -1990,6 +1991,11 @@
 .rws-kb-theme-light.rws-kb-device-android .rws-kb-special {
     background: #cbd5e1;
     color: #475569;
+}
+
+.rws-kb-theme-light.rws-kb-device-android .rws-kb-send {
+    background: #cbd5e1;
+    color: #1e293b;
 }
 
 /* Keypress Highlight Animation */
@@ -2016,4 +2022,849 @@
 
 .rws-rec-wave-bar.recorded {
     background: #ea4335;
+}
+
+/* Contact Avatar Interactive Clickable Styling */
+.rws-avatar-clickable {
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rws-avatar-clickable:hover {
+    transform: scale(1.08);
+}
+
+.rws-avatar-ripple-active {
+    transform: scale(0.92);
+}
+
+/* Animated Finger Touch Cursor & Pulse Ripple */
+.rws-finger-avatar-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 100;
+}
+
+.rws-finger-back-indicator {
+    position: absolute;
+    top: 22px;
+    left: 18px;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.rws-finger-circle {
+    display: block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37, 211, 102, 0.85) 0%, rgba(0, 168, 132, 0.4) 60%, rgba(255, 255, 255, 0.2) 100%);
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 16px rgba(0, 168, 132, 0.8), 0 4px 10px rgba(0, 0, 0, 0.4);
+    animation: rws-finger-tap-down 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.rws-finger-wave {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 32px;
+    height: 32px;
+    margin-top: -16px;
+    margin-left: -16px;
+    border-radius: 50%;
+    border: 2px solid #25d366;
+    animation: rws-finger-pulse-wave 0.6s ease-out infinite;
+}
+
+@keyframes rws-finger-tap-down {
+    0% { transform: scale(1.6); opacity: 0; }
+    50% { transform: scale(0.85); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.9; }
+}
+
+@keyframes rws-finger-pulse-wave {
+    0% { transform: scale(0.8); opacity: 0.9; }
+    100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* WhatsApp Contact Profile Photo & Info View Modal */
+.rws-profile-modal-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 90;
+    background: #0b141a;
+    color: #e9edef;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    user-select: none;
+}
+
+.rws-theme-light.rws-profile-modal-overlay {
+    background: #f0f2f5;
+    color: #111b21;
+}
+
+.rws-profile-header {
+    height: 56px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #111b21;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rws-theme-light .rws-profile-header {
+    background: #00a884;
+    color: #ffffff;
+}
+
+.rws-profile-back-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+}
+
+.rws-profile-back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.rws-profile-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.rws-profile-scroll-body {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 24px;
+}
+
+.rws-profile-photo-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 16px;
+    background: #111b21;
+    margin-bottom: 10px;
+}
+
+.rws-theme-light .rws-profile-photo-card {
+    background: #ffffff;
+}
+
+.rws-profile-large-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    margin-bottom: 16px;
+}
+
+.rws-profile-large-fallback {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: #00a884;
+    color: #ffffff;
+    font-size: 56px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    margin-bottom: 16px;
+}
+
+.rws-profile-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+.rws-profile-phone {
+    font-size: 13.5px;
+    color: #8696a0;
+    margin: 0;
+}
+
+.rws-profile-actions-bar {
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 16px;
+    background: #111b21;
+    margin-bottom: 10px;
+}
+
+.rws-theme-light .rws-profile-actions-bar {
+    background: #ffffff;
+}
+
+.rws-profile-action-btn {
+    background: transparent;
+    border: none;
+    color: #00a884;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.15s ease;
+}
+
+.rws-profile-action-btn:hover {
+    background: rgba(0, 168, 132, 0.1);
+}
+
+.rws-profile-info-section {
+    background: #111b21;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+}
+
+.rws-theme-light .rws-profile-info-section {
+    background: #ffffff;
+}
+
+.rws-profile-info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rws-profile-info-label {
+    font-size: 12px;
+    color: #8696a0;
+}
+
+.rws-profile-info-val {
+    font-size: 14.5px;
+}
+
+.rws-profile-security-row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.rws-profile-sec-icon {
+    color: #8696a0;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.rws-profile-sec-sub {
+    font-size: 12.5px;
+    color: #8696a0;
+    margin: 4px 0 0;
+    line-height: 1.4;
+}
+
+/* Incoming Call Banner & Modal Overlay */
+.rws-call-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 110;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+
+.rws-call-card {
+    background: rgba(20, 28, 36, 0.94);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 22px;
+    padding: 14px 16px;
+    color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.2);
+    pointer-events: auto;
+}
+
+.rws-device-android .rws-call-card {
+    border-radius: 16px;
+    background: #1e293b;
+}
+
+.rws-call-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.rws-call-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.rws-call-avatar-fallback {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #00a884;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rws-call-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rws-call-app-tag {
+    font-size: 11px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.rws-call-caller-name {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+    color: #ffffff;
+}
+
+.rws-call-sub-text {
+    font-size: 12.5px;
+    color: #cbd5e1;
+    margin: 0;
+}
+
+.rws-call-actions-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 4px;
+}
+
+.rws-call-btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.rws-call-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.rws-call-decline-btn {
+    background: #ef4444;
+}
+
+.rws-call-decline-btn:hover {
+    background: #dc2626;
+}
+
+.rws-call-accept-btn {
+    background: #22c55e;
+}
+
+.rws-call-accept-btn:hover {
+    background: #16a34a;
+}
+
+.rws-call-btn-pressing {
+    transform: scale(0.88);
+}
+
+.rws-call-btn-label {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.rws-finger-btn-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 120;
+}
+
+/* Push Notification Banner Styling */
+.rws-push-banner-wrapper {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    z-index: 120;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.rws-push-card {
+    padding: 10px 14px;
+    color: #ffffff;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    position: relative;
+    overflow: hidden;
+}
+
+.rws-push-ios {
+    background: rgba(26, 35, 46, 0.92);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+}
+
+.rws-push-android {
+    background: #1e293b;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rws-push-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.rws-push-app-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rws-push-whatsapp-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    background: #25d366;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rws-push-app-name {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.rws-push-time-tag {
+    font-size: 11px;
+    color: #64748b;
+}
+
+.rws-push-body-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rws-push-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.rws-push-text-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.rws-push-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    margin: 0;
+    color: #f8fafc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rws-push-text {
+    font-size: 12.5px;
+    margin: 0;
+    color: #cbd5e1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rws-push-finger-indicator {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 130;
+}
+
+/* iOS Authentic Full Screen Call UI & Horizontal Slide Track */
+.rws-ios-call-screen {
+    position: absolute;
+    inset: 0;
+    z-index: 110;
+    background: linear-gradient(180deg, #2b3036 0%, #15181c 100%);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 50px 24px 38px;
+    user-select: none;
+    overflow: hidden;
+}
+
+.rws-ios-call-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.rws-ios-call-avatar-top {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.rws-ios-caller-name {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+}
+
+.rws-ios-call-type-label {
+    font-size: 14px;
+    color: #94a3b8;
+    margin: 0;
+}
+
+.rws-ios-call-mid-actions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+.rws-ios-mid-btn-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.rws-ios-mid-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: background-color 0.15s ease;
+}
+
+.rws-ios-mid-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.rws-ios-mid-label {
+    font-size: 11.5px;
+    color: #cbd5e1;
+    font-weight: 500;
+}
+
+.rws-ios-call-bottom-section {
+    width: 100%;
+}
+
+.rws-ios-slide-track {
+    position: relative;
+    width: 100%;
+    height: 58px;
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.rws-ios-slide-knob {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+}
+
+.rws-ios-knob-decline {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+.rws-ios-knob-icon {
+    transform: rotate(0deg);
+}
+
+.rws-finger-slider-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 120;
+}
+
+.rws-ios-slide-text-box {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 54px;
+    pointer-events: none;
+    user-select: none;
+}
+
+.rws-ios-slide-text {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.2px;
+}
+
+.rws-ios-slide-arrows {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: 2px;
+}
+
+.rws-arrow-1 { animation: rws-arrow-glow 1.2s infinite 0s; }
+.rws-arrow-2 { animation: rws-arrow-glow 1.2s infinite 0.2s; margin-left: -8px; }
+.rws-arrow-3 { animation: rws-arrow-glow 1.2s infinite 0.4s; margin-left: -8px; }
+
+@keyframes rws-arrow-glow {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+}
+
+/* Android Authentic Full Screen Call UI & Slide Track */
+.rws-android-call-screen {
+    position: absolute;
+    inset: 0;
+    z-index: 110;
+    background: #1e293b;
+    color: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 48px 20px 32px;
+    user-select: none;
+    overflow: hidden;
+}
+
+.rws-android-call-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.rws-android-call-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.rws-android-avatar-fallback {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #00a884;
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6px;
+}
+
+.rws-android-caller-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    color: #f8fafc;
+}
+
+.rws-android-call-type {
+    font-size: 13.5px;
+    color: #94a3b8;
+    margin: 0;
+}
+
+.rws-android-call-bottom {
+    width: 100%;
+}
+
+.rws-android-slide-track {
+    position: relative;
+    width: 100%;
+    height: 58px;
+    background: #334155;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 29px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.rws-android-slide-knob {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+}
+
+.rws-android-knob-decline {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+.rws-android-slide-text-box {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 54px;
+    pointer-events: none;
+    user-select: none;
+}
+
+.rws-android-slide-text {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+.rws-ios-slide-knob-accept-static,
+.rws-android-knob-accept-static {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #22c55e;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 5;
+}
+
+.rws-call-labels-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 14px 0;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.rws-call-action-label-decline {
+    color: #ef4444;
+}
+
+.rws-call-action-label-accept {
+    color: #22c55e;
 }

@@ -18,6 +18,8 @@ interface ChatHeaderProps {
     networkType?: "2G" | "3G" | "4G" | "5G";
     wifiSignalStrength?: number | string;
     statusBarTime?: string;
+    onAvatarClick?: () => void;
+    avatarRipple?: boolean;
 }
 
 export const ChatHeader: React.FC<ChatHeaderProps> = ({
@@ -37,6 +39,8 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
     networkType = "5G",
     wifiSignalStrength = 4,
     statusBarTime = "09:41",
+    onAvatarClick,
+    avatarRipple = false,
 }) => {
     const nameToDisplay = contactName || assistantName || "RRORTEGA";
     const avatarToDisplay = contactAvatarUrl || assistantAvatarUrl;
@@ -154,9 +158,21 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
                     <button type="button" className="rws-back-button" aria-label="Volver">
                         <ArrowLeft size={20} className="rws-header-icon" />
                     </button>
-                    <div className="rws-avatar-container">
+                    <div
+                        className={`rws-avatar-container rws-avatar-clickable ${avatarRipple ? "rws-avatar-ripple-active" : ""}`}
+                        onClick={onAvatarClick}
+                        title="Ver foto e información del contacto"
+                        role="button"
+                        tabIndex={0}
+                    >
                         {avatarContent}
                         {chatType !== "group" && <span className="rws-status-indicator" />}
+                        {avatarRipple && (
+                            <div className="rws-finger-avatar-indicator">
+                                <span className="rws-finger-circle rws-finger-pressing" />
+                                <span className="rws-finger-wave" />
+                            </div>
+                        )}
                     </div>
                     <div className="rws-header-info">
                         <h3 className="rws-header-title">{nameToDisplay}</h3>

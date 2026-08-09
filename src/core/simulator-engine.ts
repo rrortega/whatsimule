@@ -1,5 +1,5 @@
 import { Message, ScriptStep, ChatScript, WhatsAppSimulatorOptions, SimulatorEventHandlers, StepPerspective } from "./types";
-import { playKeyClickSound, playSentSound, playReceiveSound } from "./audio-synth";
+import { playKeyClickSound, playSentSound, playReceiveSound, playCallRingtoneSound, playNotificationSound } from "./audio-synth";
 
 export type StateListener = (state: SimulatorState) => void;
 
@@ -15,6 +15,22 @@ export interface AudioRecordingState {
     timer: string;
     isPaused: boolean;
     progress: number;
+}
+
+export interface IncomingCallState {
+    callerName: string;
+    callerAvatarUrl?: string;
+    callType: "voice" | "video";
+    isFingerDeclineActive?: boolean;
+}
+
+export interface PushNotificationState {
+    title: string;
+    text: string;
+    app: string;
+    avatarUrl?: string;
+    isSwipeDismissing?: boolean;
+    isFingerTapActive?: boolean;
 }
 
 export interface SimulatorState {
@@ -37,6 +53,10 @@ export interface SimulatorState {
     isPaused?: boolean;
     currentStepIndex?: number;
     speedMultiplier?: number;
+    isAvatarModalOpen?: boolean;
+    avatarRipple?: boolean;
+    incomingCall: IncomingCallState | null;
+    pushNotification: PushNotificationState | null;
 }
 
 export class WhatsAppSimulatorEngine {
@@ -79,6 +99,8 @@ export class WhatsAppSimulatorEngine {
             isPaused: false,
             currentStepIndex: 0,
             speedMultiplier: options.speedMultiplier || 1,
+            incomingCall: null,
+            pushNotification: null,
         };
     }
 
@@ -94,6 +116,18 @@ export class WhatsAppSimulatorEngine {
         return this.state;
     }
 
+    public openAvatarModal(): void {
+        this.updateState({ isAvatarModalOpen: true });
+    }
+
+    public closeAvatarModal(): void {
+        this.updateState({ isAvatarModalOpen: false });
+    }
+
+    public toggleAvatarModal(): void {
+        this.updateState({ isAvatarModalOpen: !this.state.isAvatarModalOpen });
+    }
+
     private updateState(partial: Partial<SimulatorState>): void {
         this.state = { ...this.state, ...partial };
         this.listeners.forEach((listener) => listener(this.state));
@@ -103,8 +137,21 @@ export class WhatsAppSimulatorEngine {
         if (!script || !script.steps) return 0;
         return script.steps.reduce((acc, step) => {
             let typingDelay = 0;
-            if ((step.sender === "resident" || step.sender === "user") && step.type === "text") {
-                typingDelay = step.content.length * 13 + 750;
+            const isErase = Boolean(step.eraseBeforeSend || (step as any).erase || (step as any).cancel);
+            const isAvatarAction = step.action === "tap_avatar" || step.action === "view_avatar" || (step as any).type === "tap_avatar" || (step as any).type === "avatar";
+
+            if (isAvatarAction) {
+                typingDelay = 2500;
+            } else if ((step.sender === "resident" || step.sender === "user") && step.type === "text") {
+                const isKeyboard = this.options.typingMode === "keyboard";
+                const typeCharTime = isKeyboard ? 55 : 13;
+                typingDelay = step.content.length * typeCharTime + 750;
+                if (isErase) {
+                    const backspaceCharTime = isKeyboard ? 48 : 17;
+                    typingDelay += 450 + step.content.length * backspaceCharTime + 600;
+                }
+            } else if (step.sender === "assistant" || step.sender === "contact" || step.sender === "asistenxa") {
+                typingDelay = isErase ? 1300 : 1400;
             }
             return acc + step.delay + typingDelay;
         }, 0);
@@ -166,6 +213,8 @@ export class WhatsAppSimulatorEngine {
 
         for (let i = 0; i < startIndex; i++) {
             const step = script.steps[i];
+            const isErase = Boolean(step.eraseBeforeSend || (step as any).erase || (step as any).cancel);
+            if (isErase) continue;
             const pastTime = new Date(now.getTime() - (startIndex - i) * 60000);
             const timestamp = `${pastTime.getHours().toString().padStart(2, "0")}:${pastTime.getMinutes().toString().padStart(2, "0")}`;
             initialMessages.push(this.createMessageFromStep(step, `${script.id}-initial-${i}`, timestamp));
@@ -249,6 +298,144 @@ export class WhatsAppSimulatorEngine {
             }
             if (this.activeRunId !== runId) return;
 
+            const isAvatarAction = step.action === "tap_avatar" || step.action === "view_avatar" || (step as any).type === "tap_avatar" || (step as any).type === "avatar";
+            const isCloseAvatarAction = step.action === "close_avatar";
+
+            if (isAvatarAction) {
+                this.updateState({ avatarRipple: true });
+                if (this.options.enableSound !== false && this.options.soundTyping !== false) {
+                    playKeyClickSound();
+                }
+                await this.sleep(220);
+                if (this.activeRunId !== runId) return;
+
+                this.updateState({ avatarRipple: false, isAvatarModalOpen: true });
+                const viewDuration = step.delay && step.delay > 500 ? step.delay : 2000;
+                await this.sleep(viewDuration);
+                if (this.activeRunId !== runId) return;
+
+                this.updateState({ isAvatarModalOpen: false });
+                await this.sleep(350);
+                continue;
+            }
+
+            if (isCloseAvatarAction) {
+                this.updateState({ isAvatarModalOpen: false });
+                await this.sleep(300);
+                continue;
+            }
+
+            const isIncomingCallAction = step.action === "incoming_call" || (step as any).type === "incoming_call" || (step as any).type === "call";
+            const isPushNotificationAction = step.action === "push_notification" || (step as any).type === "push_notification" || (step as any).type === "notification";
+
+            if (isIncomingCallAction) {
+                const callData = step.callData || {};
+                const callerName = callData.callerName || this.options.assistantName || "Contacto";
+                const callerAvatarUrl = callData.callerAvatarUrl || this.options.assistantAvatarUrl;
+                const callType = callData.callType || "voice";
+
+                if (this.options.enableSound !== false) {
+                    playCallRingtoneSound();
+                }
+
+                // Show Incoming Call Banner / Screen
+                this.updateState({
+                    incomingCall: {
+                        callerName,
+                        callerAvatarUrl,
+                        callType,
+                        isFingerDeclineActive: false,
+                    }
+                });
+
+                await this.sleep(1200);
+                if (this.activeRunId !== runId) return;
+
+                // Animate Finger Touch Cursor over Decline Red Button
+                this.updateState({
+                    incomingCall: {
+                        callerName,
+                        callerAvatarUrl,
+                        callType,
+                        isFingerDeclineActive: true,
+                    }
+                });
+
+                if (this.options.enableSound !== false && this.options.soundTyping !== false) {
+                    playKeyClickSound();
+                }
+
+                await this.sleep(450);
+                if (this.activeRunId !== runId) return;
+
+                // Call Declined & Screen Closed
+                this.updateState({ incomingCall: null });
+                await this.sleep(400);
+                continue;
+            }
+
+            if (isPushNotificationAction) {
+                const notifData = step.notificationData || {};
+                const title = notifData.title || this.options.assistantName || "WhatsApp";
+                const text = notifData.text || step.content || "Nuevo mensaje recibido";
+                const app = notifData.app || "WhatsApp";
+                const avatarUrl = notifData.avatarUrl || this.options.assistantAvatarUrl;
+                const actionType = notifData.action || "dismiss";
+
+                if (this.options.enableSound !== false) {
+                    playNotificationSound();
+                }
+
+                // Slide down push notification banner from top
+                this.updateState({
+                    pushNotification: {
+                        title,
+                        text,
+                        app,
+                        avatarUrl,
+                        isSwipeDismissing: false,
+                        isFingerTapActive: false,
+                    }
+                });
+
+                await this.sleep(1400);
+                if (this.activeRunId !== runId) return;
+
+                if (actionType === "tap") {
+                    this.updateState({
+                        pushNotification: {
+                            title,
+                            text,
+                            app,
+                            avatarUrl,
+                            isSwipeDismissing: false,
+                            isFingerTapActive: true,
+                        }
+                    });
+                    if (this.options.enableSound !== false && this.options.soundTyping !== false) {
+                        playKeyClickSound();
+                    }
+                    await this.sleep(400);
+                } else {
+                    this.updateState({
+                        pushNotification: {
+                            title,
+                            text,
+                            app,
+                            avatarUrl,
+                            isSwipeDismissing: true,
+                            isFingerTapActive: false,
+                        }
+                    });
+                    await this.sleep(450);
+                }
+                if (this.activeRunId !== runId) return;
+
+                this.updateState({ pushNotification: null });
+                await this.sleep(350);
+                continue;
+            }
+
             const isUserSender = step.sender === "resident" || step.sender === "user";
 
             if (isUserSender) {
@@ -281,6 +468,41 @@ export class WhatsAppSimulatorEngine {
                         }
                         const charDelay = isKeyboard ? 40 + Math.random() * 30 : 8 + Math.random() * 10;
                         await this.sleep(charDelay);
+                    }
+
+                    const isEraseStep = Boolean(step.eraseBeforeSend || (step as any).erase || (step as any).cancel);
+
+                    if (isEraseStep) {
+                        if (isKeyboard) {
+                            this.updateState({ pressedKey: null });
+                        }
+                        // Hesitation pause to simulate user regret
+                        await this.sleep(450);
+                        if (this.activeRunId !== runId) return;
+
+                        // Erase character by character back to 0 characters
+                        while (currentText.length > 0) {
+                            if (this.activeRunId !== runId) return;
+                            currentText = currentText.slice(0, -1);
+                            this.updateState({
+                                inputValue: currentText,
+                                pressedKey: isKeyboard ? "BACKSPACE" : null,
+                            });
+
+                            if (this.options.enableSound !== false && this.options.soundTyping !== false) {
+                                playKeyClickSound();
+                            }
+                            const backspaceDelay = isKeyboard ? 35 + Math.random() * 25 : 12 + Math.random() * 10;
+                            await this.sleep(backspaceDelay);
+                        }
+
+                        if (isKeyboard) {
+                            this.updateState({ pressedKey: null });
+                            await this.sleep(250);
+                        }
+                        this.updateState({ isKeyboardOpen: false, pressedKey: null, inputValue: "" });
+                        await this.sleep(350);
+                        continue; // Skip posting message bubble
                     }
 
                     if (isKeyboard) {
@@ -520,6 +742,7 @@ export class WhatsAppSimulatorEngine {
                 }
             } else {
                 // Assistant step
+                const isEraseStep = Boolean(step.eraseBeforeSend || (step as any).erase || (step as any).cancel);
                 if (step.type === "audio") {
                     this.updateState({ isRecordingAudio: true, isTyping: false });
                 } else {
@@ -533,6 +756,12 @@ export class WhatsAppSimulatorEngine {
                 }
                 await this.sleep(1400 - halfTypingTime);
                 if (this.activeRunId !== runId) return;
+
+                if (isEraseStep) {
+                    this.updateState({ isTyping: false, isRecordingAudio: false });
+                    await this.sleep(300);
+                    continue; // Skip posting message bubble
+                }
 
                 this.updateState({ isTyping: false, isRecordingAudio: false });
                 if (this.options.enableSound !== false && this.options.soundReceive !== false) {
