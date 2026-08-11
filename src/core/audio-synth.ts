@@ -1,6 +1,9 @@
 let audioCtx: AudioContext | null = null;
 
 function getAudioContext(): AudioContext | null {
+    if (typeof window !== "undefined" && (window as any).__WHATSIMULE_DISABLE_AUDIO__) {
+        return null;
+    }
     if (!audioCtx && typeof window !== "undefined") {
         const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
         if (AudioCtxClass) {

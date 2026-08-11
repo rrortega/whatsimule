@@ -198,6 +198,7 @@ export class WhatsAppSimulatorEngine {
 
         if (typeof scriptsOrStartIndex === "object" && scriptsOrStartIndex !== null) {
             scripts = scriptsOrStartIndex;
+            this.options.customScripts = scripts;
         } else if (typeof scriptsOrStartIndex === "number") {
             startIndexOverride = scriptsOrStartIndex;
         }
@@ -254,21 +255,20 @@ export class WhatsAppSimulatorEngine {
     }
 
     private async sleep(ms: number): Promise<void> {
-        const checkInterval = 50;
-        let elapsed = 0;
-        while (elapsed < ms) {
-            if (this.isPausedState) {
-                await new Promise((r) => setTimeout(r, checkInterval));
-                continue;
-            }
-            const speed = this.options.speedMultiplier && this.options.speedMultiplier > 0 ? this.options.speedMultiplier : 1;
-            const stepMs = Math.max(10, Math.round(checkInterval * speed));
-            await new Promise((r) => {
-                const id = setTimeout(r, checkInterval);
-                this.timeoutIds.push(id);
-            });
-            elapsed += stepMs;
+        if (this.isPausedState) {
+            await new Promise((r) => setTimeout(r, Math.max(10, ms)));
+            return;
         }
+        const speed = this.options.speedMultiplier && this.options.speedMultiplier > 0 ? this.options.speedMultiplier : 1;
+        const targetMs = Math.max(1, Math.round(ms / speed));
+        await new Promise<void>((r) => {
+            const id = setTimeout(() => {
+                const idx = this.timeoutIds.indexOf(id);
+                if (idx !== -1) this.timeoutIds.splice(idx, 1);
+                r();
+            }, targetMs);
+            this.timeoutIds.push(id);
+        });
     }
 
     private async runScriptAsync(script: ChatScript, runId: number, startIndexParam?: number): Promise<void> {
@@ -881,9 +881,20 @@ export class WhatsAppSimulatorEngine {
         });
     }
 
+    public setCustomScripts(scripts: Record<string, ChatScript>): void {
+        this.options.customScripts = scripts;
+    }
+
     public restartCurrentScript(): void {
-        if (this.state.activeScriptId) {
-            this.startScript(this.state.activeScriptId, 0);
+        const customScripts = this.options.customScripts || {};
+        const scriptId =
+            this.state.activeScriptId ||
+            this.options.defaultActiveScriptId ||
+            Object.keys(customScripts)[0] ||
+            "embed_script";
+
+        if (scriptId) {
+            this.startScript(scriptId, customScripts, 0);
         }
     }
 

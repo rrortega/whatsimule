@@ -10,7 +10,7 @@ export function useWhatsAppSimulator(
     const engineRef = useRef<WhatsAppSimulatorEngine | null>(null);
 
     if (!engineRef.current) {
-        engineRef.current = new WhatsAppSimulatorEngine(options, handlers);
+        engineRef.current = new WhatsAppSimulatorEngine({ ...options, customScripts: scripts }, handlers);
     }
 
     const [state, setState] = useState<SimulatorState>(() => engineRef.current!.getState());
@@ -29,6 +29,12 @@ export function useWhatsAppSimulator(
         };
     }, []);
 
+    useEffect(() => {
+        if (engineRef.current && scripts) {
+            engineRef.current.setCustomScripts(scripts);
+        }
+    }, [scripts]);
+
     const activeScriptId = state.activeScriptId || Object.keys(scripts)[0] || "";
 
     const startScript = (scriptId: string, startIndex?: number) => {
@@ -36,9 +42,14 @@ export function useWhatsAppSimulator(
     };
 
     const restartCurrentScript = () => {
-        if (activeScriptId) {
-            startScript(activeScriptId);
+        const targetScriptId = activeScriptId || Object.keys(scripts)[0] || "";
+        if (targetScriptId) {
+            startScript(targetScriptId, 0);
         }
+    };
+
+    const restart = () => {
+        restartCurrentScript();
     };
 
     useEffect(() => {
@@ -64,7 +75,6 @@ export function useWhatsAppSimulator(
     const resume = () => engineRef.current?.resume();
     const pause = () => engineRef.current?.pause();
     const stop = () => engineRef.current?.stop();
-    const restart = () => engineRef.current?.restart();
     const setSpeedMultiplier = (speed: number) => engineRef.current?.setSpeedMultiplier(speed);
     const setSpeed = (speed: number) => engineRef.current?.setSpeed(speed);
     const setScript = (scriptId: string, startIndex?: number) => engineRef.current?.setScript(scriptId, startIndex);
