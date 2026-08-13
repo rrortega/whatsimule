@@ -98,11 +98,11 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                             }}
                             transition={{ duration: 0.3 }}
                         >
-                            {/* Left Red Decline Knob: Moment 2 grows on tap, rotates icon, then slides right */}
+                            {/* Left Red Decline Knob: Moment 2 grows on tap, rotates icon, then slides right to end of track */}
                             <motion.div
                                 className="rws-ios-slide-knob rws-ios-knob-decline"
                                 animate={{
-                                    x: hasStartedSlide ? 170 : 0,
+                                    x: hasStartedSlide ? "calc(100% - 58px)" : 0,
                                     scale: isFingerDeclineActive && !hasStartedSlide ? 1.15 : 1,
                                 }}
                                 transition={{
@@ -207,7 +207,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                             <motion.div
                                 className="rws-android-slide-knob rws-android-knob-decline"
                                 animate={{
-                                    x: hasStartedSlide ? 170 : 0,
+                                    x: hasStartedSlide ? "calc(100% - 58px)" : 0,
                                     scale: isFingerDeclineActive && !hasStartedSlide ? 1.15 : 1,
                                 }}
                                 transition={{
