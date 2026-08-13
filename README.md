@@ -35,6 +35,7 @@ Try the live playground and customize all options in real-time:
 - 🎨 **Fully Customizable**: Live control over dimensions (width/height sliders), custom wallpaper patterns (Doodle, Dots, Custom image upload), avatar initials, and script steps.
 - 🎛️ **3D Tilt & Smooth Motion**: Interactive hover tilt, scroll tilt perspective, and smooth auto-scrolling to the latest messages.
 - 🔊 **Zero External Sound Dependencies**: Built-in sound synthesis using the Web Audio API for typing clicks, sent sounds, and receive chime.
+- 📇 **Contact Sharing & 8-Option Attachment Menu**: Full contact sharing flow (`type: "contact"`). Features official WhatsApp bottom attachment panel (Gallery, Camera, Location, Contact, Document, Poll, Event, AI Images), contact list picker sheet with search keyboard filtering, avatars (`avatarUrl`), green send button, and official WhatsApp Contact Card message bubbles.
 - 📦 **Production Ready**: Optimized TypeScript build with ESM and CJS bundle formats.
 
 ---

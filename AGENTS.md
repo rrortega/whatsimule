@@ -305,8 +305,17 @@ sim.play();
 ### Data Structures (`ChatScript` & `ScriptStep`)
 
 ```ts
-export type MessageSender = "user" | "resident" | "assistant" | "asistenxa";
-export type MessageType = "text" | "image" | "audio";
+export type MessageSender = "user" | "contact" | "resident" | "assistant" | "asistenxa";
+export type MessageType = "text" | "image" | "audio" | "contact";
+
+export interface ContactCardData {
+  name: string;
+  phone?: string;
+  avatarUrl?: string;
+  organization?: string;
+  email?: string;
+  vCardUrl?: string;
+}
 
 export interface LinkPreviewData {
   url: string;
@@ -338,7 +347,8 @@ export interface ScriptStep {
   linkPreview?: LinkPreviewData;
   perspective?: StepPerspective; // Step-defined 3D tilt angles & zoom
   eraseBeforeSend?: boolean; // Simulates user typing text and erasing it back to 0 chars before sending
-  action?: "tap_avatar" | "view_avatar" | "close_avatar" | string; // Simulates clicking contact avatar photo to view profile info
+  action?: "tap_avatar" | "view_avatar" | "close_avatar" | "incoming_call" | "push_notification" | string; // Simulates interactive actions
+  contactData?: ContactCardData; // Contact card details for type="contact"
 }
 
 export interface ChatScript {

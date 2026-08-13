@@ -1,4 +1,4 @@
-import { Message, ScriptStep, ChatScript, WhatsAppSimulatorOptions, SimulatorEventHandlers, StepPerspective, SoundType } from "./types";
+import { Message, ScriptStep, ChatScript, WhatsAppSimulatorOptions, SimulatorEventHandlers, StepPerspective, SoundType, ContactCardData } from "./types";
 import { playKeyClickSound, playSentSound, playReceiveSound, playCallRingtoneSound, playNotificationSound, playClickSound, playHangupSound } from "./audio-synth";
 
 export type StateListener = (state: SimulatorState) => void;
@@ -33,6 +33,25 @@ export interface PushNotificationState {
     isFingerTapActive?: boolean;
 }
 
+export interface AttachmentMenuState {
+    isOpen: boolean;
+    activeOption?: "galeria" | "camara" | "ubicacion" | "contacto" | "documento" | "encuesta" | "evento" | "ia_images" | string | null;
+    isFingerClickingAttach?: boolean;
+    isFingerClickingOption?: boolean;
+}
+
+export interface ContactPickerState {
+    isOpen: boolean;
+    contacts: ContactCardData[];
+    searchQuery: string;
+    selectedContact: ContactCardData | null;
+    isKeyboardOpen?: boolean;
+    pressedKey?: string | null;
+    isFingerClickingSearch?: boolean;
+    isFingerClickingItem?: boolean;
+    isFingerClickingSend?: boolean;
+}
+
 export interface SimulatorState {
     activeScriptId: string;
     messages: Message[];
@@ -43,6 +62,8 @@ export interface SimulatorState {
     attachedImage: string | null;
     mediaPreview: MediaPreviewState | null;
     audioRecording: AudioRecordingState | null;
+    attachmentMenu: AttachmentMenuState | null;
+    contactPicker: ContactPickerState | null;
     elapsedTime: number;
     totalDuration: number;
     isComplete: boolean;
@@ -91,6 +112,8 @@ export class WhatsAppSimulatorEngine {
             attachedImage: null,
             mediaPreview: null,
             audioRecording: null,
+            attachmentMenu: null,
+            contactPicker: null,
             elapsedTime: 0,
             totalDuration: 0,
             isComplete: false,
@@ -188,6 +211,8 @@ export class WhatsAppSimulatorEngine {
                     const backspaceCharTime = isKeyboard ? 48 : 17;
                     typingDelay += 450 + step.content.length * backspaceCharTime + 600;
                 }
+            } else if ((step.sender === "resident" || step.sender === "user") && step.type === "contact") {
+                typingDelay = 4200;
             } else if (step.sender === "assistant" || step.sender === "contact" || step.sender === "asistenxa") {
                 typingDelay = isErase ? 1300 : 1400;
             }
@@ -219,6 +244,7 @@ export class WhatsAppSimulatorEngine {
             audioUrl: step.audioUrl,
             linkPreview: step.linkPreview,
             perspective: step.perspective,
+            contactData: step.contactData || (step.type === "contact" ? { name: step.content || "Contacto", phone: "+52 55 9876 5432" } : undefined),
         };
     }
 
@@ -268,6 +294,10 @@ export class WhatsAppSimulatorEngine {
             isTyping: false,
             inputValue: "",
             attachedImage: null,
+            mediaPreview: null,
+            audioRecording: null,
+            attachmentMenu: null,
+            contactPicker: null,
             elapsedTime: 0,
             totalDuration,
             isComplete: false,
@@ -757,6 +787,185 @@ export class WhatsAppSimulatorEngine {
                     });
                     this.handlers.onMessageSent?.(audioMessage);
                     await this.sleep(400);
+                } else if (step.type === "contact") {
+                    // Contact send flow: Attach menu -> Contact icon -> Contact Picker -> Search & Filter -> Click Contact -> Send
+                    const contact: ContactCardData = step.contactData || {
+                        name: step.content || "Carlos Rodríguez",
+                        phone: "+52 55 9876 5432",
+                        organization: "ChambaPro AI",
+                    };
+
+                    const sampleContacts: ContactCardData[] = [
+                        { name: contact.name, phone: contact.phone || "+52 55 9876 5432", avatarUrl: contact.avatarUrl || "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&auto=format&fit=crop&q=80", organization: contact.organization },
+                        { name: "Ana Martínez", phone: "+52 55 1122 3344", avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80", organization: "Diseño UI/UX" },
+                        { name: "Dr. Fernando Ruiz", phone: "+52 55 5566 7788", avatarUrl: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=200&auto=format&fit=crop&q=80", organization: "Medicina General" },
+                        { name: "Laura Gómez", phone: "+52 55 4433 2211", avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop&q=80", organization: "Logística" },
+                        { name: "Sofía Mendoza", phone: "+52 55 8899 0011", avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&auto=format&fit=crop&q=80", organization: "Soporte Técnico" },
+                    ].sort((a, b) => a.name.localeCompare(b.name));
+
+                    // 1. Click paperclip attachment button
+                    this.updateState({
+                        attachmentMenu: {
+                            isOpen: false,
+                            activeOption: null,
+                            isFingerClickingAttach: true,
+                        }
+                    });
+                    this.playSound("click");
+                    await this.sleep(350);
+                    if (this.activeRunId !== runId) return;
+
+                    // 2. Open attachment menu with options grid
+                    this.updateState({
+                        attachmentMenu: {
+                            isOpen: true,
+                            activeOption: null,
+                            isFingerClickingAttach: false,
+                        }
+                    });
+                    await this.sleep(650);
+                    if (this.activeRunId !== runId) return;
+
+                    // 3. Click "Contacto" option icon
+                    this.updateState({
+                        attachmentMenu: {
+                            isOpen: true,
+                            activeOption: "contacto",
+                            isFingerClickingOption: true,
+                        }
+                    });
+                    this.playSound("click");
+                    await this.sleep(400);
+                    if (this.activeRunId !== runId) return;
+
+                    // 4. Close attachment menu & Open Contact selection sheet
+                    this.updateState({
+                        attachmentMenu: null,
+                        contactPicker: {
+                            isOpen: true,
+                            contacts: sampleContacts,
+                            searchQuery: "",
+                            selectedContact: null,
+                            isKeyboardOpen: false,
+                            isFingerClickingSearch: false,
+                        }
+                    });
+                    await this.sleep(550);
+                    if (this.activeRunId !== runId) return;
+
+                    // 5. Click Search bar
+                    this.updateState({
+                        contactPicker: {
+                            isOpen: true,
+                            contacts: sampleContacts,
+                            searchQuery: "",
+                            selectedContact: null,
+                            isKeyboardOpen: false,
+                            isFingerClickingSearch: true,
+                        }
+                    });
+                    this.playSound("click");
+                    await this.sleep(300);
+                    if (this.activeRunId !== runId) return;
+
+                    // 6. Keyboard opens & type contact first name character by character
+                    const firstName = contact.name.trim().split(" ")[0] || "Carlos";
+                    let currentQuery = "";
+
+                    for (let cIdx = 0; cIdx < firstName.length; cIdx++) {
+                        if (this.activeRunId !== runId) return;
+                        const char = firstName[cIdx];
+                        currentQuery += char;
+
+                        this.updateState({
+                            contactPicker: {
+                                isOpen: true,
+                                contacts: sampleContacts,
+                                searchQuery: currentQuery,
+                                selectedContact: null,
+                                isKeyboardOpen: true,
+                                pressedKey: char.toUpperCase(),
+                                isFingerClickingSearch: false,
+                            }
+                        });
+                        this.playSound("key");
+                        const charDelay = 45 + Math.random() * 25;
+                        await this.sleep(charDelay);
+                    }
+
+                    this.updateState({
+                        contactPicker: {
+                            isOpen: true,
+                            contacts: sampleContacts,
+                            searchQuery: currentQuery,
+                            selectedContact: null,
+                            isKeyboardOpen: true,
+                            pressedKey: null,
+                        }
+                    });
+                    await this.sleep(400);
+                    if (this.activeRunId !== runId) return;
+
+                    // 7. Click target contact item in filtered list
+                    this.updateState({
+                        contactPicker: {
+                            isOpen: true,
+                            contacts: sampleContacts,
+                            searchQuery: currentQuery,
+                            selectedContact: contact,
+                            isKeyboardOpen: false,
+                            pressedKey: null,
+                            isFingerClickingItem: true,
+                        }
+                    });
+                    this.playSound("click");
+                    await this.sleep(500);
+                    if (this.activeRunId !== runId) return;
+
+                    // 8. Click Send button
+                    this.updateState({
+                        contactPicker: {
+                            isOpen: true,
+                            contacts: sampleContacts,
+                            searchQuery: currentQuery,
+                            selectedContact: contact,
+                            isKeyboardOpen: false,
+                            pressedKey: null,
+                            isFingerClickingSend: true,
+                        }
+                    });
+                    this.playSound("sent");
+                    this.updateState({ sendRipple: true });
+                    await this.sleep(250);
+                    if (this.activeRunId !== runId) return;
+
+                    // 9. Close contact picker & Post Contact Card Message
+                    this.updateState({
+                        contactPicker: null,
+                        sendRipple: false,
+                    });
+
+                    const now = new Date();
+                    const timestamp = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+
+                    const contactMessage: Message = {
+                        id: `${script.id}-${i}`,
+                        sender: step.sender,
+                        type: "contact",
+                        content: step.content || contact.name,
+                        contactData: contact,
+                        timestamp,
+                        senderName: step.senderName,
+                        senderAvatarUrl: step.senderAvatarUrl,
+                        senderColor: step.senderColor,
+                        perspective: step.perspective,
+                    };
+
+                    this.updateState({
+                        messages: [...this.state.messages, contactMessage],
+                    });
+                    this.handlers.onMessageSent?.(contactMessage);
+                    await this.sleep(400);
                 }
             } else {
                 // Assistant step
@@ -799,7 +1008,9 @@ export class WhatsAppSimulatorEngine {
                     caption: step.caption,
                     audioDuration: step.audioDuration || "0:14",
                     audioUrl: step.audioUrl,
+                    linkPreview: step.linkPreview,
                     perspective: step.perspective,
+                    contactData: step.contactData || (step.type === "contact" ? { name: step.content || "Carlos Rodríguez", phone: "+52 55 9876 5432" } : undefined),
                 };
 
                 this.updateState({

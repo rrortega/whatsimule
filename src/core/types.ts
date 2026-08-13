@@ -1,7 +1,16 @@
 import React from "react";
 
 export type MessageSender = "user" | "contact" | "resident" | "assistant" | "asistenxa";
-export type MessageType = "text" | "image" | "audio";
+export type MessageType = "text" | "image" | "audio" | "contact";
+
+export interface ContactCardData {
+    name: string;
+    phone?: string;
+    avatarUrl?: string;
+    organization?: string;
+    email?: string;
+    vCardUrl?: string;
+}
 
 export interface LinkPreviewData {
     url: string;
@@ -36,6 +45,7 @@ export interface Message {
     audioUrl?: string;
     linkPreview?: LinkPreviewData;
     perspective?: StepPerspective;
+    contactData?: ContactCardData;
 }
 
 export interface IncomingCallData {
@@ -70,6 +80,7 @@ export interface ScriptStep {
     action?: "tap_avatar" | "view_avatar" | "close_avatar" | "incoming_call" | "push_notification" | string; // Optional interactive step action
     callData?: IncomingCallData;
     notificationData?: PushNotificationData;
+    contactData?: ContactCardData;
 }
 
 export interface ChatScript {

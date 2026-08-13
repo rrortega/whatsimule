@@ -13,6 +13,7 @@ export type {
     SimulatorEventHandlers,
     WhatSimuleRef,
     SoundType,
+    ContactCardData,
 } from "./core/types";
 
 // React exports

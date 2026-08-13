@@ -35,6 +35,7 @@ Prueba el playground interactivo y personaliza todas las opciones en tiempo real
 - 🎨 **Totalmente Personalizable**: Control directo de dimensiones (ancho y alto), patrones de fondo (Doodle, Puntos o imagen propia), avatares, nombres y pasos de la conversación.
 - 🎛️ **Perspectiva & Inclinación 3D**: Efectos sutiles de inclinación 3D al hacer hover o scroll, auto-scroll fluido a mensajes recientes y control de velocidad.
 - 🔊 **Sin Archivos de Sonido Externos**: Síntesis de sonido nativa con Web Audio API para pulsación de teclas, envío de mensajes y tono de recepción. Cero dependencias mp3 pesadas.
+- 📇 **Compartición de Contactos & Menú de Adjuntos de 8 Opciones**: Flujo completo de envío de contactos (`type: "contact"`). Hoja inferior deslizable idéntica a WhatsApp (Galería, Cámara, Ubicación, Contacto, Documento, Encuesta, Evento, Imágenes de IA), modal selector con teclado para búsqueda filtrada, avatares (`avatarUrl`), botón flotante de envío y tarjetas de contacto oficial (Contact Card).
 - 📦 **Listo para Producción**: Código optimizado en TypeScript con distribución dual en formatos ESM y CJS.
 
 ---

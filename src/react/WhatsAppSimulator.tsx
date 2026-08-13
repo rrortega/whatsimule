@@ -11,6 +11,8 @@ import { ScriptSelector } from "./components/ScriptSelector";
 import { AvatarModal } from "./components/AvatarModal";
 import { IncomingCallModal } from "./components/IncomingCallModal";
 import { PushNotificationBanner } from "./components/PushNotificationBanner";
+import { AttachmentMenu } from "./components/AttachmentMenu";
+import { ContactPickerModal } from "./components/ContactPickerModal";
 
 export interface WhatSimuleProps extends WhatsAppSimulatorOptions, SimulatorEventHandlers {
     scripts?: Record<string, ChatScript>;
@@ -185,7 +187,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
 
     const captionTextareaRef = useRef<HTMLTextAreaElement>(null);
 
-    // Auto-scroll internal chat container to bottom on new messages, typing, or keyboard open
+    // Auto-scroll internal chat container to bottom on new messages, typing, keyboard open, or attachment menu open
     useEffect(() => {
         const scrollToBottom = () => {
             if (chatBodyRef.current) {
@@ -198,7 +200,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
 
         scrollToBottom();
 
-        // Additional timers ensure chat auto-scrolls cleanly as keyboard finishes opening
+        // Additional timers ensure chat auto-scrolls cleanly as keyboard or menu finishes opening
         const timer1 = setTimeout(scrollToBottom, 60);
         const timer2 = setTimeout(scrollToBottom, 180);
 
@@ -206,7 +208,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
             clearTimeout(timer1);
             clearTimeout(timer2);
         };
-    }, [state.messages, state.isTyping, state.isKeyboardOpen, state.inputValue]);
+    }, [state.messages, state.isTyping, state.isKeyboardOpen, state.inputValue, state.attachmentMenu?.isOpen]);
 
     // Auto-expand caption textarea in media preview screen
     useEffect(() => {
@@ -500,6 +502,14 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             locale={locale}
                         />
 
+                        {/* Contact Selection Modal */}
+                        <ContactPickerModal
+                            pickerState={state.contactPicker}
+                            locale={locale}
+                            theme={theme}
+                            deviceStyle={deviceStyle}
+                        />
+
                         {/* Chat Messages Body */}
                         <div
                             ref={chatBodyRef}
@@ -565,9 +575,17 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             inputValue={state.inputValue}
                             attachedImage={state.attachedImage}
                             audioRecording={state.audioRecording}
+                            attachmentMenu={state.attachmentMenu}
                             sendRipple={state.sendRipple}
                             placeholder={labels.inputPlaceholder || (locale === "es" ? "Escribe un mensaje" : "Type a message")}
                             isKeyboardOpen={state.isKeyboardOpen}
+                        />
+
+                        {/* Attachment Options Menu Panel (occupies bottom panel space under input bar) */}
+                        <AttachmentMenu
+                            menuState={state.attachmentMenu}
+                            locale={locale}
+                            theme={theme}
                         />
 
                         {/* Interactive Virtual Mobile Keyboard */}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCheck, Play, Pause, Mic, X } from "lucide-react";
+import { CheckCheck, Play, Pause, Mic, X, User, MessageSquare } from "lucide-react";
 import { Message } from "../../core/types";
 import { LinkPreviewBadge } from "./LinkPreviewBadge";
 
@@ -270,6 +270,35 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                                 <em>"{message.content}"</em>
                             </div>
                         )}
+                    </div>
+                ) : message.type === "contact" ? (
+                    <div className="rws-contact-card-box">
+                        <div className="rws-contact-card-header">
+                            <div className="rws-contact-card-avatar" style={{ backgroundColor: message.contactData?.avatarUrl ? "transparent" : "#00a884" }}>
+                                {message.contactData?.avatarUrl ? (
+                                    <img src={message.contactData.avatarUrl} alt={message.contactData.name || message.content} />
+                                ) : (
+                                    <User size={24} color="#ffffff" />
+                                )}
+                            </div>
+                            <div className="rws-contact-card-info">
+                                <div className="rws-contact-card-name">
+                                    {message.contactData?.name || message.content || "Contacto"}
+                                </div>
+                                <div className="rws-contact-card-sub">
+                                    {message.contactData?.organization || message.contactData?.phone || "+52 55 9876 5432"}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="rws-contact-card-divider" />
+
+                        <div className="rws-contact-card-actions">
+                            <button type="button" className="rws-contact-card-btn" aria-label="Enviar mensaje">
+                                <MessageSquare size={14} />
+                                <span>Mensaje</span>
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <div className="rws-text-content">

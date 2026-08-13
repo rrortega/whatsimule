@@ -1820,6 +1820,23 @@
               <p class="script-card-desc">Llamada colgada, vista de perfil, mensaje y transferencia en NuBank.</p>
             </div>
           </div>
+
+          <div class="script-card-item" data-value="contact_share">
+            <div class="script-card-icon" style="background: rgba(0, 168, 132, 0.15); color: #00a884;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div class="script-card-content">
+              <div class="script-card-header">
+                <span class="script-card-title">📇 Compartir Contacto (Jon Snow)</span>
+                <span class="script-card-tag" style="background: rgba(0, 168, 132, 0.2); color: #25d366;">Contacto & Adjuntos</span>
+              </div>
+              <p class="script-card-desc">Pedido de contacto de Jon Snow, menú de adjuntos, selector y confirmación con emoji.</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2656,7 +2673,7 @@
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
             </svg>
           </div>
-          <h3 class="feature-title">📞 Llamadas Entrantes (iOS & Android)</h3>
+          <h3 class="feature-title">Llamadas Entrantes (iOS & Android)</h3>
           <p class="feature-desc">Simula la experiencia de llamadas en pantalla completa. Muestra dos botones iniciales (Rechazar/Aceptar) con entrada zoomIn, toque animado, despliegue de cápsula translúcida y arrastre horizontal (swipe) para colgar.</p>
         </div>
 
@@ -2668,7 +2685,7 @@
               <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
             </svg>
           </div>
-          <h3 class="feature-title">🔔 Notificaciones Push Interactivas</h3>
+          <h3 class="feature-title">Notificaciones Push Interactivas</h3>
           <p class="feature-desc">Simula notificaciones push del sistema en tiempo real con alertas de sonido, diseño glassmorphism en iOS / Material en Android y gestos táctiles animados de toque o descarte.</p>
         </div>
 
@@ -2681,8 +2698,31 @@
               <line x1="12" y1="4" x2="12" y2="20" />
             </svg>
           </div>
-          <h3 class="feature-title">💻 Bloques de Código & Markdown</h3>
+          <h3 class="feature-title">Bloques de Código & Markdown</h3>
           <p class="feature-desc">Renderizado de mensajes en formato de código monoespaciado ```código```, preservación de saltos de línea, viñetas de lista (- / *), negritas/cursivas y simulación de borrado de borrador (eraseBeforeSend).</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Tarjetas & Selección de Contactos</h3>
+          <p class="feature-desc">Flujo completo de compartición de contactos: apertura del selector, filtrado dinámico mediante búsqueda con teclado y renderizado de la tarjeta de contacto oficial (Contact Card).</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Menú de Adjuntos de 8 Opciones</h3>
+          <p class="feature-desc">Hoja inferior deslizable con las 8 opciones nativas de WhatsApp (Galería, Cámara, Ubicación, Contacto, Documento, Encuesta, Evento e Imágenes de IA) con gestos táctiles animados.</p>
         </div>
       </div>
 
@@ -2826,6 +2866,49 @@
               avatarUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f7/Nu_logo.svg",
               action: "dismiss"
             }
+          }
+        ]
+      },
+      contact_share: {
+        id: "contact_share",
+        label: "📇 Compartir Contacto",
+        description: "Pedido de contacto de Jon Snow, menú de adjuntos, selector interactivo y confirmación con emoji",
+        steps: [
+          {
+            sender: "assistant",
+            type: "text",
+            content: "Hola! Me podrías pasar el contacto de Jon Snow por favor?",
+            delay: 1000
+          },
+          {
+            sender: "user",
+            type: "text",
+            content: "Dame un chance, ahora te lo envío",
+            delay: 1200
+          },
+          {
+            sender: "user",
+            type: "contact",
+            content: "Jon Snow",
+            delay: 1400,
+            contactData: {
+              name: "Jon Snow",
+              phone: "+52 55 7000 1234",
+              organization: "Guardia de la Noche",
+              avatarUrl: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&auto=format&fit=crop&q=80"
+            }
+          },
+          {
+            sender: "assistant",
+            type: "text",
+            content: "Muchas gracias!",
+            delay: 1600
+          },
+          {
+            sender: "user",
+            type: "text",
+            content: "👍",
+            delay: 1000
           }
         ]
       },

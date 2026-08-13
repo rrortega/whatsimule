@@ -1,11 +1,12 @@
 import React, { useRef, useEffect } from "react";
 import { Smile, Paperclip, Mic, Send, Trash2, Pause } from "lucide-react";
-import { AudioRecordingState } from "../../core/simulator-engine";
+import { AudioRecordingState, AttachmentMenuState } from "../../core/simulator-engine";
 
 interface ChatInputProps {
     inputValue: string;
     attachedImage: string | null;
     audioRecording?: AudioRecordingState | null;
+    attachmentMenu?: AttachmentMenuState | null;
     sendRipple: boolean;
     placeholder?: string;
     isKeyboardOpen?: boolean;
@@ -15,6 +16,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     inputValue,
     attachedImage,
     audioRecording,
+    attachmentMenu,
     sendRipple,
     placeholder = "Escribe un mensaje",
     isKeyboardOpen = false,
@@ -119,8 +121,14 @@ export const ChatInput: React.FC<ChatInputProps> = ({
                         </div>
                     )}
                 </div>
-                <button type="button" className="rws-input-icon-btn" aria-label="Adjuntar">
+                <button type="button" className="rws-input-icon-btn" style={{ position: "relative" }} aria-label="Adjuntar">
                     <Paperclip size={20} className="rws-input-icon" />
+                    {attachmentMenu?.isFingerClickingAttach && (
+                        <div className="rws-finger-indicator" style={{ position: "absolute", inset: 0 }}>
+                            <span className="rws-finger-circle rws-finger-pressing" />
+                            <span className="rws-finger-wave" />
+                        </div>
+                    )}
                 </button>
             </div>
             <button
