@@ -67,10 +67,18 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
     className = "",
     style,
     onMessageSent,
+    onScriptStart,
+    onStart,
     onScriptComplete,
     onComplete,
+    onEnd,
     onScriptChange,
     onSound,
+    onContactShareStart,
+    onContactShareEnd,
+    onCallStart,
+    onCallEnd,
+    onHangup,
 }, ref) => {
     const activeScripts = customScripts || scripts;
     const containerRef = useRef<HTMLDivElement>(null);
@@ -79,15 +87,196 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
 
     const actualScrollTilt = enable3DTilt !== undefined ? enable3DTilt : enableScrollTilt;
 
+    const handleScriptStart = (scriptId: string) => {
+        onScriptStart?.(scriptId);
+        onStart?.(scriptId);
+        if (typeof window !== "undefined") {
+            try {
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:start", { detail: { scriptId }, bubbles: true, composed: true })
+                );
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:scriptstart", { detail: { scriptId }, bubbles: true, composed: true })
+                );
+            } catch {}
+        }
+        if (containerRef.current) {
+            const elem = containerRef.current as any;
+            if (typeof elem.onStart === "function") elem.onStart(scriptId);
+            if (typeof elem.onScriptStart === "function") elem.onScriptStart(scriptId);
+            containerRef.current.dispatchEvent(
+                new CustomEvent("start", { detail: { scriptId }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("scriptstart", { detail: { scriptId }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("whatsimule:start", { detail: { scriptId }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("whatsimule:scriptstart", { detail: { scriptId }, bubbles: true, composed: true })
+            );
+        }
+    };
+
     const handleScriptComplete = (scriptId: string) => {
         onScriptComplete?.(scriptId);
         onComplete?.(scriptId);
+        onEnd?.(scriptId);
+        if (typeof window !== "undefined") {
+            try {
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:complete", { detail: { scriptId }, bubbles: true, composed: true })
+                );
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:end", { detail: { scriptId }, bubbles: true, composed: true })
+                );
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:scriptcomplete", { detail: { scriptId }, bubbles: true, composed: true })
+                );
+            } catch {}
+        }
         if (containerRef.current) {
+            const elem = containerRef.current as any;
+            if (typeof elem.onComplete === "function") elem.onComplete(scriptId);
+            if (typeof elem.onScriptComplete === "function") elem.onScriptComplete(scriptId);
+            if (typeof elem.onEnd === "function") elem.onEnd(scriptId);
             containerRef.current.dispatchEvent(
                 new CustomEvent("complete", { detail: { scriptId }, bubbles: true, composed: true })
             );
             containerRef.current.dispatchEvent(
+                new CustomEvent("end", { detail: { scriptId }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
                 new CustomEvent("scriptcomplete", { detail: { scriptId }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("whatsimule:complete", { detail: { scriptId }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("whatsimule:end", { detail: { scriptId }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("whatsimule:scriptcomplete", { detail: { scriptId }, bubbles: true, composed: true })
+            );
+        }
+    };
+
+    const handleContactShareStart = (contactData?: any) => {
+        onContactShareStart?.(contactData);
+        if (typeof window !== "undefined") {
+            try {
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:contact-share-start", { detail: { contactData }, bubbles: true, composed: true })
+                );
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:contact_share_start", { detail: { contactData }, bubbles: true, composed: true })
+                );
+            } catch {}
+        }
+        if (containerRef.current) {
+            const elem = containerRef.current as any;
+            if (typeof elem.onContactShareStart === "function") elem.onContactShareStart(contactData);
+            containerRef.current.dispatchEvent(
+                new CustomEvent("contactsharestart", { detail: { contactData }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("contact-share-start", { detail: { contactData }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("whatsimule:contact-share-start", { detail: { contactData }, bubbles: true, composed: true })
+            );
+        }
+    };
+
+    const handleContactShareEnd = (contactData?: any) => {
+        onContactShareEnd?.(contactData);
+        if (typeof window !== "undefined") {
+            try {
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:contact-share-end", { detail: { contactData }, bubbles: true, composed: true })
+                );
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:contact_share_end", { detail: { contactData }, bubbles: true, composed: true })
+                );
+            } catch {}
+        }
+        if (containerRef.current) {
+            const elem = containerRef.current as any;
+            if (typeof elem.onContactShareEnd === "function") elem.onContactShareEnd(contactData);
+            containerRef.current.dispatchEvent(
+                new CustomEvent("contactshareend", { detail: { contactData }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("contact-share-end", { detail: { contactData }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("whatsimule:contact-share-end", { detail: { contactData }, bubbles: true, composed: true })
+            );
+        }
+    };
+
+    const handleCallStart = (callData?: any) => {
+        onCallStart?.(callData);
+        if (typeof window !== "undefined") {
+            try {
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:call-start", { detail: { callData }, bubbles: true, composed: true })
+                );
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:call_start", { detail: { callData }, bubbles: true, composed: true })
+                );
+            } catch {}
+        }
+        if (containerRef.current) {
+            const elem = containerRef.current as any;
+            if (typeof elem.onCallStart === "function") elem.onCallStart(callData);
+            containerRef.current.dispatchEvent(
+                new CustomEvent("callstart", { detail: { callData }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("call-start", { detail: { callData }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("whatsimule:call-start", { detail: { callData }, bubbles: true, composed: true })
+            );
+        }
+    };
+
+    const handleCallEnd = () => {
+        onCallEnd?.();
+        onHangup?.();
+        if (typeof window !== "undefined") {
+            try {
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:call-end", { detail: {}, bubbles: true, composed: true })
+                );
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:call_end", { detail: {}, bubbles: true, composed: true })
+                );
+                window.dispatchEvent(
+                    new CustomEvent("whatsimule:hangup", { detail: {}, bubbles: true, composed: true })
+                );
+            } catch {}
+        }
+        if (containerRef.current) {
+            const elem = containerRef.current as any;
+            if (typeof elem.onCallEnd === "function") elem.onCallEnd();
+            if (typeof elem.onHangup === "function") elem.onHangup();
+            containerRef.current.dispatchEvent(
+                new CustomEvent("callend", { detail: {}, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("call-end", { detail: {}, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("hangup", { detail: {}, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("whatsimule:call-end", { detail: {}, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("whatsimule:hangup", { detail: {}, bubbles: true, composed: true })
             );
         }
     };
@@ -127,7 +316,21 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
             labels,
             onSound: handleSound,
         },
-        { onMessageSent, onScriptComplete: handleScriptComplete, onComplete, onScriptChange, onSound: handleSound }
+        {
+            onMessageSent,
+            onScriptStart: handleScriptStart,
+            onStart: handleScriptStart,
+            onScriptComplete: handleScriptComplete,
+            onComplete: handleScriptComplete,
+            onEnd: handleScriptComplete,
+            onScriptChange,
+            onSound: handleSound,
+            onContactShareStart: handleContactShareStart,
+            onContactShareEnd: handleContactShareEnd,
+            onCallStart: handleCallStart,
+            onCallEnd: handleCallEnd,
+            onHangup: handleCallEnd,
+        }
     );
     const { state, activeScriptId, startScript, restartCurrentScript } = sim;
 

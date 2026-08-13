@@ -127,6 +127,10 @@ export class WhatsAppSimulatorEngine {
         };
     }
 
+    public setHandlers(handlers: SimulatorEventHandlers): void {
+        this.handlers = { ...this.handlers, ...handlers };
+    }
+
     public playSound(type: SoundType): void {
         if (this.options.enableSound === false) return;
         if (type === "key" && this.options.soundTyping === false) return;
@@ -317,6 +321,8 @@ export class WhatsAppSimulatorEngine {
         });
 
         this.handlers.onScriptChange?.(scriptId);
+        this.handlers.onScriptStart?.(scriptId);
+        this.handlers.onStart?.(scriptId);
 
         // Progress timer
         const stepTime = 50;
@@ -422,6 +428,8 @@ export class WhatsAppSimulatorEngine {
                     }
                 });
 
+                this.handlers.onCallStart?.({ callerName, callerAvatarUrl, callType });
+
                 await this.sleep(1200);
                 if (this.activeRunId !== runId) return;
 
@@ -443,6 +451,8 @@ export class WhatsAppSimulatorEngine {
                 // Call Declined & Screen Closed
                 this.playSound("hangup");
                 this.updateState({ incomingCall: null });
+                this.handlers.onCallEnd?.();
+                this.handlers.onHangup?.();
                 await this.sleep(450);
                 continue;
             }
@@ -814,6 +824,8 @@ export class WhatsAppSimulatorEngine {
                         { name: "Sofía Mendoza", phone: "+52 55 8899 0011", avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&auto=format&fit=crop&q=80", organization: "Soporte Técnico" },
                     ].sort((a, b) => a.name.localeCompare(b.name));
 
+                    this.handlers.onContactShareStart?.(contact);
+
                     // 1. Click paperclip attachment button
                     this.updateState({
                         attachmentMenu: {
@@ -955,6 +967,7 @@ export class WhatsAppSimulatorEngine {
                         contactPicker: null,
                         sendRipple: false,
                     });
+                    this.handlers.onContactShareEnd?.(contact);
 
                     const now = new Date();
                     const timestamp = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
@@ -1036,6 +1049,7 @@ export class WhatsAppSimulatorEngine {
             this.updateState({ isComplete: true });
             this.handlers.onScriptComplete?.(script.id);
             this.handlers.onComplete?.(script.id);
+            this.handlers.onEnd?.(script.id);
         }
     }
 

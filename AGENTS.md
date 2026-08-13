@@ -247,25 +247,59 @@ Register `WhatSimuleElement` as a Web Component for non-React projects:
 | `locale` | `"es" \| "en"` | `"es"` | Built-in i18n label set |
 | `labels` | `object` | `{}` | Custom string overrides for UI labels |
 | `onMessageSent` | `(message: Message) => void` | `undefined` | Callback fired when a message renders |
-| `onScriptComplete` / `onComplete` | `(scriptId: string) => void` | `undefined` | Callback fired when script finishes playback (all messages rendered) |
+| `onScriptStart` / `onStart` | `(scriptId: string) => void` | `undefined` | Callback fired when a simulation script starts playing |
+| `onScriptComplete` / `onComplete` / `onEnd` | `(scriptId: string) => void` | `undefined` | Callback fired when script finishes playback (all messages rendered) |
 | `onScriptChange` | `(scriptId: string) => void` | `undefined` | Callback fired when user switches active script |
 | `onSound` | `(type: SoundType) => void` | `undefined` | Callback fired when any sound effect plays (`"key" \| "sent" \| "receive" \| "push" \| "call"`) |
+| `onContactShareStart` | `(contactData?: any) => void` | `undefined` | Callback fired when contact sharing interactive flow starts |
+| `onContactShareEnd` | `(contactData?: any) => void` | `undefined` | Callback fired when contact sharing interactive flow completes |
+| `onCallStart` | `(callData?: any) => void` | `undefined` | Callback fired when an incoming or outgoing call starts |
+| `onCallEnd` / `onHangup` | `() => void` | `undefined` | Callback fired when a call ends or hangs up |
 
 ---
 
-### 🔊 Sound Events (`whatsimule:sound`)
+### 🔊 Custom Events (`whatsimule:*`)
 
-Whenever any procedural sound effect is played, a `CustomEvent` is dispatched globally on `window` and locally on the simulator DOM element:
+Whenever key lifecycle milestones or simulation interactions occur, `CustomEvent` instances are dispatched globally on `window` and locally on the simulator DOM element:
 
 ```js
-window.addEventListener('whatsimule:sound', (event) => {
-  console.log('Sound played:', event.detail.type); // 'key' | 'sent' | 'receive' | 'push' | 'call'
+// Simulation Lifecycle Events
+window.addEventListener('whatsimule:start', (event) => {
+  console.log('Simulation started:', event.detail.scriptId);
 });
 
-// Or handle on DOM element / Web Component:
-document.getElementById('whatsimule').onSound = (type) => {
-  console.log('Element sound trigger:', type);
-};
+window.addEventListener('whatsimule:complete', (event) => {
+  console.log('Simulation completed:', event.detail.scriptId);
+});
+
+// Contact Sharing Flow Events
+window.addEventListener('whatsimule:contact-share-start', (event) => {
+  console.log('Contact share flow started:', event.detail.contactData);
+});
+
+window.addEventListener('whatsimule:contact-share-end', (event) => {
+  console.log('Contact share flow completed:', event.detail.contactData);
+});
+
+// Calling Flow Events
+window.addEventListener('whatsimule:call-start', (event) => {
+  console.log('Call started:', event.detail.callData);
+});
+
+window.addEventListener('whatsimule:call-end', (event) => {
+  console.log('Call ended / hung up');
+});
+
+// Sound Events
+window.addEventListener('whatsimule:sound', (event) => {
+  console.log('Sound played:', event.detail.type); // 'key' | 'sent' | 'receive' | 'push' | 'call' | 'hangup'
+});
+
+// Or handle directly on DOM element / Web Component:
+const sim = document.getElementById('whatsimule');
+sim.addEventListener('whatsimule:start', (e) => console.log('Started', e.detail));
+sim.addEventListener('whatsimule:complete', (e) => console.log('Completed', e.detail));
+sim.onSound = (type) => console.log('Sound:', type);
 ```
 
 ### 🕹️ Imperative Remote Control Methods (`WhatSimuleRef` / DOM Element)

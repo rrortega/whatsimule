@@ -35,6 +35,12 @@ export function useWhatsAppSimulator(
         }
     }, [scripts]);
 
+    useEffect(() => {
+        if (engineRef.current && handlers) {
+            engineRef.current.setHandlers(handlers);
+        }
+    }, [handlers]);
+
     const activeScriptId = state.activeScriptId || Object.keys(scripts)[0] || "";
 
     const startScript = (scriptId: string, startIndex?: number) => {

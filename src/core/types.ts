@@ -155,14 +155,34 @@ export interface WhatsAppSimulatorOptions {
         trackerLinkText?: string;
     };
     onSound?: (type: SoundType) => void;
+    onMessageSent?: (message: Message) => void;
+    onScriptStart?: (scriptId: string) => void;
+    onStart?: (scriptId: string) => void;
+    onScriptComplete?: (scriptId: string) => void;
+    onComplete?: (scriptId: string) => void;
+    onEnd?: (scriptId: string) => void;
+    onScriptChange?: (scriptId: string) => void;
+    onContactShareStart?: (contactData?: any) => void;
+    onContactShareEnd?: (contactData?: any) => void;
+    onCallStart?: (callData?: any) => void;
+    onCallEnd?: () => void;
+    onHangup?: () => void;
 }
 
 export interface SimulatorEventHandlers {
     onMessageSent?: (message: Message) => void;
+    onScriptStart?: (scriptId: string) => void;
+    onStart?: (scriptId: string) => void;
     onScriptComplete?: (scriptId: string) => void;
     onComplete?: (scriptId: string) => void;
+    onEnd?: (scriptId: string) => void;
     onScriptChange?: (scriptId: string) => void;
     onSound?: (type: SoundType) => void;
+    onContactShareStart?: (contactData?: any) => void;
+    onContactShareEnd?: (contactData?: any) => void;
+    onCallStart?: (callData?: any) => void;
+    onCallEnd?: () => void;
+    onHangup?: () => void;
 }
 
 export interface WhatSimuleRef {

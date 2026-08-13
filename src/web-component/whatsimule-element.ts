@@ -44,9 +44,89 @@ export class WhatSimuleElement extends HTMLElement {
         };
 
         const handlers = {
+            onScriptStart: (scriptId: string) => {
+                this.dispatchEvent(new CustomEvent("start", { detail: { scriptId }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("scriptstart", { detail: { scriptId }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("whatsimule:start", { detail: { scriptId }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("whatsimule:scriptstart", { detail: { scriptId }, bubbles: true, composed: true }));
+                if (typeof window !== "undefined") {
+                    try {
+                        window.dispatchEvent(new CustomEvent("whatsimule:start", { detail: { scriptId }, bubbles: true, composed: true }));
+                        window.dispatchEvent(new CustomEvent("whatsimule:scriptstart", { detail: { scriptId }, bubbles: true, composed: true }));
+                    } catch {}
+                }
+                if (typeof (this as any).onStart === "function") (this as any).onStart(scriptId);
+                if (typeof (this as any).onScriptStart === "function") (this as any).onScriptStart(scriptId);
+            },
             onScriptComplete: (scriptId: string) => {
                 this.dispatchEvent(new CustomEvent("complete", { detail: { scriptId }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("end", { detail: { scriptId }, bubbles: true, composed: true }));
                 this.dispatchEvent(new CustomEvent("scriptcomplete", { detail: { scriptId }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("whatsimule:complete", { detail: { scriptId }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("whatsimule:end", { detail: { scriptId }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("whatsimule:scriptcomplete", { detail: { scriptId }, bubbles: true, composed: true }));
+                if (typeof window !== "undefined") {
+                    try {
+                        window.dispatchEvent(new CustomEvent("whatsimule:complete", { detail: { scriptId }, bubbles: true, composed: true }));
+                        window.dispatchEvent(new CustomEvent("whatsimule:end", { detail: { scriptId }, bubbles: true, composed: true }));
+                        window.dispatchEvent(new CustomEvent("whatsimule:scriptcomplete", { detail: { scriptId }, bubbles: true, composed: true }));
+                    } catch {}
+                }
+                if (typeof (this as any).onComplete === "function") (this as any).onComplete(scriptId);
+                if (typeof (this as any).onScriptComplete === "function") (this as any).onScriptComplete(scriptId);
+                if (typeof (this as any).onEnd === "function") (this as any).onEnd(scriptId);
+            },
+            onContactShareStart: (contactData?: any) => {
+                this.dispatchEvent(new CustomEvent("contactsharestart", { detail: { contactData }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("contact-share-start", { detail: { contactData }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("whatsimule:contact-share-start", { detail: { contactData }, bubbles: true, composed: true }));
+                if (typeof window !== "undefined") {
+                    try {
+                        window.dispatchEvent(new CustomEvent("whatsimule:contact-share-start", { detail: { contactData }, bubbles: true, composed: true }));
+                        window.dispatchEvent(new CustomEvent("whatsimule:contact_share_start", { detail: { contactData }, bubbles: true, composed: true }));
+                    } catch {}
+                }
+                if (typeof (this as any).onContactShareStart === "function") (this as any).onContactShareStart(contactData);
+            },
+            onContactShareEnd: (contactData?: any) => {
+                this.dispatchEvent(new CustomEvent("contactshareend", { detail: { contactData }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("contact-share-end", { detail: { contactData }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("whatsimule:contact-share-end", { detail: { contactData }, bubbles: true, composed: true }));
+                if (typeof window !== "undefined") {
+                    try {
+                        window.dispatchEvent(new CustomEvent("whatsimule:contact-share-end", { detail: { contactData }, bubbles: true, composed: true }));
+                        window.dispatchEvent(new CustomEvent("whatsimule:contact_share_end", { detail: { contactData }, bubbles: true, composed: true }));
+                    } catch {}
+                }
+                if (typeof (this as any).onContactShareEnd === "function") (this as any).onContactShareEnd(contactData);
+            },
+            onCallStart: (callData?: any) => {
+                this.dispatchEvent(new CustomEvent("callstart", { detail: { callData }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("call-start", { detail: { callData }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("whatsimule:call-start", { detail: { callData }, bubbles: true, composed: true }));
+                if (typeof window !== "undefined") {
+                    try {
+                        window.dispatchEvent(new CustomEvent("whatsimule:call-start", { detail: { callData }, bubbles: true, composed: true }));
+                        window.dispatchEvent(new CustomEvent("whatsimule:call_start", { detail: { callData }, bubbles: true, composed: true }));
+                    } catch {}
+                }
+                if (typeof (this as any).onCallStart === "function") (this as any).onCallStart(callData);
+            },
+            onCallEnd: () => {
+                this.dispatchEvent(new CustomEvent("callend", { detail: {}, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("call-end", { detail: {}, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("hangup", { detail: {}, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("whatsimule:call-end", { detail: {}, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("whatsimule:hangup", { detail: {}, bubbles: true, composed: true }));
+                if (typeof window !== "undefined") {
+                    try {
+                        window.dispatchEvent(new CustomEvent("whatsimule:call-end", { detail: {}, bubbles: true, composed: true }));
+                        window.dispatchEvent(new CustomEvent("whatsimule:call_end", { detail: {}, bubbles: true, composed: true }));
+                        window.dispatchEvent(new CustomEvent("whatsimule:hangup", { detail: {}, bubbles: true, composed: true }));
+                    } catch {}
+                }
+                if (typeof (this as any).onCallEnd === "function") (this as any).onCallEnd();
+                if (typeof (this as any).onHangup === "function") (this as any).onHangup();
             },
             onMessageSent: (message: any) => {
                 this.dispatchEvent(new CustomEvent("messagesent", { detail: { message }, bubbles: true, composed: true }));
