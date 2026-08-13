@@ -243,8 +243,18 @@ export class WhatsAppSimulatorEngine {
             audioDuration: step.audioDuration || "0:14",
             audioUrl: step.audioUrl,
             linkPreview: step.linkPreview,
-            perspective: step.perspective,
-            contactData: step.contactData || (step.type === "contact" ? { name: step.content || "Contacto", phone: "+52 55 9876 5432" } : undefined),
+            contactData: step.contactData
+                ? {
+                    ...step.contactData,
+                    avatarUrl: step.contactData.avatarUrl || "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&auto=format&fit=crop&q=80",
+                }
+                : (step.type === "contact"
+                    ? {
+                        name: step.content || "Contacto",
+                        phone: "+52 55 9876 5432",
+                        avatarUrl: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&auto=format&fit=crop&q=80",
+                    }
+                    : undefined),
         };
     }
 
@@ -789,14 +799,15 @@ export class WhatsAppSimulatorEngine {
                     await this.sleep(400);
                 } else if (step.type === "contact") {
                     // Contact send flow: Attach menu -> Contact icon -> Contact Picker -> Search & Filter -> Click Contact -> Send
-                    const contact: ContactCardData = step.contactData || {
-                        name: step.content || "Carlos Rodríguez",
-                        phone: "+52 55 9876 5432",
-                        organization: "ChambaPro AI",
+                    const contact: ContactCardData = {
+                        name: step.contactData?.name || step.content || "Jon Snow",
+                        phone: step.contactData?.phone || "+52 55 9876 5432",
+                        organization: step.contactData?.organization || "ChambaPro AI",
+                        avatarUrl: step.contactData?.avatarUrl || "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&auto=format&fit=crop&q=80",
                     };
 
                     const sampleContacts: ContactCardData[] = [
-                        { name: contact.name, phone: contact.phone || "+52 55 9876 5432", avatarUrl: contact.avatarUrl || "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&auto=format&fit=crop&q=80", organization: contact.organization },
+                        { name: contact.name, phone: contact.phone, avatarUrl: contact.avatarUrl, organization: contact.organization },
                         { name: "Ana Martínez", phone: "+52 55 1122 3344", avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80", organization: "Diseño UI/UX" },
                         { name: "Dr. Fernando Ruiz", phone: "+52 55 5566 7788", avatarUrl: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=200&auto=format&fit=crop&q=80", organization: "Medicina General" },
                         { name: "Laura Gómez", phone: "+52 55 4433 2211", avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop&q=80", organization: "Logística" },

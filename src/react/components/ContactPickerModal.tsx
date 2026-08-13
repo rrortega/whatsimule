@@ -92,7 +92,7 @@ export const ContactPickerModal: React.FC<ContactPickerModalProps> = ({
                                 key={contact.name}
                                 className={`rws-contact-item-row ${isTargetSelected ? "selected" : ""}`}
                             >
-                                <div className="rws-contact-item-avatar" style={{ backgroundColor: bg }}>
+                                <div className="rws-contact-item-avatar" style={{ backgroundColor: contact.avatarUrl ? "transparent" : bg }}>
                                     {contact.avatarUrl ? (
                                         <img src={contact.avatarUrl} alt={contact.name} />
                                     ) : (
