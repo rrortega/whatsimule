@@ -435,9 +435,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             </div>
                         ) : null}
 
-                        {/* Phone Inner Screen Layer */}
-                        <div className="rws-screen-content">
-                        {/* Header bar */}
+                        {/* WhatsApp Header & Status Bar */}
                         <ChatHeader
                             contactName={contactName}
                             assistantName={assistantName}
@@ -671,7 +669,6 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                                 <RotateCcw size={16} />
                             </button>
                         )}
-                    </div>
                     </div>
                 </motion.div>
             </div>
