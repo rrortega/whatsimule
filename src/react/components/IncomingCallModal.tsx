@@ -106,15 +106,15 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                             }}
                             transition={{ duration: 0.3 }}
                         >
-                            {/* Left Red Decline Knob */}
+                            {/* Left Red Decline Knob: animates left (parent %) not x (element %) */}
                             <motion.div
                                 className="rws-ios-slide-knob rws-ios-knob-decline"
                                 animate={{
-                                    x: hasStartedSlide ? "calc(100% - 58px)" : 0,
+                                    left: hasStartedSlide ? "calc(100% - 53px)" : "5px",
                                     scale: isFingerDeclineActive && !hasStartedSlide ? 1.15 : 1,
                                 }}
                                 transition={{
-                                    x: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] },
+                                    left: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] },
                                     scale: { duration: 0.2, ease: "easeOut" },
                                 }}
                             >
@@ -207,11 +207,11 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                             <motion.div
                                 className="rws-android-slide-knob rws-android-knob-decline"
                                 animate={{
-                                    x: hasStartedSlide ? "calc(100% - 58px)" : 0,
+                                    left: hasStartedSlide ? "calc(100% - 53px)" : "5px",
                                     scale: isFingerDeclineActive && !hasStartedSlide ? 1.15 : 1,
                                 }}
                                 transition={{
-                                    x: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] },
+                                    left: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] },
                                     scale: { duration: 0.2, ease: "easeOut" },
                                 }}
                             >
