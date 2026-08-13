@@ -2371,6 +2371,39 @@
           </label>
         </div>
 
+        <div class="toggle-row" style="margin-top: 4px;">
+          <div>
+            <div class="toggle-label">Sonido Notificación Push</div>
+            <div class="toggle-sub">Tono al deslizar notificación de otra app</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="sound-push-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row" style="margin-top: 4px;">
+          <div>
+            <div class="toggle-label">Sonido Llamada Entrante</div>
+            <div class="toggle-sub">Timbre de tono de llamada entrante</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="sound-call-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row" style="margin-top: 4px;">
+          <div>
+            <div class="toggle-label">Sonido Al Colgar</div>
+            <div class="toggle-sub">Tono descendente al rechazar o finalizar llamada</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="sound-hangup-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
         <div class="toggle-row" style="margin-top: 8px;">
           <div>
             <div class="toggle-label">Aviso Cifrado Extremo a Extremo</div>
@@ -3321,10 +3354,17 @@ export default function App() {
         speedSlider?.addEventListener('input', handleChange);
         widthSlider?.addEventListener('input', handleChange);
         heightSlider?.addEventListener('input', handleChange);
+        const soundPushToggle = document.getElementById('sound-push-toggle');
+        const soundCallToggle = document.getElementById('sound-call-toggle');
+        const soundHangupToggle = document.getElementById('sound-hangup-toggle');
+
         soundToggle?.addEventListener('change', handleChange);
         soundTypingToggle?.addEventListener('change', handleChange);
         soundSentToggle?.addEventListener('change', handleChange);
         soundReceiveToggle?.addEventListener('change', handleChange);
+        soundPushToggle?.addEventListener('change', handleChange);
+        soundCallToggle?.addEventListener('change', handleChange);
+        soundHangupToggle?.addEventListener('change', handleChange);
 
         updateGeneratedCode();
       }, []);
