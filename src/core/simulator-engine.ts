@@ -397,7 +397,7 @@ export class WhatsAppSimulatorEngine {
 
                 this.playSound("click");
 
-                await this.sleep(1100);
+                await this.sleep(1600);
                 if (this.activeRunId !== runId) return;
 
                 // Call Declined & Screen Closed

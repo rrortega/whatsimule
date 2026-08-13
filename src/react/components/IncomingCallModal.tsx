@@ -20,6 +20,14 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
 
     const isFingerDeclineActive = callState?.isFingerDeclineActive ?? false;
 
+    // Immediate inline styles to hide the green accept knob the instant decline tap starts.
+    // AnimatePresence exit animations introduced a ~100ms delay where both knobs coexisted
+    // in the DOM, causing the green to visually overlap the red. Direct style binding is
+    // synchronous with the React render — zero delay.
+    const acceptHiddenStyle: React.CSSProperties = isFingerDeclineActive
+        ? { opacity: 0, visibility: "hidden", pointerEvents: "none" }
+        : {};
+
     useEffect(() => {
         if (isFingerDeclineActive) {
             const timer = setTimeout(() => {
@@ -48,7 +56,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                     exit={{ opacity: 0, scale: 0.65 }}
                     transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    {/* Top Caller Header (Subtitle on top, Name below) */}
+                    {/* Top Caller Header */}
                     <div className="rws-ios-call-header">
                         {callerAvatarUrl && (
                             <img src={callerAvatarUrl} alt={callerName} className="rws-ios-call-avatar-top" />
@@ -59,7 +67,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                         <h2 className="rws-ios-caller-name">{callerName}</h2>
                     </div>
 
-                    {/* Middle Action Buttons (Message & Remind me) */}
+                    {/* Middle Action Buttons */}
                     <div className="rws-ios-call-mid-actions">
                         <div className="rws-ios-mid-btn-group">
                             <button type="button" className="rws-ios-mid-btn">
@@ -75,7 +83,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                         </div>
                     </div>
 
-                    {/* Bottom Section: Moment 1 -> Moment 2 (Tap, Hide Accept, Slide, Highlight & ZoomOut) */}
+                    {/* Bottom Section: Decline slide track */}
                     <div className="rws-ios-call-bottom-section">
                         <motion.div
                             className="rws-ios-slide-track"
@@ -98,7 +106,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                             }}
                             transition={{ duration: 0.3 }}
                         >
-                            {/* Left Red Decline Knob: Moment 2 grows on tap, rotates icon, then slides right to end of track */}
+                            {/* Left Red Decline Knob */}
                             <motion.div
                                 className="rws-ios-slide-knob rws-ios-knob-decline"
                                 animate={{
@@ -126,7 +134,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                 )}
                             </motion.div>
 
-                            {/* Center Slide Track Text: Fades in during Moment 2 */}
+                            {/* Center Slide Track Text */}
                             <motion.div
                                 className="rws-ios-slide-text-box"
                                 animate={{ opacity: isFingerDeclineActive ? 1 : 0 }}
@@ -140,35 +148,20 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                 </div>
                             </motion.div>
 
-                            {/* Right Green Accept Knob: Unmounts immediately when decline tap starts */}
-                            <AnimatePresence>
-                                {!isFingerDeclineActive && (
-                                    <motion.div
-                                        className="rws-ios-slide-knob rws-ios-knob-accept-static"
-                                        initial={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.2 }}
-                                        transition={{ duration: 0.1 }}
-                                    >
-                                        {callType === "video" ? <Video size={24} /> : <Phone size={24} />}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                            {/* Right Green Accept Knob: hidden instantly via inline style */}
+                            <div
+                                className="rws-ios-slide-knob rws-ios-knob-accept-static"
+                                style={acceptHiddenStyle}
+                            >
+                                {callType === "video" ? <Video size={24} /> : <Phone size={24} />}
+                            </div>
                         </motion.div>
 
-                        {/* Button Labels Row below: Unmounts immediately when decline tap starts */}
-                        <AnimatePresence>
-                            {!isFingerDeclineActive && (
-                                <motion.div
-                                    className="rws-call-labels-row"
-                                    initial={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.1 }}
-                                >
-                                    <span className="rws-call-action-label-decline">Rechazar</span>
-                                    <span className="rws-call-action-label-accept">Aceptar</span>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                        {/* Button Labels Row */}
+                        <div className="rws-call-labels-row" style={acceptHiddenStyle}>
+                            <span className="rws-call-action-label-decline">Rechazar</span>
+                            <span className="rws-call-action-label-accept">Aceptar</span>
+                        </div>
                     </div>
                 </motion.div>
             ) : isAndroid ? (
@@ -251,33 +244,19 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                 </div>
                             </motion.div>
 
-                            <AnimatePresence>
-                                {!isFingerDeclineActive && (
-                                    <motion.div
-                                        className="rws-android-slide-knob rws-android-knob-accept-static"
-                                        initial={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.2 }}
-                                        transition={{ duration: 0.1 }}
-                                    >
-                                        {callType === "video" ? <Video size={24} /> : <Phone size={24} />}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                            {/* Green Accept Knob: hidden instantly via inline style */}
+                            <div
+                                className="rws-android-slide-knob rws-android-knob-accept-static"
+                                style={acceptHiddenStyle}
+                            >
+                                {callType === "video" ? <Video size={24} /> : <Phone size={24} />}
+                            </div>
                         </motion.div>
 
-                        <AnimatePresence>
-                            {!isFingerDeclineActive && (
-                                <motion.div
-                                    className="rws-call-labels-row"
-                                    initial={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.1 }}
-                                >
-                                    <span className="rws-call-action-label-decline">Rechazar</span>
-                                    <span className="rws-call-action-label-accept">Aceptar</span>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                        <div className="rws-call-labels-row" style={acceptHiddenStyle}>
+                            <span className="rws-call-action-label-decline">Rechazar</span>
+                            <span className="rws-call-action-label-accept">Aceptar</span>
+                        </div>
                     </div>
                 </motion.div>
             ) : (
@@ -326,21 +305,13 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                 <span className="rws-call-btn-label">Rechazar</span>
                             </div>
 
-                            <AnimatePresence>
-                                {!isFingerDeclineActive && (
-                                    <motion.div
-                                        className="rws-call-btn-wrapper"
-                                        initial={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.2 }}
-                                        transition={{ duration: 0.1 }}
-                                    >
-                                        <button type="button" className="rws-call-btn rws-call-accept-btn" aria-label="Aceptar llamada">
-                                            {callType === "video" ? <Video size={22} /> : <Phone size={22} />}
-                                        </button>
-                                        <span className="rws-call-btn-label">Aceptar</span>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                            {/* Green Accept button: hidden instantly via inline style */}
+                            <div className="rws-call-btn-wrapper" style={acceptHiddenStyle}>
+                                <button type="button" className="rws-call-btn rws-call-accept-btn" aria-label="Aceptar llamada">
+                                    {callType === "video" ? <Video size={22} /> : <Phone size={22} />}
+                                </button>
+                                <span className="rws-call-btn-label">Aceptar</span>
+                            </div>
                         </div>
                     </div>
                 </motion.div>
