@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, PhoneOff, Video, MessageSquare, Clock, ChevronRight } from "lucide-react";
 import { IncomingCallState } from "../../core/simulator-engine";
@@ -8,6 +8,7 @@ interface IncomingCallModalProps {
     onDecline: () => void;
     deviceStyle?: "iphone" | "android" | "none";
     theme?: "dark" | "light";
+    locale?: "es" | "en";
 }
 
 export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
@@ -15,27 +16,36 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
     onDecline,
     deviceStyle = "iphone",
     theme = "dark",
+    locale = "es",
 }) => {
     const [hasStartedSlide, setHasStartedSlide] = useState(false);
+    const [slideDistancePx, setSlideDistancePx] = useState(0);
+    const iosTrackRef = useRef<HTMLDivElement>(null);
+    const androidTrackRef = useRef<HTMLDivElement>(null);
 
     const isFingerDeclineActive = callState?.isFingerDeclineActive ?? false;
 
     // Immediate inline styles to hide the green accept knob the instant decline tap starts.
-    // AnimatePresence exit animations introduced a ~100ms delay where both knobs coexisted
-    // in the DOM, causing the green to visually overlap the red. Direct style binding is
-    // synchronous with the React render — zero delay.
     const acceptHiddenStyle: React.CSSProperties = isFingerDeclineActive
         ? { opacity: 0, visibility: "hidden", pointerEvents: "none" }
         : {};
 
+    // Measure track width and compute slide distance in pixels when finger activates
     useEffect(() => {
         if (isFingerDeclineActive) {
+            const trackEl = iosTrackRef.current || androidTrackRef.current;
+            if (trackEl) {
+                const trackWidth = trackEl.getBoundingClientRect().width;
+                // knob is 48px wide, starts at left:5px, ends at right:5px margin
+                setSlideDistancePx(trackWidth - 48 - 10);
+            }
             const timer = setTimeout(() => {
                 setHasStartedSlide(true);
             }, 200);
             return () => clearTimeout(timer);
         } else {
             setHasStartedSlide(false);
+            setSlideDistancePx(0);
         }
     }, [isFingerDeclineActive]);
 
@@ -44,6 +54,22 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
     const { callerName, callerAvatarUrl, callType = "voice" } = callState;
     const isIos = deviceStyle === "iphone";
     const isAndroid = deviceStyle === "android";
+
+    // i18n labels
+    const t = {
+        voiceCall: locale === "es" ? "Llamada de voz de WhatsApp" : "WhatsApp Voice Call",
+        videoCall: locale === "es" ? "Videollamada de WhatsApp" : "WhatsApp Video Call",
+        incomingCall: locale === "es" ? "Llamada entrante de WhatsApp" : "Incoming WhatsApp Call",
+        voiceCallSub: locale === "es" ? "Llamada de voz de WhatsApp..." : "WhatsApp Voice Call...",
+        videoCallSub: locale === "es" ? "Videollamada de WhatsApp..." : "WhatsApp Video Call...",
+        message: locale === "es" ? "Mensaje" : "Message",
+        remindMe: locale === "es" ? "Recordármelo" : "Remind Me",
+        slideToDecline: locale === "es" ? "desliza para rechazar" : "slide to decline",
+        decline: locale === "es" ? "Rechazar" : "Decline",
+        accept: locale === "es" ? "Aceptar" : "Accept",
+        declineLabel: locale === "es" ? "Rechazar llamada" : "Decline call",
+        acceptLabel: locale === "es" ? "Aceptar llamada" : "Accept call",
+    };
 
     return (
         <AnimatePresence>
@@ -62,7 +88,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                             <img src={callerAvatarUrl} alt={callerName} className="rws-ios-call-avatar-top" />
                         )}
                         <p className="rws-ios-call-sub-tag">
-                            {callType === "video" ? "Videollamada de WhatsApp" : "Llamada de voz de WhatsApp"}
+                            {callType === "video" ? t.videoCall : t.voiceCall}
                         </p>
                         <h2 className="rws-ios-caller-name">{callerName}</h2>
                     </div>
@@ -73,19 +99,20 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                             <button type="button" className="rws-ios-mid-btn">
                                 <MessageSquare size={20} />
                             </button>
-                            <span className="rws-ios-mid-label">Mensaje</span>
+                            <span className="rws-ios-mid-label">{t.message}</span>
                         </div>
                         <div className="rws-ios-mid-btn-group">
                             <button type="button" className="rws-ios-mid-btn">
                                 <Clock size={20} />
                             </button>
-                            <span className="rws-ios-mid-label">Recordármelo</span>
+                            <span className="rws-ios-mid-label">{t.remindMe}</span>
                         </div>
                     </div>
 
                     {/* Bottom Section: Decline slide track */}
                     <div className="rws-ios-call-bottom-section">
                         <motion.div
+                            ref={iosTrackRef}
                             className="rws-ios-slide-track"
                             animate={{
                                 background: hasStartedSlide
@@ -106,15 +133,15 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                             }}
                             transition={{ duration: 0.3 }}
                         >
-                            {/* Left Red Decline Knob: animates left (parent %) not x (element %) */}
+                            {/* Left Red Decline Knob: slides right using measured pixel distance */}
                             <motion.div
                                 className="rws-ios-slide-knob rws-ios-knob-decline"
                                 animate={{
-                                    left: hasStartedSlide ? "calc(100% - 53px)" : "5px",
+                                    x: hasStartedSlide ? slideDistancePx : 0,
                                     scale: isFingerDeclineActive && !hasStartedSlide ? 1.15 : 1,
                                 }}
                                 transition={{
-                                    left: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] },
+                                    x: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] },
                                     scale: { duration: 0.2, ease: "easeOut" },
                                 }}
                             >
@@ -140,7 +167,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                 animate={{ opacity: isFingerDeclineActive ? 1 : 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <span className="rws-ios-slide-text">desliza para rechazar</span>
+                                <span className="rws-ios-slide-text">{t.slideToDecline}</span>
                                 <div className="rws-ios-slide-arrows">
                                     <ChevronRight size={15} className="rws-arrow-1" />
                                     <ChevronRight size={15} className="rws-arrow-2" />
@@ -159,8 +186,8 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
 
                         {/* Button Labels Row */}
                         <div className="rws-call-labels-row" style={acceptHiddenStyle}>
-                            <span className="rws-call-action-label-decline">Rechazar</span>
-                            <span className="rws-call-action-label-accept">Aceptar</span>
+                            <span className="rws-call-action-label-decline">{t.decline}</span>
+                            <span className="rws-call-action-label-accept">{t.accept}</span>
                         </div>
                     </div>
                 </motion.div>
@@ -182,13 +209,14 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                             </div>
                         )}
                         <p className="rws-android-call-type">
-                            {callType === "video" ? "Videollamada de WhatsApp" : "Llamada de voz de WhatsApp"}
+                            {callType === "video" ? t.videoCall : t.voiceCall}
                         </p>
                         <h2 className="rws-android-caller-name">{callerName}</h2>
                     </div>
 
                     <div className="rws-android-call-bottom">
                         <motion.div
+                            ref={androidTrackRef}
                             className="rws-android-slide-track"
                             animate={{
                                 background: hasStartedSlide
@@ -207,11 +235,11 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                             <motion.div
                                 className="rws-android-slide-knob rws-android-knob-decline"
                                 animate={{
-                                    left: hasStartedSlide ? "calc(100% - 53px)" : "5px",
+                                    x: hasStartedSlide ? slideDistancePx : 0,
                                     scale: isFingerDeclineActive && !hasStartedSlide ? 1.15 : 1,
                                 }}
                                 transition={{
-                                    left: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] },
+                                    x: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] },
                                     scale: { duration: 0.2, ease: "easeOut" },
                                 }}
                             >
@@ -236,7 +264,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                 animate={{ opacity: isFingerDeclineActive ? 1 : 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <span className="rws-android-slide-text">desliza para rechazar</span>
+                                <span className="rws-android-slide-text">{t.slideToDecline}</span>
                                 <div className="rws-ios-slide-arrows">
                                     <ChevronRight size={15} className="rws-arrow-1" />
                                     <ChevronRight size={15} className="rws-arrow-2" />
@@ -254,8 +282,8 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                         </motion.div>
 
                         <div className="rws-call-labels-row" style={acceptHiddenStyle}>
-                            <span className="rws-call-action-label-decline">Rechazar</span>
-                            <span className="rws-call-action-label-accept">Aceptar</span>
+                            <span className="rws-call-action-label-decline">{t.decline}</span>
+                            <span className="rws-call-action-label-accept">{t.accept}</span>
                         </div>
                     </div>
                 </motion.div>
@@ -278,10 +306,10 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                 </div>
                             )}
                             <div className="rws-call-info">
-                                <span className="rws-call-app-tag">Llamada entrante de WhatsApp</span>
+                                <span className="rws-call-app-tag">{t.incomingCall}</span>
                                 <h3 className="rws-call-caller-name">{callerName}</h3>
                                 <p className="rws-call-sub-text">
-                                    {callType === "video" ? "Videollamada de WhatsApp..." : "Llamada de voz de WhatsApp..."}
+                                    {callType === "video" ? t.videoCallSub : t.voiceCallSub}
                                 </p>
                             </div>
                         </div>
@@ -292,7 +320,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                     type="button"
                                     className={`rws-call-btn rws-call-decline-btn ${isFingerDeclineActive ? "rws-call-btn-pressing" : ""}`}
                                     onClick={onDecline}
-                                    aria-label="Rechazar llamada"
+                                    aria-label={t.declineLabel}
                                 >
                                     <PhoneOff size={22} />
                                     {isFingerDeclineActive && (
@@ -302,15 +330,15 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
                                         </div>
                                     )}
                                 </button>
-                                <span className="rws-call-btn-label">Rechazar</span>
+                                <span className="rws-call-btn-label">{t.decline}</span>
                             </div>
 
                             {/* Green Accept button: hidden instantly via inline style */}
                             <div className="rws-call-btn-wrapper" style={acceptHiddenStyle}>
-                                <button type="button" className="rws-call-btn rws-call-accept-btn" aria-label="Aceptar llamada">
+                                <button type="button" className="rws-call-btn rws-call-accept-btn" aria-label={t.acceptLabel}>
                                     {callType === "video" ? <Video size={22} /> : <Phone size={22} />}
                                 </button>
-                                <span className="rws-call-btn-label">Aceptar</span>
+                                <span className="rws-call-btn-label">{t.accept}</span>
                             </div>
                         </div>
                     </div>

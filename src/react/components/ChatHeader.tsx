@@ -13,6 +13,7 @@ interface ChatHeaderProps {
     onlineStatusText?: string;
     typingStatusText?: string;
     recordingStatusText?: string;
+    locale?: "es" | "en";
     deviceStyle?: "iphone" | "android" | "none";
     batteryLevel?: number;
     networkType?: "2G" | "3G" | "4G" | "5G";
@@ -31,9 +32,10 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
     groupMembersText,
     isTyping = false,
     isRecordingAudio = false,
-    onlineStatusText = "en línea",
-    typingStatusText = "escribiendo...",
-    recordingStatusText = "grabando audio...",
+    onlineStatusText,
+    typingStatusText,
+    recordingStatusText,
+    locale = "es",
     deviceStyle = "iphone",
     batteryLevel = 63,
     networkType = "5G",
@@ -64,10 +66,13 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
     })();
 
     const statusText = (() => {
-        if (isRecordingAudio) return recordingStatusText;
-        if (isTyping) return typingStatusText;
+        const resolvedOnline = onlineStatusText || (locale === "es" ? "en línea" : "online");
+        const resolvedTyping = typingStatusText || (locale === "es" ? "escribiendo..." : "typing...");
+        const resolvedRecording = recordingStatusText || (locale === "es" ? "grabando audio..." : "recording audio...");
+        if (isRecordingAudio) return resolvedRecording;
+        if (isTyping) return resolvedTyping;
         if (chatType === "group") return groupMembersText || `Tú, Alex, Sofía, ${nameToDisplay}`;
-        return onlineStatusText;
+        return resolvedOnline;
     })();
 
     const isLowBattery = batteryLevel <= 15;

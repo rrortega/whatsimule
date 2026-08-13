@@ -448,6 +448,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             onlineStatusText={labels.onlineStatusText}
                             typingStatusText={labels.typingStatusText}
                             recordingStatusText={labels.recordingStatusText}
+                            locale={locale}
                             deviceStyle={deviceStyle}
                             batteryLevel={batteryLevel}
                             networkType={networkType}
@@ -480,6 +481,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             }}
                             deviceStyle={deviceStyle}
                             theme={theme}
+                            locale={locale}
                         />
 
                         {/* Contact Profile Photo & Info Viewer Modal */}
@@ -495,6 +497,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             assistantAvatarUrl={assistantAvatarUrl}
                             chatType={chatType}
                             theme={theme}
+                            locale={locale}
                         />
 
                         {/* Chat Messages Body */}
@@ -564,6 +567,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             audioRecording={state.audioRecording}
                             sendRipple={state.sendRipple}
                             placeholder={labels.inputPlaceholder || (locale === "es" ? "Escribe un mensaje" : "Type a message")}
+                            isKeyboardOpen={state.isKeyboardOpen}
                         />
 
                         {/* Interactive Virtual Mobile Keyboard */}
@@ -572,6 +576,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             pressedKey={state.pressedKey}
                             deviceStyle={deviceStyle}
                             theme={theme}
+                            locale={locale}
                         />
 
                         {/* Full Screen WhatsApp Media Preview Screen */}

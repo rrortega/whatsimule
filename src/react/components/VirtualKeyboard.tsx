@@ -7,6 +7,7 @@ interface VirtualKeyboardProps {
     pressedKey: string | null;
     deviceStyle?: "iphone" | "android" | "none";
     theme?: "dark" | "light";
+    locale?: "es" | "en";
 }
 
 const ROW_1 = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"];
@@ -18,6 +19,7 @@ export const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
     pressedKey,
     deviceStyle = "iphone",
     theme = "dark",
+    locale = "es",
 }) => {
     const isPressed = (key: string) => {
         if (!pressedKey) return false;
@@ -28,6 +30,12 @@ export const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
         if (key === "SEND" && (upper === "SEND" || upper === "ENTER")) return true;
         return upper === key;
     };
+
+    const spaceLabel = deviceStyle === "android"
+        ? (locale === "es" ? "Español" : "English")
+        : (locale === "es" ? "espacio" : "space");
+
+    const goLabel = locale === "es" ? "Ir" : "Go";
 
     return (
         <AnimatePresence>
@@ -46,112 +54,112 @@ export const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
                         exit={{ y: 24 }}
                         transition={{ duration: 0.18, ease: "easeOut" }}
                     >
-                    {/* Gboard Android Top Toolbar */}
-                    {deviceStyle === "android" && (
-                        <div className="rws-gboard-toolbar">
-                            <button type="button" className="rws-gboard-tool-btn" aria-label="Stickers">
-                                <Smile size={16} />
+                        {/* Gboard Android Top Toolbar */}
+                        {deviceStyle === "android" && (
+                            <div className="rws-gboard-toolbar">
+                                <button type="button" className="rws-gboard-tool-btn" aria-label="Stickers">
+                                    <Smile size={16} />
+                                </button>
+                                <button type="button" className="rws-gboard-tool-btn" aria-label="Ajustes">
+                                    <Settings size={16} />
+                                </button>
+                                <button type="button" className="rws-gboard-tool-btn" aria-label="Micrófono">
+                                    <Mic size={16} />
+                                </button>
+                                <button type="button" className="rws-gboard-tool-btn" aria-label="Más opciones">
+                                    <MoreHorizontal size={16} />
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Key Row 1 */}
+                        <div className="rws-kb-row">
+                            {ROW_1.map((k) => (
+                                <button
+                                    key={k}
+                                    type="button"
+                                    className={`rws-kb-key ${isPressed(k) ? "rws-kb-key-active" : ""}`}
+                                >
+                                    {k}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Key Row 2 */}
+                        <div className="rws-kb-row rws-kb-row-padded">
+                            {ROW_2.map((k) => (
+                                <button
+                                    key={k}
+                                    type="button"
+                                    className={`rws-kb-key ${isPressed(k) ? "rws-kb-key-active" : ""}`}
+                                >
+                                    {k}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Key Row 3 */}
+                        <div className="rws-kb-row">
+                            <button
+                                type="button"
+                                className={`rws-kb-key rws-kb-special ${isPressed("SHIFT") ? "rws-kb-key-active" : ""}`}
+                            >
+                                <ArrowUp size={16} />
                             </button>
-                            <button type="button" className="rws-gboard-tool-btn" aria-label="Ajustes">
-                                <Settings size={16} />
-                            </button>
-                            <button type="button" className="rws-gboard-tool-btn" aria-label="Micrófono">
-                                <Mic size={16} />
-                            </button>
-                            <button type="button" className="rws-gboard-tool-btn" aria-label="Más opciones">
-                                <MoreHorizontal size={16} />
+                            {ROW_3.filter((k) => k !== "SHIFT" && k !== "BACKSPACE").map((k) => (
+                                <button
+                                    key={k}
+                                    type="button"
+                                    className={`rws-kb-key ${isPressed(k) ? "rws-kb-key-active" : ""}`}
+                                >
+                                    {k}
+                                </button>
+                            ))}
+                            <button
+                                type="button"
+                                className={`rws-kb-key rws-kb-special ${isPressed("BACKSPACE") ? "rws-kb-key-active" : ""}`}
+                            >
+                                <Delete size={16} />
                             </button>
                         </div>
-                    )}
 
-                    {/* Key Row 1 */}
-                    <div className="rws-kb-row">
-                        {ROW_1.map((k) => (
-                            <button
-                                key={k}
-                                type="button"
-                                className={`rws-kb-key ${isPressed(k) ? "rws-kb-key-active" : ""}`}
-                            >
-                                {k}
+                        {/* Key Row 4 (Spacebar & Actions) */}
+                        <div className="rws-kb-row rws-kb-bottom-row">
+                            <button type="button" className="rws-kb-key rws-kb-special rws-kb-mod">
+                                {deviceStyle === "android" ? "?123" : "123"}
                             </button>
-                        ))}
-                    </div>
-
-                    {/* Key Row 2 */}
-                    <div className="rws-kb-row rws-kb-row-padded">
-                        {ROW_2.map((k) => (
-                            <button
-                                key={k}
-                                type="button"
-                                className={`rws-kb-key ${isPressed(k) ? "rws-kb-key-active" : ""}`}
-                            >
-                                {k}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Key Row 3 */}
-                    <div className="rws-kb-row">
-                        <button
-                            type="button"
-                            className={`rws-kb-key rws-kb-special ${isPressed("SHIFT") ? "rws-kb-key-active" : ""}`}
-                        >
-                            <ArrowUp size={16} />
-                        </button>
-                        {ROW_3.filter((k) => k !== "SHIFT" && k !== "BACKSPACE").map((k) => (
-                            <button
-                                key={k}
-                                type="button"
-                                className={`rws-kb-key ${isPressed(k) ? "rws-kb-key-active" : ""}`}
-                            >
-                                {k}
-                            </button>
-                        ))}
-                        <button
-                            type="button"
-                            className={`rws-kb-key rws-kb-special ${isPressed("BACKSPACE") ? "rws-kb-key-active" : ""}`}
-                        >
-                            <Delete size={16} />
-                        </button>
-                    </div>
-
-                    {/* Key Row 4 (Spacebar & Actions) */}
-                    <div className="rws-kb-row rws-kb-bottom-row">
-                        <button type="button" className="rws-kb-key rws-kb-special rws-kb-mod">
-                            {deviceStyle === "android" ? "?123" : "123"}
-                        </button>
-                        {deviceStyle === "android" && (
-                            <button type="button" className="rws-kb-key rws-kb-special rws-kb-comma">
-                                ,
-                            </button>
-                        )}
-                        <button
-                            type="button"
-                            className={`rws-kb-key rws-kb-space ${isPressed("SPACE") ? "rws-kb-key-active" : ""}`}
-                        >
-                            {deviceStyle === "android" ? "Español" : "espacio"}
-                        </button>
-                        {deviceStyle === "android" && (
-                            <button type="button" className="rws-kb-key rws-kb-special rws-kb-dot">
-                                .
-                            </button>
-                        )}
-                        <button
-                            type="button"
-                            className={`rws-kb-key rws-kb-send ${isPressed("SEND") ? "rws-kb-key-active" : ""}`}
-                        >
-                            {deviceStyle === "android" ? (
-                                <CornerDownLeft size={16} />
-                            ) : (
-                                <>
-                                    <CornerDownLeft size={14} />
-                                    <span>Ir</span>
-                                </>
+                            {deviceStyle === "android" && (
+                                <button type="button" className="rws-kb-key rws-kb-special rws-kb-comma">
+                                    ,
+                                </button>
                             )}
-                        </button>
-                    </div>
+                            <button
+                                type="button"
+                                className={`rws-kb-key rws-kb-space ${isPressed("SPACE") ? "rws-kb-key-active" : ""}`}
+                            >
+                                {spaceLabel}
+                            </button>
+                            {deviceStyle === "android" && (
+                                <button type="button" className="rws-kb-key rws-kb-special rws-kb-dot">
+                                    .
+                                </button>
+                            )}
+                            <button
+                                type="button"
+                                className={`rws-kb-key rws-kb-send ${isPressed("SEND") ? "rws-kb-key-active" : ""}`}
+                            >
+                                {deviceStyle === "android" ? (
+                                    <CornerDownLeft size={16} />
+                                ) : (
+                                    <>
+                                        <CornerDownLeft size={14} />
+                                        <span>{goLabel}</span>
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </motion.div>
                 </motion.div>
-            </motion.div>
             )}
         </AnimatePresence>
     );

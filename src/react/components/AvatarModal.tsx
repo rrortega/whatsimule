@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Phone, Video, MessageSquare, Search, Bell, Lock, ShieldCheck, X } from "lucide-react";
+import { ArrowLeft, Phone, Video, MessageSquare, Search, Lock } from "lucide-react";
 
 interface AvatarModalProps {
     isOpen: boolean;
@@ -13,6 +13,7 @@ interface AvatarModalProps {
     phone?: string;
     aboutText?: string;
     theme?: "dark" | "light";
+    locale?: "es" | "en";
     isFingerBackActive?: boolean;
 }
 
@@ -24,13 +25,31 @@ export const AvatarModal: React.FC<AvatarModalProps> = ({
     contactAvatarUrl,
     assistantAvatarUrl,
     chatType = "direct",
-    phone = "+54 9 11 5432-8765",
-    aboutText = "¡Hola! Estoy usando WhatsApp.",
+    phone,
+    aboutText,
     theme = "dark",
+    locale = "es",
     isFingerBackActive = false,
 }) => {
     const nameToDisplay = contactName || assistantName || "RRORTEGA";
     const avatarUrl = contactAvatarUrl || assistantAvatarUrl;
+
+    const resolvedPhone = phone || (locale === "es" ? "+54 9 11 5432-8765" : "+1 (555) 234-5678");
+    const resolvedAboutText = aboutText || (locale === "es" ? "¡Hola! Estoy usando WhatsApp." : "Hey there! I am using WhatsApp.");
+
+    const t = {
+        backLabel: locale === "es" ? "Volver al chat" : "Back to chat",
+        contactInfo: locale === "es" ? "Info. del contacto" : "Contact Info",
+        message: locale === "es" ? "Mensaje" : "Message",
+        audio: "Audio",
+        video: "Video",
+        search: locale === "es" ? "Buscar" : "Search",
+        about: locale === "es" ? "Info." : "About",
+        encryptionTitle: locale === "es" ? "Cifrado de extremo a extremo" : "End-to-end encryption",
+        encryptionDesc: locale === "es"
+            ? "Los mensajes y las llamadas están cifrados de extremo a extremo. Nadie fuera de este chat los puede leer."
+            : "Messages and calls are end-to-end encrypted. No one outside of this chat can read them.",
+    };
 
     return (
         <AnimatePresence>
@@ -48,11 +67,11 @@ export const AvatarModal: React.FC<AvatarModalProps> = ({
                             type="button"
                             className="rws-profile-back-btn"
                             onClick={onClose}
-                            aria-label="Volver al chat"
+                            aria-label={t.backLabel}
                         >
                             <ArrowLeft size={22} />
                         </button>
-                        <span className="rws-profile-title">Info. del contacto</span>
+                        <span className="rws-profile-title">{t.contactInfo}</span>
                         <div style={{ width: 22 }} />
                     </div>
 
@@ -76,34 +95,34 @@ export const AvatarModal: React.FC<AvatarModalProps> = ({
                                 </div>
                             )}
                             <h2 className="rws-profile-name">{nameToDisplay}</h2>
-                            <p className="rws-profile-phone">{phone}</p>
+                            <p className="rws-profile-phone">{resolvedPhone}</p>
                         </div>
 
                         {/* Quick Action Icons Bar */}
                         <div className="rws-profile-actions-bar">
                             <button type="button" className="rws-profile-action-btn" onClick={onClose}>
                                 <MessageSquare size={20} />
-                                <span>Mensaje</span>
+                                <span>{t.message}</span>
                             </button>
                             <button type="button" className="rws-profile-action-btn">
                                 <Phone size={20} />
-                                <span>Audio</span>
+                                <span>{t.audio}</span>
                             </button>
                             <button type="button" className="rws-profile-action-btn">
                                 <Video size={20} />
-                                <span>Video</span>
+                                <span>{t.video}</span>
                             </button>
                             <button type="button" className="rws-profile-action-btn">
                                 <Search size={20} />
-                                <span>Buscar</span>
+                                <span>{t.search}</span>
                             </button>
                         </div>
 
                         {/* Status / Info Box */}
                         <div className="rws-profile-info-section">
                             <div className="rws-profile-info-row">
-                                <span className="rws-profile-info-label">Info.</span>
-                                <span className="rws-profile-info-val">{aboutText}</span>
+                                <span className="rws-profile-info-label">{t.about}</span>
+                                <span className="rws-profile-info-val">{resolvedAboutText}</span>
                             </div>
                         </div>
 
@@ -113,10 +132,10 @@ export const AvatarModal: React.FC<AvatarModalProps> = ({
                                 <Lock size={18} className="rws-profile-sec-icon" />
                                 <div>
                                     <span className="rws-profile-info-val" style={{ fontWeight: 600 }}>
-                                        Cifrado de extremo a extremo
+                                        {t.encryptionTitle}
                                     </span>
                                     <p className="rws-profile-sec-sub">
-                                        Los mensajes y las llamadas están cifrados de extremo a extremo. Nadie fuera de este chat los puede leer.
+                                        {t.encryptionDesc}
                                     </p>
                                 </div>
                             </div>

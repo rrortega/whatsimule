@@ -8,6 +8,7 @@ interface ChatInputProps {
     audioRecording?: AudioRecordingState | null;
     sendRipple: boolean;
     placeholder?: string;
+    isKeyboardOpen?: boolean;
 }
 
 export const ChatInput: React.FC<ChatInputProps> = ({
@@ -16,6 +17,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     audioRecording,
     sendRipple,
     placeholder = "Escribe un mensaje",
+    isKeyboardOpen = false,
 }) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -91,12 +93,12 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     }
 
     return (
-        <div className="rws-input-bar">
+        <div className="rws-input-bar" style={{ position: "relative" }}>
             <div className="rws-input-wrapper">
                 <button type="button" className="rws-input-icon-btn" aria-label="Emojis">
                     <Smile size={20} className="rws-input-icon" />
                 </button>
-                <div className="rws-input-field-container">
+                <div className="rws-input-field-container" style={{ position: "relative" }}>
                     <textarea
                         ref={textareaRef}
                         readOnly
@@ -108,6 +110,12 @@ export const ChatInput: React.FC<ChatInputProps> = ({
                     {attachedImage && (
                         <div className="rws-attached-preview">
                             <img src={attachedImage} alt="Preview" />
+                        </div>
+                    )}
+                    {isKeyboardOpen && inputValue.length === 0 && (
+                        <div className="rws-finger-avatar-indicator" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", pointerEvents: "none" }}>
+                            <span className="rws-finger-circle rws-finger-pressing" />
+                            <span className="rws-finger-wave" />
                         </div>
                     )}
                 </div>
