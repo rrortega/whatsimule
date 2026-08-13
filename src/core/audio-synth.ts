@@ -96,6 +96,27 @@ export function playReceiveSound(): void {
     }
 }
 
+export function playClickSound(): void {
+    emitSoundEvent("click");
+    try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(1000, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.025, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.04);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.04);
+    } catch {
+        // ignore audio errors
+    }
+}
+
 export function playNotificationSound(): void {
     emitSoundEvent("push");
     try {
@@ -122,17 +143,43 @@ export function playCallRingtoneSound(): void {
     try {
         const ctx = getAudioContext();
         if (!ctx) return;
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(ctx.destination);
+        osc1.type = "sine";
+        osc2.type = "sine";
+        osc1.frequency.setValueAtTime(440, ctx.currentTime);
+        osc2.frequency.setValueAtTime(480, ctx.currentTime);
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.35);
+        osc1.start();
+        osc2.start();
+        osc1.stop(ctx.currentTime + 0.35);
+        osc2.stop(ctx.currentTime + 0.35);
+    } catch {
+        // ignore audio errors
+    }
+}
+
+export function playHangupSound(): void {
+    emitSoundEvent("hangup");
+    try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.type = "sine";
-        osc.frequency.setValueAtTime(440, ctx.currentTime);
-        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.04, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.25);
+        osc.frequency.setValueAtTime(480, ctx.currentTime);
+        osc.frequency.setValueAtTime(350, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.18);
         osc.start();
-        osc.stop(ctx.currentTime + 0.25);
+        osc.stop(ctx.currentTime + 0.18);
     } catch {
         // ignore audio errors
     }

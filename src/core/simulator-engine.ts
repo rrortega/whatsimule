@@ -1,5 +1,5 @@
 import { Message, ScriptStep, ChatScript, WhatsAppSimulatorOptions, SimulatorEventHandlers, StepPerspective, SoundType } from "./types";
-import { playKeyClickSound, playSentSound, playReceiveSound, playCallRingtoneSound, playNotificationSound } from "./audio-synth";
+import { playKeyClickSound, playSentSound, playReceiveSound, playCallRingtoneSound, playNotificationSound, playClickSound, playHangupSound } from "./audio-synth";
 
 export type StateListener = (state: SimulatorState) => void;
 
@@ -104,7 +104,7 @@ export class WhatsAppSimulatorEngine {
         };
     }
 
-    private playSound(type: SoundType): void {
+    public playSound(type: SoundType): void {
         if (this.options.enableSound === false) return;
         if (type === "key" && this.options.soundTyping === false) return;
         if (type === "sent" && this.options.soundSent === false) return;
@@ -113,6 +113,9 @@ export class WhatsAppSimulatorEngine {
         switch (type) {
             case "key":
                 playKeyClickSound();
+                break;
+            case "click":
+                playClickSound();
                 break;
             case "sent":
                 playSentSound();
@@ -125,6 +128,9 @@ export class WhatsAppSimulatorEngine {
                 break;
             case "call":
                 playCallRingtoneSound();
+                break;
+            case "hangup":
+                playHangupSound();
                 break;
         }
 
@@ -389,12 +395,13 @@ export class WhatsAppSimulatorEngine {
                     }
                 });
 
-                this.playSound("key");
+                this.playSound("click");
 
                 await this.sleep(1100);
                 if (this.activeRunId !== runId) return;
 
                 // Call Declined & Screen Closed
+                this.playSound("hangup");
                 this.updateState({ incomingCall: null });
                 await this.sleep(450);
                 continue;
@@ -436,7 +443,7 @@ export class WhatsAppSimulatorEngine {
                             isFingerTapActive: true,
                         }
                     });
-                    this.playSound("key");
+                    this.playSound("click");
                     await this.sleep(400);
                 } else {
                     this.updateState({
@@ -449,6 +456,7 @@ export class WhatsAppSimulatorEngine {
                             isFingerTapActive: false,
                         }
                     });
+                    this.playSound("click");
                     await this.sleep(450);
                 }
                 if (this.activeRunId !== runId) return;
@@ -798,6 +806,7 @@ export class WhatsAppSimulatorEngine {
                     messages: [...this.state.messages, assistantMessage],
                 });
                 this.handlers.onMessageSent?.(assistantMessage);
+                await this.sleep(300);
             }
         }
 

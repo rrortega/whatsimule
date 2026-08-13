@@ -435,7 +435,9 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             </div>
                         ) : null}
 
-                        {/* WhatsApp Header & Status Bar */}
+                        {/* Phone Inner Screen Layer */}
+                        <div className="rws-screen-content">
+                        {/* Header bar */}
                         <ChatHeader
                             contactName={contactName}
                             assistantName={assistantName}
@@ -445,30 +447,39 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                             groupMembersText={groupMembersText}
                             isTyping={state.isTyping}
                             isRecordingAudio={state.isRecordingAudio}
-                            onlineStatusText={labels.onlineStatusText || (locale === "es" ? "en línea" : "online")}
-                            typingStatusText={labels.typingStatusText || (locale === "es" ? "escribiendo..." : "typing...")}
-                            recordingStatusText={labels.recordingStatusText || (locale === "es" ? "grabando audio..." : "recording audio...")}
+                            onlineStatusText={labels.onlineStatusText}
+                            typingStatusText={labels.typingStatusText}
+                            recordingStatusText={labels.recordingStatusText}
                             deviceStyle={deviceStyle}
                             batteryLevel={batteryLevel}
                             networkType={networkType}
                             wifiSignalStrength={wifiSignalStrength}
                             statusBarTime={statusBarTime}
-                            onAvatarClick={sim.toggleAvatarModal}
+                            onAvatarClick={() => {
+                                sim.engine?.playSound("click");
+                                sim.openAvatarModal();
+                            }}
                             avatarRipple={state.avatarRipple}
                         />
 
-                        {/* Push Notification Banner */}
+                        {/* Push Notification Banner Overlay */}
                         <PushNotificationBanner
                             notificationState={state.pushNotification}
-                            onDismiss={() => {}}
+                            onDismiss={() => {
+                                sim.engine?.playSound("click");
+                                (sim.engine as any)?.updateState?.({ pushNotification: null });
+                            }}
                             deviceStyle={deviceStyle}
                             theme={theme}
                         />
 
-                        {/* Incoming Call Screen Banner */}
+                        {/* Incoming Call Screen / Banner Overlay */}
                         <IncomingCallModal
                             callState={state.incomingCall}
-                            onDecline={() => {}}
+                            onDecline={() => {
+                                sim.engine?.playSound("hangup");
+                                (sim.engine as any)?.updateState?.({ incomingCall: null });
+                            }}
                             deviceStyle={deviceStyle}
                             theme={theme}
                         />
@@ -476,7 +487,10 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                         {/* Contact Profile Photo & Info Viewer Modal */}
                         <AvatarModal
                             isOpen={Boolean(state.isAvatarModalOpen)}
-                            onClose={sim.closeAvatarModal}
+                            onClose={() => {
+                                sim.engine?.playSound("click");
+                                sim.closeAvatarModal();
+                            }}
                             contactName={contactName}
                             assistantName={assistantName}
                             contactAvatarUrl={contactAvatarUrl}
@@ -646,7 +660,10 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                         {shouldShowRestart && (
                             <button
                                 type="button"
-                                onClick={restartCurrentScript}
+                                onClick={() => {
+                                    sim.engine?.playSound("click");
+                                    restartCurrentScript();
+                                }}
                                 className={`rws-restart-btn rws-restart-pos-${restartButtonPosition}`}
                                 title={labels.restartTooltip || "Reiniciar conversación"}
                                 aria-label="Reiniciar conversación"
@@ -654,6 +671,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
                                 <RotateCcw size={16} />
                             </button>
                         )}
+                    </div>
                     </div>
                 </motion.div>
             </div>

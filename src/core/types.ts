@@ -91,7 +91,7 @@ export interface PerspectiveKeyframe {
     yOffset?: number;
 }
 
-export type SoundType = "key" | "sent" | "receive" | "push" | "call";
+export type SoundType = "key" | "click" | "sent" | "receive" | "push" | "call" | "hangup";
 
 export interface WhatsAppSimulatorOptions {
     customScripts?: Record<string, ChatScript>;
