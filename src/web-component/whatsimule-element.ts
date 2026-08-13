@@ -1,5 +1,5 @@
 import { WhatsAppSimulatorEngine } from "../core/simulator-engine";
-import { ChatScript, WhatsAppSimulatorOptions } from "../core/types";
+import { ChatScript, WhatsAppSimulatorOptions, SoundType } from "../core/types";
 
 /**
  * Web Component wrapper `<what-simule>` for framework-agnostic usage.
@@ -53,6 +53,15 @@ export class WhatSimuleElement extends HTMLElement {
             },
             onScriptChange: (scriptId: string) => {
                 this.dispatchEvent(new CustomEvent("scriptchange", { detail: { scriptId }, bubbles: true, composed: true }));
+            },
+            onSound: (type: SoundType) => {
+                this.dispatchEvent(new CustomEvent("sound", { detail: { type }, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent("whatsimule:sound", { detail: { type }, bubbles: true, composed: true }));
+                if (typeof (this as any).onSound === "function") {
+                    (this as any).onSound(type);
+                } else if (typeof (this as any).onsound === "function") {
+                    (this as any).onsound(type);
+                }
             },
         };
 

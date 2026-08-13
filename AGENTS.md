@@ -249,8 +249,24 @@ Register `WhatSimuleElement` as a Web Component for non-React projects:
 | `onMessageSent` | `(message: Message) => void` | `undefined` | Callback fired when a message renders |
 | `onScriptComplete` / `onComplete` | `(scriptId: string) => void` | `undefined` | Callback fired when script finishes playback (all messages rendered) |
 | `onScriptChange` | `(scriptId: string) => void` | `undefined` | Callback fired when user switches active script |
+| `onSound` | `(type: SoundType) => void` | `undefined` | Callback fired when any sound effect plays (`"key" \| "sent" \| "receive" \| "push" \| "call"`) |
 
 ---
+
+### 🔊 Sound Events (`whatsimule:sound`)
+
+Whenever any procedural sound effect is played, a `CustomEvent` is dispatched globally on `window` and locally on the simulator DOM element:
+
+```js
+window.addEventListener('whatsimule:sound', (event) => {
+  console.log('Sound played:', event.detail.type); // 'key' | 'sent' | 'receive' | 'push' | 'call'
+});
+
+// Or handle on DOM element / Web Component:
+document.getElementById('whatsimule').onSound = (type) => {
+  console.log('Element sound trigger:', type);
+};
+```
 
 ### 🕹️ Imperative Remote Control Methods (`WhatSimuleRef` / DOM Element)
 

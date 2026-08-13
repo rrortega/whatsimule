@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useMemo, forwardRef, useImperativeHandle } from "react";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { RotateCcw, Square, Circle, Triangle, X, Crop, Smile, Type, Pencil, Send, Mic, Lock } from "lucide-react";
-import { WhatsAppSimulatorOptions, ChatScript, SimulatorEventHandlers, PerspectiveKeyframe, WhatSimuleRef } from "../core/types";
+import { WhatsAppSimulatorOptions, ChatScript, SimulatorEventHandlers, PerspectiveKeyframe, WhatSimuleRef, SoundType } from "../core/types";
 import { useWhatsAppSimulator } from "./useWhatsAppSimulator";
 import { ChatHeader } from "./components/ChatHeader";
 import { MessageBubble } from "./components/MessageBubble";
@@ -68,6 +68,7 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
     onScriptComplete,
     onComplete,
     onScriptChange,
+    onSound,
 }, ref) => {
     const activeScripts = customScripts || scripts;
     const containerRef = useRef<HTMLDivElement>(null);
@@ -89,6 +90,24 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
         }
     };
 
+    const handleSound = (type: SoundType) => {
+        onSound?.(type);
+        if (containerRef.current) {
+            const elem = containerRef.current as any;
+            if (typeof elem.onSound === "function") {
+                elem.onSound(type);
+            } else if (typeof elem.onsound === "function") {
+                elem.onsound(type);
+            }
+            containerRef.current.dispatchEvent(
+                new CustomEvent("sound", { detail: { type }, bubbles: true, composed: true })
+            );
+            containerRef.current.dispatchEvent(
+                new CustomEvent("whatsimule:sound", { detail: { type }, bubbles: true, composed: true })
+            );
+        }
+    };
+
     const sim = useWhatsAppSimulator(
         activeScripts,
         {
@@ -104,8 +123,9 @@ export const WhatSimule = forwardRef<WhatSimuleRef, WhatSimuleProps>(({
             typingMode,
             locale,
             labels,
+            onSound: handleSound,
         },
-        { onMessageSent, onScriptComplete: handleScriptComplete, onComplete, onScriptChange }
+        { onMessageSent, onScriptComplete: handleScriptComplete, onComplete, onScriptChange, onSound: handleSound }
     );
     const { state, activeScriptId, startScript, restartCurrentScript } = sim;
 

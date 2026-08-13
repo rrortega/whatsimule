@@ -1,4 +1,4 @@
-import { Message, ScriptStep, ChatScript, WhatsAppSimulatorOptions, SimulatorEventHandlers, StepPerspective } from "./types";
+import { Message, ScriptStep, ChatScript, WhatsAppSimulatorOptions, SimulatorEventHandlers, StepPerspective, SoundType } from "./types";
 import { playKeyClickSound, playSentSound, playReceiveSound, playCallRingtoneSound, playNotificationSound } from "./audio-synth";
 
 export type StateListener = (state: SimulatorState) => void;
@@ -102,6 +102,38 @@ export class WhatsAppSimulatorEngine {
             incomingCall: null,
             pushNotification: null,
         };
+    }
+
+    private playSound(type: SoundType): void {
+        if (this.options.enableSound === false) return;
+        if (type === "key" && this.options.soundTyping === false) return;
+        if (type === "sent" && this.options.soundSent === false) return;
+        if (type === "receive" && this.options.soundReceive === false) return;
+
+        switch (type) {
+            case "key":
+                playKeyClickSound();
+                break;
+            case "sent":
+                playSentSound();
+                break;
+            case "receive":
+                playReceiveSound();
+                break;
+            case "push":
+                playNotificationSound();
+                break;
+            case "call":
+                playCallRingtoneSound();
+                break;
+        }
+
+        try {
+            this.handlers.onSound?.(type);
+            this.options.onSound?.(type);
+        } catch {
+            // ignore handler errors
+        }
     }
 
     public subscribe(listener: StateListener): () => void {
@@ -303,9 +335,7 @@ export class WhatsAppSimulatorEngine {
 
             if (isAvatarAction) {
                 this.updateState({ avatarRipple: true });
-                if (this.options.enableSound !== false && this.options.soundTyping !== false) {
-                    playKeyClickSound();
-                }
+                this.playSound("key");
                 await this.sleep(220);
                 if (this.activeRunId !== runId) return;
 
@@ -334,9 +364,7 @@ export class WhatsAppSimulatorEngine {
                 const callerAvatarUrl = callData.callerAvatarUrl || this.options.assistantAvatarUrl;
                 const callType = callData.callType || "voice";
 
-                if (this.options.enableSound !== false) {
-                    playCallRingtoneSound();
-                }
+                this.playSound("call");
 
                 // Show Incoming Call Banner / Screen
                 this.updateState({
@@ -361,9 +389,7 @@ export class WhatsAppSimulatorEngine {
                     }
                 });
 
-                if (this.options.enableSound !== false && this.options.soundTyping !== false) {
-                    playKeyClickSound();
-                }
+                this.playSound("key");
 
                 await this.sleep(1100);
                 if (this.activeRunId !== runId) return;
@@ -382,9 +408,7 @@ export class WhatsAppSimulatorEngine {
                 const avatarUrl = notifData.avatarUrl || this.options.assistantAvatarUrl;
                 const actionType = notifData.action || "dismiss";
 
-                if (this.options.enableSound !== false) {
-                    playNotificationSound();
-                }
+                this.playSound("push");
 
                 // Slide down push notification banner from top
                 this.updateState({
@@ -412,9 +436,7 @@ export class WhatsAppSimulatorEngine {
                             isFingerTapActive: true,
                         }
                     });
-                    if (this.options.enableSound !== false && this.options.soundTyping !== false) {
-                        playKeyClickSound();
-                    }
+                    this.playSound("key");
                     await this.sleep(400);
                 } else {
                     this.updateState({
@@ -463,9 +485,7 @@ export class WhatsAppSimulatorEngine {
                             pressedKey: isKeyboard ? char.toUpperCase() : null,
                         });
 
-                        if (this.options.enableSound !== false && this.options.soundTyping !== false) {
-                            playKeyClickSound();
-                        }
+                        this.playSound("key");
                         const charDelay = isKeyboard ? 40 + Math.random() * 30 : 8 + Math.random() * 10;
                         await this.sleep(charDelay);
                     }
@@ -489,9 +509,7 @@ export class WhatsAppSimulatorEngine {
                                 pressedKey: isKeyboard ? "BACKSPACE" : null,
                             });
 
-                            if (this.options.enableSound !== false && this.options.soundTyping !== false) {
-                                playKeyClickSound();
-                            }
+                            this.playSound("key");
                             const backspaceDelay = isKeyboard ? 35 + Math.random() * 25 : 12 + Math.random() * 10;
                             await this.sleep(backspaceDelay);
                         }
@@ -514,9 +532,7 @@ export class WhatsAppSimulatorEngine {
                     if (this.activeRunId !== runId) return;
 
                     this.updateState({ sendRipple: true });
-                    if (this.options.enableSound !== false && this.options.soundSent !== false) {
-                        playSentSound();
-                    }
+                    this.playSound("sent");
                     await this.sleep(150);
                     this.updateState({ sendRipple: false, isKeyboardOpen: false, pressedKey: null });
                     if (this.activeRunId !== runId) return;
@@ -586,9 +602,7 @@ export class WhatsAppSimulatorEngine {
                                         pressedKey: char.toUpperCase(),
                                     }
                                 });
-                                if (this.options.enableSound !== false && this.options.soundTyping !== false) {
-                                    playKeyClickSound();
-                                }
+                                this.playSound("key");
                                 const charDelay = 35 + Math.random() * 25;
                                 await this.sleep(charDelay);
                             }
@@ -619,9 +633,7 @@ export class WhatsAppSimulatorEngine {
 
                     // Click Send Button in Media Preview
                     this.updateState({ sendRipple: true });
-                    if (this.options.enableSound !== false && this.options.soundSent !== false) {
-                        playSentSound();
-                    }
+                    this.playSound("sent");
                     await this.sleep(150);
                     this.updateState({ mediaPreview: null, sendRipple: false });
                     if (this.activeRunId !== runId) return;
@@ -689,8 +701,8 @@ export class WhatsAppSimulatorEngine {
                             }
                         });
 
-                        if (s % 4 === 0 && this.options.enableSound !== false && this.options.soundTyping !== false) {
-                            playKeyClickSound();
+                        if (s % 4 === 0) {
+                            this.playSound("key");
                         }
                         await this.sleep(intervalMs);
                     }
@@ -710,9 +722,7 @@ export class WhatsAppSimulatorEngine {
 
                     // Click Send Button
                     this.updateState({ sendRipple: true });
-                    if (this.options.enableSound !== false && this.options.soundSent !== false) {
-                        playSentSound();
-                    }
+                    this.playSound("sent");
                     await this.sleep(150);
                     this.updateState({ audioRecording: null, sendRipple: false });
                     if (this.activeRunId !== runId) return;
@@ -764,9 +774,7 @@ export class WhatsAppSimulatorEngine {
                 }
 
                 this.updateState({ isTyping: false, isRecordingAudio: false });
-                if (this.options.enableSound !== false && this.options.soundReceive !== false) {
-                    playReceiveSound();
-                }
+                this.playSound("receive");
 
                 const now = new Date();
                 const timestamp = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;

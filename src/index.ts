@@ -1,6 +1,6 @@
 // Core framework-agnostic exports
 export { WhatsAppSimulatorEngine } from "./core/simulator-engine";
-export { playKeyClickSound, playSentSound, playReceiveSound } from "./core/audio-synth";
+export { playKeyClickSound, playSentSound, playReceiveSound, playNotificationSound, playCallRingtoneSound } from "./core/audio-synth";
 export type {
     Message,
     MessageSender,
@@ -12,6 +12,7 @@ export type {
     WhatsAppSimulatorOptions,
     SimulatorEventHandlers,
     WhatSimuleRef,
+    SoundType,
 } from "./core/types";
 
 // React exports

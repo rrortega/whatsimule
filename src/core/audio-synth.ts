@@ -1,4 +1,22 @@
+import { SoundType } from "./types";
+
 let audioCtx: AudioContext | null = null;
+
+function emitSoundEvent(type: SoundType): void {
+    if (typeof window !== "undefined") {
+        try {
+            window.dispatchEvent(
+                new CustomEvent("whatsimule:sound", {
+                    detail: { type },
+                    bubbles: true,
+                    composed: true,
+                })
+            );
+        } catch {
+            // ignore event dispatch errors
+        }
+    }
+}
 
 function getAudioContext(): AudioContext | null {
     if (typeof window !== "undefined" && (window as any).__WHATSIMULE_DISABLE_AUDIO__) {
@@ -17,6 +35,7 @@ function getAudioContext(): AudioContext | null {
 }
 
 export function playKeyClickSound(): void {
+    emitSoundEvent("key");
     try {
         const ctx = getAudioContext();
         if (!ctx) return;
@@ -36,6 +55,7 @@ export function playKeyClickSound(): void {
 }
 
 export function playSentSound(): void {
+    emitSoundEvent("sent");
     try {
         const ctx = getAudioContext();
         if (!ctx) return;
@@ -56,6 +76,7 @@ export function playSentSound(): void {
 }
 
 export function playReceiveSound(): void {
+    emitSoundEvent("receive");
     try {
         const ctx = getAudioContext();
         if (!ctx) return;
@@ -76,6 +97,7 @@ export function playReceiveSound(): void {
 }
 
 export function playNotificationSound(): void {
+    emitSoundEvent("push");
     try {
         const ctx = getAudioContext();
         if (!ctx) return;
@@ -96,6 +118,7 @@ export function playNotificationSound(): void {
 }
 
 export function playCallRingtoneSound(): void {
+    emitSoundEvent("call");
     try {
         const ctx = getAudioContext();
         if (!ctx) return;

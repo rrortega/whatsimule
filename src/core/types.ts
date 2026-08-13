@@ -91,6 +91,8 @@ export interface PerspectiveKeyframe {
     yOffset?: number;
 }
 
+export type SoundType = "key" | "sent" | "receive" | "push" | "call";
+
 export interface WhatsAppSimulatorOptions {
     customScripts?: Record<string, ChatScript>;
     defaultActiveScriptId?: string;
@@ -141,6 +143,7 @@ export interface WhatsAppSimulatorOptions {
         restartTooltip?: string;
         trackerLinkText?: string;
     };
+    onSound?: (type: SoundType) => void;
 }
 
 export interface SimulatorEventHandlers {
@@ -148,6 +151,7 @@ export interface SimulatorEventHandlers {
     onScriptComplete?: (scriptId: string) => void;
     onComplete?: (scriptId: string) => void;
     onScriptChange?: (scriptId: string) => void;
+    onSound?: (type: SoundType) => void;
 }
 
 export interface WhatSimuleRef {
