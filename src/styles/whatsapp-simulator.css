@@ -3427,3 +3427,11 @@
 .rws-theme-light .rws-call-card-sub {
     color: #667781;
 }
+
+.rws-bubble-user .rws-call-card-sub {
+    color: rgba(233, 237, 239, 0.78);
+}
+
+.rws-theme-light .rws-bubble-user .rws-call-card-sub {
+    color: #54656f;
+}
