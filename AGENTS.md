@@ -340,7 +340,7 @@ sim.play();
 
 ```ts
 export type MessageSender = "user" | "contact" | "resident" | "assistant" | "asistenxa";
-export type MessageType = "text" | "image" | "audio" | "contact";
+export type MessageType = "text" | "image" | "audio" | "contact" | "call";
 
 export interface ContactCardData {
   name: string;
@@ -349,6 +349,17 @@ export interface ContactCardData {
   organization?: string;
   email?: string;
   vCardUrl?: string;
+}
+
+export interface CallData {
+  callerName?: string;
+  callerAvatarUrl?: string;
+  callType?: "voice" | "video";
+  direction?: "incoming" | "outgoing";
+  status?: "missed" | "declined" | "unanswered" | "ended";
+  title?: string;
+  subtitle?: string;
+  action?: "decline" | "answer";
 }
 
 export interface LinkPreviewData {
@@ -381,8 +392,9 @@ export interface ScriptStep {
   linkPreview?: LinkPreviewData;
   perspective?: StepPerspective; // Step-defined 3D tilt angles & zoom
   eraseBeforeSend?: boolean; // Simulates user typing text and erasing it back to 0 chars before sending
-  action?: "tap_avatar" | "view_avatar" | "close_avatar" | "incoming_call" | "push_notification" | string; // Simulates interactive actions
+  action?: "tap_avatar" | "view_avatar" | "close_avatar" | "incoming_call" | "outgoing_call" | "push_notification" | string; // Simulates interactive actions
   contactData?: ContactCardData; // Contact card details for type="contact"
+  callData?: CallData; // Call details for incoming or outgoing calls
 }
 
 export interface ChatScript {

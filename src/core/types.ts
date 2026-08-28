@@ -1,7 +1,7 @@
 import React from "react";
 
 export type MessageSender = "user" | "contact" | "resident" | "assistant" | "asistenxa";
-export type MessageType = "text" | "image" | "audio" | "contact";
+export type MessageType = "text" | "image" | "audio" | "contact" | "call";
 
 export interface ContactCardData {
     name: string;
@@ -29,6 +29,19 @@ export interface StepPerspective {
     duration?: number;
 }
 
+export interface CallData {
+    callerName?: string;
+    callerAvatarUrl?: string;
+    callType?: "voice" | "video";
+    direction?: "incoming" | "outgoing";
+    status?: "missed" | "declined" | "unanswered" | "ended";
+    title?: string;
+    subtitle?: string;
+    action?: "decline" | "answer";
+}
+
+export type IncomingCallData = CallData;
+
 export interface Message {
     id: string;
     sender: MessageSender;
@@ -46,13 +59,7 @@ export interface Message {
     linkPreview?: LinkPreviewData;
     perspective?: StepPerspective;
     contactData?: ContactCardData;
-}
-
-export interface IncomingCallData {
-    callerName?: string;
-    callerAvatarUrl?: string;
-    callType?: "voice" | "video";
-    action?: "decline" | "answer";
+    callData?: CallData;
 }
 
 export interface PushNotificationData {
@@ -77,8 +84,8 @@ export interface ScriptStep {
     linkPreview?: LinkPreviewData;
     perspective?: StepPerspective;
     eraseBeforeSend?: boolean; // Erase typed text character by character before sending (simulates regret/cancellation)
-    action?: "tap_avatar" | "view_avatar" | "close_avatar" | "incoming_call" | "push_notification" | string; // Optional interactive step action
-    callData?: IncomingCallData;
+    action?: "tap_avatar" | "view_avatar" | "close_avatar" | "incoming_call" | "outgoing_call" | "push_notification" | string; // Optional interactive step action
+    callData?: CallData;
     notificationData?: PushNotificationData;
     contactData?: ContactCardData;
 }

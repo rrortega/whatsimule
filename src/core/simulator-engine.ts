@@ -21,6 +21,8 @@ export interface IncomingCallState {
     callerName: string;
     callerAvatarUrl?: string;
     callType: "voice" | "video";
+    direction?: "incoming" | "outgoing";
+    statusText?: string;
     isFingerDeclineActive?: boolean;
 }
 
@@ -259,6 +261,28 @@ export class WhatsAppSimulatorEngine {
                         avatarUrl: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&auto=format&fit=crop&q=80",
                     }
                     : undefined),
+            callData: step.callData
+                ? {
+                    callerName: step.callData.callerName || step.senderName || this.options.assistantName || "Contacto",
+                    callerAvatarUrl: step.callData.callerAvatarUrl || step.senderAvatarUrl || this.options.assistantAvatarUrl,
+                    callType: step.callData.callType || "voice",
+                    direction: step.callData.direction || (step.sender === "user" || step.action === "outgoing_call" ? "outgoing" : "incoming"),
+                    status: step.callData.status || (step.sender === "user" || step.action === "outgoing_call" ? "unanswered" : "missed"),
+                    title: step.callData.title || step.content || (step.sender === "user" || step.action === "outgoing_call" ? "Llamada de voz sin respuesta" : "Llamada perdida"),
+                    subtitle: step.callData.subtitle || "Tocar para volver a llamar",
+                    ...step.callData,
+                }
+                : (step.type === "call" || step.action === "incoming_call" || step.action === "outgoing_call"
+                    ? {
+                        callerName: step.senderName || this.options.assistantName || "Contacto",
+                        callerAvatarUrl: step.senderAvatarUrl || this.options.assistantAvatarUrl,
+                        callType: "voice",
+                        direction: step.sender === "user" || step.action === "outgoing_call" ? "outgoing" : "incoming",
+                        status: step.sender === "user" || step.action === "outgoing_call" ? "unanswered" : "missed",
+                        title: step.content || (step.sender === "user" || step.action === "outgoing_call" ? "Llamada de voz sin respuesta" : "Llamada perdida"),
+                        subtitle: "Tocar para volver a llamar",
+                    }
+                    : undefined),
         };
     }
 
@@ -407,10 +431,11 @@ export class WhatsAppSimulatorEngine {
                 continue;
             }
 
-            const isIncomingCallAction = step.action === "incoming_call" || (step as any).type === "incoming_call" || (step as any).type === "call";
+            const isCallStep = step.type === "call" || step.action === "incoming_call" || step.action === "outgoing_call" || (step as any).type === "incoming_call" || (step as any).type === "outgoing_call";
+            const isOutgoingCall = step.action === "outgoing_call" || step.callData?.direction === "outgoing" || (step.type === "call" && step.sender === "user");
             const isPushNotificationAction = step.action === "push_notification" || (step as any).type === "push_notification" || (step as any).type === "notification";
 
-            if (isIncomingCallAction) {
+            if (isCallStep && isOutgoingCall) {
                 const callData = step.callData || {};
                 const callerName = callData.callerName || this.options.assistantName || "Contacto";
                 const callerAvatarUrl = callData.callerAvatarUrl || this.options.assistantAvatarUrl;
@@ -418,12 +443,100 @@ export class WhatsAppSimulatorEngine {
 
                 this.playSound("call");
 
-                // Show Incoming Call Banner / Screen
+                // 1. Show Outgoing Call Screen with "Llamando..."
                 this.updateState({
                     incomingCall: {
                         callerName,
                         callerAvatarUrl,
                         callType,
+                        direction: "outgoing",
+                        statusText: "Llamando...",
+                    }
+                });
+
+                this.handlers.onCallStart?.({ callerName, callerAvatarUrl, callType });
+
+                await this.sleep(1300);
+                if (this.activeRunId !== runId) return;
+
+                // 2. Status updates to "Marcando..."
+                this.updateState({
+                    incomingCall: {
+                        callerName,
+                        callerAvatarUrl,
+                        callType,
+                        direction: "outgoing",
+                        statusText: "Marcando...",
+                    }
+                });
+
+                await this.sleep(1400);
+                if (this.activeRunId !== runId) return;
+
+                // 3. Status updates to "Llamada colgada"
+                this.updateState({
+                    incomingCall: {
+                        callerName,
+                        callerAvatarUrl,
+                        callType,
+                        direction: "outgoing",
+                        statusText: "Llamada colgada",
+                    }
+                });
+
+                this.playSound("hangup");
+                await this.sleep(900);
+                if (this.activeRunId !== runId) return;
+
+                // Close Call Screen
+                this.updateState({ incomingCall: null });
+                this.handlers.onCallEnd?.();
+                this.handlers.onHangup?.();
+                await this.sleep(300);
+
+                // Post Outgoing Missed/Unanswered Call Card Message into Chat
+                const now = new Date();
+                const timestamp = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+                const callMsg: Message = {
+                    id: `call-outgoing-${Date.now()}`,
+                    sender: "user",
+                    type: "call",
+                    content: step.content || "Llamada de voz sin respuesta",
+                    timestamp,
+                    callData: {
+                        callerName,
+                        callerAvatarUrl,
+                        callType,
+                        direction: "outgoing",
+                        status: "unanswered",
+                        title: step.content || "Llamada de voz sin respuesta",
+                        subtitle: "Tocar para volver a llamar",
+                        ...step.callData,
+                    }
+                };
+
+                this.updateState({
+                    messages: [...this.state.messages, callMsg]
+                });
+                this.handlers.onMessageSent?.(callMsg);
+
+                await this.sleep(450);
+                continue;
+            } else if (isCallStep) {
+                const callData = step.callData || {};
+                const callerName = callData.callerName || this.options.assistantName || "Contacto";
+                const callerAvatarUrl = callData.callerAvatarUrl || this.options.assistantAvatarUrl;
+                const callType = callData.callType || "voice";
+
+                this.playSound("call");
+
+                // Show Incoming Call Screen
+                this.updateState({
+                    incomingCall: {
+                        callerName,
+                        callerAvatarUrl,
+                        callType,
+                        direction: "incoming",
                         isFingerDeclineActive: false,
                     }
                 });
@@ -439,6 +552,7 @@ export class WhatsAppSimulatorEngine {
                         callerName,
                         callerAvatarUrl,
                         callType,
+                        direction: "incoming",
                         isFingerDeclineActive: true,
                     }
                 });
@@ -453,6 +567,34 @@ export class WhatsAppSimulatorEngine {
                 this.updateState({ incomingCall: null });
                 this.handlers.onCallEnd?.();
                 this.handlers.onHangup?.();
+                await this.sleep(300);
+
+                // Post Incoming Missed Call Card Message into Chat
+                const now = new Date();
+                const timestamp = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+                const callMsg: Message = {
+                    id: `call-incoming-${Date.now()}`,
+                    sender: step.sender || "assistant",
+                    type: "call",
+                    content: step.content || "Llamada perdida",
+                    timestamp,
+                    callData: {
+                        callerName,
+                        callerAvatarUrl,
+                        callType,
+                        direction: "incoming",
+                        status: "missed",
+                        title: step.content || "Llamada perdida",
+                        subtitle: "Tocar para volver a llamar",
+                        ...step.callData,
+                    }
+                };
+
+                this.updateState({
+                    messages: [...this.state.messages, callMsg]
+                });
+                this.handlers.onMessageSent?.(callMsg);
+
                 await this.sleep(450);
                 continue;
             }
@@ -538,14 +680,24 @@ export class WhatsAppSimulatorEngine {
 
                         const char = step.content[charIndex];
                         currentText += char;
+                        const keyToPress = isKeyboard ? (char === ' ' ? 'SPACE' : char.toUpperCase()) : null;
+
                         this.updateState({
                             inputValue: currentText,
-                            pressedKey: isKeyboard ? char.toUpperCase() : null,
+                            pressedKey: keyToPress,
                         });
 
                         this.playSound("key");
-                        const charDelay = isKeyboard ? 40 + Math.random() * 30 : 8 + Math.random() * 10;
-                        await this.sleep(charDelay);
+                        const pressTime = isKeyboard ? (40 + Math.random() * 20) : (8 + Math.random() * 8);
+                        await this.sleep(pressTime);
+                        if (this.activeRunId !== runId) return;
+
+                        if (isKeyboard) {
+                            // Release key tap so every single character pops distinctly in video capture
+                            this.updateState({ pressedKey: null });
+                            await this.sleep(20 + Math.random() * 15);
+                            if (this.activeRunId !== runId) return;
+                        }
                     }
 
                     const isEraseStep = Boolean(step.eraseBeforeSend || (step as any).erase || (step as any).cancel);
@@ -568,8 +720,15 @@ export class WhatsAppSimulatorEngine {
                             });
 
                             this.playSound("key");
-                            const backspaceDelay = isKeyboard ? 35 + Math.random() * 25 : 12 + Math.random() * 10;
-                            await this.sleep(backspaceDelay);
+                            const backspacePress = isKeyboard ? (35 + Math.random() * 15) : (12 + Math.random() * 8);
+                            await this.sleep(backspacePress);
+                            if (this.activeRunId !== runId) return;
+
+                            if (isKeyboard) {
+                                this.updateState({ pressedKey: null });
+                                await this.sleep(15 + Math.random() * 10);
+                                if (this.activeRunId !== runId) return;
+                            }
                         }
 
                         if (isKeyboard) {
@@ -589,9 +748,13 @@ export class WhatsAppSimulatorEngine {
                     }
                     if (this.activeRunId !== runId) return;
 
-                    this.updateState({ sendRipple: true });
+                    if (isKeyboard) {
+                        this.updateState({ pressedKey: "SEND", sendRipple: true });
+                    } else {
+                        this.updateState({ sendRipple: true });
+                    }
                     this.playSound("sent");
-                    await this.sleep(150);
+                    await this.sleep(160);
                     this.updateState({ sendRipple: false, isKeyboardOpen: false, pressedKey: null });
                     if (this.activeRunId !== runId) return;
 

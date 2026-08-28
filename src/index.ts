@@ -14,6 +14,8 @@ export type {
     WhatSimuleRef,
     SoundType,
     ContactCardData,
+    CallData,
+    IncomingCallData,
 } from "./core/types";
 
 // React exports

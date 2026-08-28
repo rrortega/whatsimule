@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCheck, Play, Pause, Mic, X, User, MessageSquare } from "lucide-react";
+import { CheckCheck, Play, Pause, Mic, X, User, MessageSquare, PhoneIncoming, PhoneOutgoing } from "lucide-react";
 import { Message } from "../../core/types";
 import { LinkPreviewBadge } from "./LinkPreviewBadge";
 
@@ -261,7 +261,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                                         );
                                     })}
                                 </div>
-                                <div className="rws-audio-duration">{message.audioDuration || "0:14"}</div>
+                                <span className="rws-audio-duration">{message.audioDuration || "0:14"}</span>
                             </div>
                         </div>
 
@@ -298,6 +298,27 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                                 <MessageSquare size={14} />
                                 <span>Mensaje</span>
                             </button>
+                        </div>
+                    </div>
+                ) : message.type === "call" ? (
+                    <div className="rws-call-card-box">
+                        <div className="rws-call-card-header">
+                            <div className={`rws-call-card-icon-badge ${message.callData?.direction === "outgoing" ? "outgoing" : "incoming"}`}>
+                                {message.callData?.direction === "outgoing" ? (
+                                    <PhoneOutgoing size={18} color="#ef4444" className="rws-call-icon-svg" />
+                                ) : (
+                                    <PhoneIncoming size={18} color="#ef4444" className="rws-call-icon-svg" />
+                                )}
+                            </div>
+
+                            <div className="rws-call-card-info">
+                                <div className="rws-call-card-title">
+                                    {message.callData?.title || message.content || (message.callData?.direction === "outgoing" ? "Llamada de voz sin respuesta" : "Llamada perdida")}
+                                </div>
+                                <div className="rws-call-card-sub">
+                                    {message.callData?.subtitle || "Tocar para volver a llamar"}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ) : (

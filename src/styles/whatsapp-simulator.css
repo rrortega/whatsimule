@@ -1915,7 +1915,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.08s ease;
+    transition: transform 0.04s ease-out, background-color 0.04s ease-out, box-shadow 0.04s ease-out, color 0.04s ease-out;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
     cursor: pointer;
     box-sizing: border-box;
@@ -2053,8 +2053,8 @@
 .rws-kb-key-active {
     background: #00a884 !important;
     color: #ffffff !important;
-    transform: scale(1.06);
-    box-shadow: 0 0 12px rgba(0, 168, 132, 0.8), 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+    transform: scale(1.15) translateY(-2px) !important;
+    box-shadow: 0 0 16px rgba(0, 168, 132, 0.9), 0 6px 12px rgba(0, 0, 0, 0.6) !important;
     border-radius: 6px;
     z-index: 20;
 }
@@ -3365,4 +3365,65 @@
 
 .rws-contact-card-btn:hover {
     background: rgba(0, 168, 132, 0.1);
+}
+
+/* Call Card Message Indicator (WhatsApp Call Card Bubble) */
+.rws-call-card-box {
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+    padding: 4px 2px 2px 2px;
+}
+
+.rws-call-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rws-call-card-icon-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.rws-theme-light .rws-call-card-icon-badge {
+    background: rgba(239, 68, 68, 0.12);
+}
+
+.rws-call-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.rws-call-card-title {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #e9edef;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rws-theme-light .rws-call-card-title {
+    color: #111b21;
+}
+
+.rws-call-card-sub {
+    font-size: 12.5px;
+    color: #8696a0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rws-theme-light .rws-call-card-sub {
+    color: #667781;
 }
